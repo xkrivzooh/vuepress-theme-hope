@@ -1,6 +1,6 @@
 ---
 title: 贡献指南
-icon: creative
+icon: lightbulb
 category:
   - FAQ
 ---
@@ -25,7 +25,7 @@ pnpm i
 
 ```sh
 corepack enable
-corepack prepare pnpm@7.18.2 --activate
+corepack prepare pnpm@latest --activate
 ```
 
 :::
@@ -46,6 +46,7 @@ corepack prepare pnpm@7.18.2 --activate
 ├── demo → 演示项目
 │
 ├── docs → 文档目录
+│ ├── auto-catalog → auto-catalog 插件文档
 │ ├── blog → blog2 插件文档
 │ ├── comment → comment2 插件文档
 │ ├── components → components 插件文档
@@ -56,7 +57,8 @@ corepack prepare pnpm@7.18.2 --activate
 │ ├── photo-swipe → photo-swipe 文档
 │ ├── pwa → pwa2 插件文档
 │ ├── reading-time → reading-time2 插件文档
-│ ├── remove-pwa →remove-pwa 插件文档
+│ ├── remove-pwa → remove-pwa 插件文档
+│ ├── rtl → rtl 插件文档
 │ ├── sass-palette → sass-palette 插件文档
 │ ├── shared → vuepress-shared 文档
 │ ├── search-pro → search-pro 插件文档
@@ -66,6 +68,7 @@ corepack prepare pnpm@7.18.2 --activate
 ├── docs-shared → 文档的通用文件
 |
 ├── packages → 项目源代码
+│ ├── auto-catalog → auto-catalog 插件
 │ ├── blog2 → blog2 插件
 │ ├── comment2 → comment2 插件
 │ ├── components → components 插件
@@ -77,7 +80,8 @@ corepack prepare pnpm@7.18.2 --activate
 │ ├── photo-swipe → photo-swipe 插件
 │ ├── pwa2 → pwa2 插件
 │ ├── reading-time2 → reading-time2 插件
-│ ├── remove-pwa →remove-pwa 插件
+│ ├── remove-pwa → remove-pwa 插件
+│ ├── rtl → rtl 插件
 │ ├── sass-palette → sass-palette 插件
 │ ├── search-pro → search-pro 插件
 │ ├── seo2 → seo2 插件

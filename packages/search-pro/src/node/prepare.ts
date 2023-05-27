@@ -1,83 +1,44 @@
-import { getPageExcerpt, utoa } from "vuepress-shared/node";
-import { generatePageIndex } from "./generateIndex.js";
+import { type App } from "@vuepress/core";
+import { addAll, discard, vacuum } from "slimsearch";
+import { entries, keys } from "vuepress-shared/node";
 
-import type { App, Page } from "@vuepress/core";
-import type { SearchProOptions } from "./options.js";
-import type { PageIndex, SearchIndex } from "../shared/index.js";
+import { generatePageIndex, getSearchIndexStore } from "./generateIndex.js";
+import { type SearchProOptions } from "./options.js";
+import { getLocaleChunkName } from "./utils.js";
+import { type SearchIndexStore } from "../shared/index.js";
 
-const HMR_CODE = `
-if (import.meta.webpackHot) {
-  import.meta.webpackHot.accept()
-  if (__VUE_HMR_RUNTIME__.updateSearchProDatabase)
-    __VUE_HMR_RUNTIME__.updateSearchProDatabase(database)
-}
-
-if (import.meta.hot) {
-  import.meta.hot.accept(({ database }) => {
-    __VUE_HMR_RUNTIME__.updateSearchProDatabase(database);
-  })
-}
-`;
-
-let previousSearchIndex: SearchIndex | null = null;
+let previousSearchIndexStore: SearchIndexStore | null = null;
 
 export const prepareSearchIndex = async (
   app: App,
-  options: SearchProOptions,
-  isBlogPluginEnabled = false
+  options: SearchProOptions
 ): Promise<void> => {
-  const { pages } = app;
-  const hasExcerpt =
-    isBlogPluginEnabled || pages.some((page) => "excerpt" in page.data);
+  if (app.env.isDev) {
+    const searchIndexStore = await getSearchIndexStore(app, options);
 
-  if (!hasExcerpt)
-    pages.forEach((page: Page<{ excerpt?: string }>) => {
-      page.data["excerpt"] = getPageExcerpt(app, page, { excerptLength: 0 });
-    });
+    previousSearchIndexStore = searchIndexStore;
 
-  const pagesSearchIndex = pages
-    .map((page) => {
-      const pageIndex = generatePageIndex(
-        page,
-        options.customFields,
-        options.indexContent
-      );
-
-      return pageIndex
-        ? { path: page.path, index: pageIndex, localePath: page.pathLocale }
-        : null;
-    })
-    .filter(
-      (item): item is { path: string; index: PageIndex; localePath: string } =>
-        item !== null
+    await Promise.all(
+      entries(searchIndexStore).map(([locale, documents]) =>
+        app.writeTemp(
+          `search-pro/${getLocaleChunkName(locale)}.js`,
+          `export default ${JSON.stringify(JSON.stringify(documents))};`
+        )
+      )
     );
 
-  const searchIndex = Object.fromEntries(
-    Object.keys(
-      // locales should at least have root locales
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      { "/": {}, ...app.options.locales }
-    ).map((localePath) => [
-      localePath,
-      Object.fromEntries(
-        pagesSearchIndex
-          .filter((item) => item.localePath === localePath)
-          .map((item) => [item.path, item.index])
-      ),
-    ])
-  );
-
-  previousSearchIndex = searchIndex;
-
-  // search index file content
-  let content = `\
-export const database = "${utoa(JSON.stringify(searchIndex))}"
-`;
-
-  // inject HMR code
-  if (app.env.isDev) content += HMR_CODE;
-
-  await app.writeTemp("search-pro/index.js", content);
+    await app.writeTemp(
+      `search-pro/index.js`,
+      `export default {${keys(searchIndexStore)
+        .map(
+          (locale) =>
+            `${JSON.stringify(locale)}: () => import('./${getLocaleChunkName(
+              locale
+            )}.js')`
+        )
+        .join(",")}}`
+    );
+  }
 };
 
 export const updateSearchIndex = async (
@@ -85,13 +46,13 @@ export const updateSearchIndex = async (
   options: SearchProOptions,
   path: string
 ): Promise<void> => {
-  if (previousSearchIndex) {
+  if (previousSearchIndexStore) {
     const actualPath = path
       .replace(/^pages\//, "")
       .replace(/\/index\.html\.vue/, "/readme.md")
       .replace(/\.html\.vue/, ".md");
 
-    const { env, pages, writeTemp } = app;
+    const { pages, writeTemp } = app;
 
     const page = pages.find(
       ({ filePathRelative }) =>
@@ -99,25 +60,34 @@ export const updateSearchIndex = async (
     )!;
 
     if (page) {
-      const pageIndex = generatePageIndex(
+      const pageIndexes = generatePageIndex(
         page,
         options.customFields,
         options.indexContent
       );
+      const { pathLocale, key } = page;
+      const localeSearchIndex = previousSearchIndexStore[pathLocale];
 
       // update index
-      if (pageIndex) {
-        previousSearchIndex[page.pathLocale][page.path] = pageIndex;
+      if (pageIndexes) {
+        // remove previous index
+        Array.from(localeSearchIndex._documentIds.values())
+          .filter((id) => id.startsWith(key))
+          .forEach((id) => discard(localeSearchIndex, id));
+
+        addAll(localeSearchIndex, pageIndexes);
+
+        await vacuum(localeSearchIndex);
 
         // search index file content
-        let content = `\
-export const database = "${utoa(JSON.stringify(previousSearchIndex))}"
+        const content = `\
+export default ${JSON.stringify(JSON.stringify(localeSearchIndex))}
 `;
 
-        // inject HMR code
-        if (env.isDev) content += HMR_CODE;
-
-        await writeTemp("search-pro/index.js", content);
+        await writeTemp(
+          `search-pro/${getLocaleChunkName(pathLocale)}.js`,
+          content
+        );
 
         return;
       }
@@ -132,13 +102,13 @@ export const removeSearchIndex = async (
   options: SearchProOptions,
   path: string
 ): Promise<void> => {
-  if (previousSearchIndex) {
+  if (previousSearchIndexStore) {
     const actualPath = path
       .replace(/^pages\//, "")
       .replace(/\/index\.html\.vue/, "/readme.md")
       .replace(/\.html\.vue/, ".md");
 
-    const { env, pages, writeTemp } = app;
+    const { pages, writeTemp } = app;
 
     const page = pages.find(
       ({ filePathRelative }) =>
@@ -146,18 +116,25 @@ export const removeSearchIndex = async (
     )!;
 
     if (page) {
-      // remove index
-      delete previousSearchIndex[page.pathLocale][page.path];
+      const { pathLocale, key } = page;
+      const localeSearchIndex = previousSearchIndexStore[pathLocale];
+
+      // remove previous index
+      Array.from(localeSearchIndex._documentIds.values())
+        .filter((id) => id.startsWith(key))
+        .forEach((id) => discard(localeSearchIndex, id));
+
+      await vacuum(localeSearchIndex);
 
       // search index file content
-      let content = `\
-export const database = "${utoa(JSON.stringify(previousSearchIndex))}"
+      const content = `\
+export default ${JSON.stringify(JSON.stringify(localeSearchIndex))}
 `;
 
-      // inject HMR code
-      if (env.isDev) content += HMR_CODE;
-
-      await writeTemp("search-pro/index.js", content);
+      await writeTemp(
+        `search-pro/${getLocaleChunkName(pathLocale)}.js`,
+        content
+      );
 
       return;
     }

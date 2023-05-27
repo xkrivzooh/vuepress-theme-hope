@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type { PluginsOptions } from "vuepress-theme-hope";
+import { type PluginsOptions } from "vuepress-theme-hope";
 
 export interface GeneratePwaOptions {
   name: string;
@@ -31,12 +31,6 @@ export const pwa = ({
           purpose: "maskable",
           type: "image/png",
         },
-        {
-          src: "/assets/icon/guide-monochrome.png",
-          sizes: "192x192",
-          purpose: "monochrome",
-          type: "image/png",
-        },
       ],
     });
 
@@ -50,12 +44,6 @@ export const pwa = ({
           src: "/assets/icon/config-maskable.png",
           sizes: "192x192",
           purpose: "maskable",
-          type: "image/png",
-        },
-        {
-          src: "/assets/icon/config-monochrome.png",
-          sizes: "192x192",
-          purpose: "monochrome",
           type: "image/png",
         },
       ],
@@ -102,6 +90,13 @@ export const pwa = ({
         },
       ],
       shortcuts,
+    },
+
+    generateSWConfig: {
+      globIgnores: [
+        // ignore pdfjs
+        "assets/lib/pdfjs/**",
+      ],
     },
   };
 };

@@ -6,27 +6,27 @@ title: AudioPlayer
 
 <!-- more -->
 
-## 案例
+## 示例
 
 一个音频播放器:
 
-<AudioPlayer :src="$withBase('/sample.mp3')" />
+<AudioPlayer src="/sample.mp3" />
 
 ```md
-<AudioPlayer :src="$withBase('/sample.mp3')" />
+<AudioPlayer src="/sample.mp3" />
 ```
 
 一个拥有标题和封面的音频播放器:
 
 <AudioPlayer
-  :src="$withBase('/sample.mp3')"
+  src="/sample.mp3"
   title="A Sample Audio"
   poster="/logo.svg"
 />
 
 ```md
 <AudioPlayer
-  :src="$withBase('/sample.mp3')"
+  src="/sample.mp3"
   title="A Sample Audio"
   poster="/logo.svg"
 />
@@ -60,6 +60,13 @@ title: AudioPlayer
 如果你的服务器不能为音频文件返回正确的 mime 类型，你应该指定它。 (例如：`audio/mp3`)
 
 :::
+
+### title
+
+- 类型: `string`
+- 必填: 否
+
+音频标题
 
 ### poster
 

@@ -1,13 +1,21 @@
-import { useEventListener, useDebounceFn } from "@vueuse/core";
 import { usePageFrontmatter } from "@vuepress/client";
-import { Transition, computed, defineComponent, h, onMounted, ref } from "vue";
+import { useElementSize, useWindowScroll, useWindowSize } from "@vueuse/core";
+import {
+  Transition,
+  type VNode,
+  computed,
+  defineComponent,
+  h,
+  onMounted,
+  shallowRef,
+} from "vue";
 import { useLocaleConfig } from "vuepress-shared/client";
+
 import { BackToTopIcon } from "./icons.js";
+import { type BackToTopLocaleConfig } from "../../shared/index.js";
 
+import "balloon-css/balloon.css";
 import "../styles/back-to-top.scss";
-
-import type { VNode } from "vue";
-import type { BackToTopLocaleConfig } from "../../shared/index.js";
 
 declare const BACK_TO_TOP_LOCALES: BackToTopLocaleConfig;
 
@@ -22,41 +30,38 @@ export default defineComponent({
      */
     threshold: {
       type: Number,
-      default: 300,
+      default: 100,
     },
+
+    /**
+     * 是否隐藏浏览进度条
+     */
+    noProgress: Boolean,
   },
 
   setup(props) {
     const pageFrontmatter = usePageFrontmatter<{ backToTop?: boolean }>();
     const locale = useLocaleConfig(BACK_TO_TOP_LOCALES);
+    const body = shallowRef<HTMLBodyElement>();
+    const { height: bodyHeight } = useElementSize(body);
+    const { height: windowHeight } = useWindowSize();
 
     /** Scroll distance */
-    const scrollTop = ref(0);
+    const { y } = useWindowScroll();
 
     /** Whether to display button */
-    const show = computed<boolean>(
+    const show = computed(
       () =>
-        pageFrontmatter.value.backToTop !== false &&
-        scrollTop.value > props.threshold
+        pageFrontmatter.value.backToTop !== false && y.value > props.threshold
     );
 
-    // Get scroll distance
-    const getScrollTop = (): number =>
-      window.pageYOffset ||
-      document.documentElement.scrollTop ||
-      document.body.scrollTop ||
-      0;
+    const progress = computed(
+      () => y.value / (bodyHeight.value - windowHeight.value)
+    );
 
     onMounted(() => {
-      scrollTop.value = getScrollTop();
+      body.value = <HTMLBodyElement>document.body;
     });
-
-    useEventListener(
-      "scroll",
-      useDebounceFn(() => {
-        scrollTop.value = getScrollTop();
-      }, 100)
-    );
 
     return (): VNode =>
       h(Transition, { name: "fade" }, () =>
@@ -64,6 +69,7 @@ export default defineComponent({
           ? h(
               "button",
               {
+                type: "button",
                 class: "back-to-top",
                 // hint text
                 "aria-label": locale.value.backToTop,
@@ -71,10 +77,28 @@ export default defineComponent({
                 // Scroll to top
                 onClick: () => {
                   window.scrollTo({ top: 0, behavior: "smooth" });
-                  scrollTop.value = 0;
                 },
               },
-              h(BackToTopIcon)
+              [
+                props.noProgress
+                  ? null
+                  : h(
+                      "svg",
+                      { class: "scroll-progress" },
+                      h("circle", {
+                        cx: "50%",
+                        cy: "50%",
+                        style: {
+                          "stroke-dasharray": `calc(${
+                            Math.PI * progress.value * 100
+                          }% - ${4 * Math.PI}px) calc(${Math.PI * 100}% - ${
+                            4 * Math.PI
+                          }px)`,
+                        },
+                      })
+                    ),
+                h(BackToTopIcon),
+              ]
             )
           : null
       );

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Page } from "@vuepress/core";
+import { type Page } from "@vuepress/core";
 
 export interface BlogTypeOptions<
   ExtraPageData extends Record<any, any> = Record<never, never>,
@@ -37,7 +37,7 @@ export interface BlogTypeOptions<
    *
    * 待注册的页面路径
    *
-   * @default '/:key/'
+   * @default "/:key/"
    */
   path?: string | false;
 
@@ -46,7 +46,7 @@ export interface BlogTypeOptions<
    *
    * 页面布局组件名称
    *
-   * @default 'Layout'
+   * @default "Layout"
    */
   layout?: string;
 

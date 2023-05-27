@@ -1,18 +1,29 @@
 import { withBase } from "@vuepress/client";
-import { defineComponent, h, toRef } from "vue";
+import {
+  type PropType,
+  type SlotsType,
+  type VNode,
+  defineComponent,
+  h,
+  toRef,
+} from "vue";
 import { RouterLink } from "vue-router";
 
-import PageInfo from "@theme-hope/modules/info/components/PageInfo";
 import {
   SlideIcon,
   StickyIcon,
 } from "@theme-hope/modules/blog/components/icons/index";
 import { useArticleInfo } from "@theme-hope/modules/blog/composables/index";
 import { LockIcon } from "@theme-hope/modules/encrypt/components/icons";
-import { ArticleInfoType, PageType } from "../../../../shared/index.js";
+import PageInfo, {
+  PageInfoProps,
+} from "@theme-hope/modules/info/components/PageInfo";
 
-import type { PropType, VNode } from "vue";
-import type { ArticleInfo } from "../../../../shared/index.js";
+import {
+  type ArticleInfo,
+  ArticleInfoType,
+  PageType,
+} from "../../../../shared/index.js";
 
 import "../styles/article-item.scss";
 
@@ -38,51 +49,84 @@ export default defineComponent({
     path: { type: String, required: true },
   },
 
-  setup(props) {
-    const info = toRef(props, "info");
-    const { info: articleInfo, items } = useArticleInfo(props);
+  slots: Object as SlotsType<{
+    cover?: (props: { cover: string | undefined }) => VNode | VNode[];
+    title?: (props: {
+      title: string;
+      isEncrypted?: boolean;
+      type: string;
+    }) => VNode | VNode[];
+    excerpt?: (props: { excerpt: string | undefined }) => VNode | VNode[];
+    info?: (props: { info: PageInfoProps }) => VNode | VNode[];
+  }>,
 
-    return (): VNode =>
-      h(
+  setup(props, { slots }) {
+    const articleInfo = toRef(props, "info");
+    const { info: pageInfo, items } = useArticleInfo(props);
+
+    return (): VNode => {
+      const {
+        [ArticleInfoType.title]: title,
+        [ArticleInfoType.type]: type,
+        [ArticleInfoType.isEncrypted]: isEncrypted = false,
+        [ArticleInfoType.cover]: cover,
+        [ArticleInfoType.excerpt]: excerpt,
+        [ArticleInfoType.sticky]: sticky,
+      } = articleInfo.value;
+      const info = pageInfo.value;
+
+      return h(
         "div",
-        { class: "article-item" },
+        { class: "vp-article-wrapper" },
         h(
           "article",
           {
-            class: "article",
+            class: "vp-article-item",
             vocab: "https://schema.org/",
             typeof: "Article",
           },
           [
-            info.value[ArticleInfoType.sticky] ? h(StickyIcon) : null,
-            h(RouterLink, { to: props.path }, () => [
-              h("header", { class: "title" }, [
-                info.value[ArticleInfoType.isEncrypted] ? h(LockIcon) : null,
-                info.value[ArticleInfoType.type] === PageType.slide
-                  ? h(SlideIcon)
-                  : null,
-                h("span", { property: "headline" }, info.value.title),
-                info.value[ArticleInfoType.cover]
-                  ? h("meta", {
+            slots.cover?.({ cover }) ||
+              (cover
+                ? [
+                    h("img", {
+                      class: "vp-article-cover",
+                      src: withBase(cover),
+                    }),
+                    h("meta", {
                       property: "image",
-                      content: withBase(info.value[ArticleInfoType.cover]!),
-                    })
-                  : null,
-              ]),
-            ]),
-            info.value[ArticleInfoType.excerpt]
-              ? h("div", {
-                  class: "article-excerpt",
-                  innerHTML: info.value[ArticleInfoType.excerpt],
-                })
-              : null,
-            h("hr", { class: "hr" }),
-            h(PageInfo, {
-              info: articleInfo.value,
-              ...(items.value ? { items: items.value } : {}),
-            }),
+                      content: withBase(cover),
+                    }),
+                  ]
+                : []),
+            sticky ? h(StickyIcon) : null,
+            h(
+              RouterLink,
+              { to: props.path },
+              () =>
+                slots.title?.({ title, isEncrypted, type }) ||
+                h("header", { class: "vp-article-title" }, [
+                  isEncrypted ? h(LockIcon) : null,
+                  type === PageType.slide ? h(SlideIcon) : null,
+                  h("span", { property: "headline" }, title),
+                ])
+            ),
+            slots.excerpt?.({ excerpt }) ||
+              (excerpt
+                ? h("div", {
+                    class: "vp-article-excerpt",
+                    innerHTML: excerpt,
+                  })
+                : null),
+            h("hr", { class: "vp-article-hr" }),
+            slots.info?.({ info }) ||
+              h(PageInfo, {
+                info,
+                ...(items.value ? { items: items.value } : {}),
+              }),
           ]
         )
       );
+    };
   },
 });

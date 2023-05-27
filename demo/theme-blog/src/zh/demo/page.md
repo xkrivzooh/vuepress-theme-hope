@@ -1,6 +1,8 @@
 ---
 # 这是文章的标题
 title: 页面配置
+# You can customize cover image
+cover: /assets/images/cover1.jpg
 # 这是页面的图标
 icon: page
 # 这是侧边栏的顺序
@@ -59,14 +61,14 @@ copyright: 无版权
 
 此页面应当包含:
 
-- [路径导航](https://vuepress-theme-hope.github.io/v2/zh/guide/layout/breadcrumb.html)
-- [标题和页面信息](https://vuepress-theme-hope.github.io/v2/zh/guide/feature/page-info.html)
-- [TOC (文章标题列表)](https://vuepress-theme-hope.github.io/v2/zh/guide/layout/page.html#标题列表)
-- [贡献者、更新时间等页面元信息](https://vuepress-theme-hope.github.io/v2/guide/feature/meta.html)
-- [评论](https://vuepress-theme-hope.github.io/v2/zh/guide/feature/comment.html)
-- [导航栏](https://vuepress-theme-hope.github.io/v2/zh/guide/layout/navbar.html)
-- [侧边栏](https://vuepress-theme-hope.github.io/v2/zh/guide/layout/sidebar.html)
-- [页脚](https://vuepress-theme-hope.github.io/v2/zh/guide/layout/footer.html)
+- [路径导航](https://theme-hope.vuejs.press/zh/guide/layout/breadcrumb.html)
+- [标题和页面信息](https://theme-hope.vuejs.press/zh/guide/feature/page-info.html)
+- [TOC (文章标题列表)](https://theme-hope.vuejs.press/zh/guide/layout/page.html#标题列表)
+- [贡献者、更新时间等页面元信息](https://theme-hope.vuejs.press/guide/feature/meta.html)
+- [评论](https://theme-hope.vuejs.press/zh/guide/feature/comment.html)
+- [导航栏](https://theme-hope.vuejs.press/zh/guide/layout/navbar.html)
+- [侧边栏](https://theme-hope.vuejs.press/zh/guide/layout/sidebar.html)
+- [页脚](https://theme-hope.vuejs.press/zh/guide/layout/footer.html)
 - 返回顶部按钮
 
 你可以通过主题选项和页面 Frontmatter 自定义它们。

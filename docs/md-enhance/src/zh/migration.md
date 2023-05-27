@@ -1,11 +1,11 @@
 ---
 title: 迁移至 V2
-icon: change
+icon: code-compare
 ---
 
 ## 传统模式
 
-您可以在调用 `mdEnhancePlugin` 时传递第二个参数 `true` 以启用传统模式，插件将尝试以 V1 行为运行。
+你可以在调用 `mdEnhancePlugin` 时传递第二个参数 `true` 以启用传统模式，插件将尝试以 V1 行为运行。
 
 ## 新功能
 
@@ -13,11 +13,11 @@ icon: change
 
   该插件现在检查你的 Markdown 链接，并在检测到损坏的链接时警告你。
 
-  你可以通过 `linkCheck` 选项控制此行为
+  你可以通过 `checkLinks` 选项控制此行为
 
 - 图像标记支持
 
-  通过 `imageMark` 选项使用 `#light` 和 `#dark` 后缀标记图像以在日间模式或夜间模式下显示它们。
+  通过 `imgMark` 选项使用 `#light` 和 `#dark` 后缀标记图像以在日间模式或夜间模式下显示它们。
 
 - `v-pre` 支持
 
@@ -49,7 +49,7 @@ icon: change
   ::: chart 标题
 
   ```js
-  module.exports = {
+  const config = {
     // chart.js 配置
   };
   ```
@@ -75,7 +75,7 @@ icon: change
   ::: echarts 标题
 
   ```js
-  module.exports = {
+  const option = {
     // echarts 配置
   };
   ```
@@ -85,15 +85,19 @@ icon: change
 
 - 包含文件支持
 
-  新增 `include` 选项使用 `@include()` 将其他文件内容导入到 Markdown 中。
+  新增 `include` 选项使用 `<!-- @include: -->` 将其他文件内容导入到 Markdown 中。
 
-  使用 `@include(filename)` 导入文件。
+  使用 `<!-- @include: filename -->` 导入文件。
 
   如果要部分导入文件，你可以指定导入的行数
 
-  - `@include(filename{start-end})`
-  - `@include(filename{start-})`
-  - `@include(filename{-end})`
+  - `<!-- @include: filename{start-end} -->`
+  - `<!-- @include: filename{start-} -->`
+  - `<!-- @include: filename{-end} -->`
+
+  同时你也可以导入文件区域:
+
+  - `<!-- @include: filename#region -->`
 
 - 选项卡支持
 
@@ -161,7 +165,7 @@ icon: change
   ::: code-group-item pnpm
 
   ```bash
-  pnpm create vuepress-theme-hope@next [dir]
+  pnpm create vuepress-theme-hope [dir]
   ```
 
   :::
@@ -169,7 +173,7 @@ icon: change
   ::: code-group-item npm:active
 
   ```bash
-  npm init vuepress-theme-hope@next [dir]
+  npm init vuepress-theme-hope [dir]
   ```
 
   :::
@@ -185,13 +189,13 @@ icon: change
   @tab pnpm
 
   ```bash
-  pnpm create vuepress-theme-hope@next [dir]
+  pnpm create vuepress-theme-hope [dir]
   ```
 
   @tab:active npm
 
   ```bash
-  npm init vuepress-theme-hope@next [dir]
+  npm init vuepress-theme-hope [dir]
   ```
 
   :::

@@ -1,6 +1,6 @@
 ---
 title: 布局 Frontmatter 配置
-icon: config
+icon: object-group
 order: 2
 category:
   - 配置
@@ -82,16 +82,16 @@ tag:
 - 类型: `boolean`
 - 默认值: `true`
 
-Whether index current page in sidebar.
+是否在侧边栏中索引当前页面。
 
 ## order
 
 - 类型: `number`
 
-Page order in sidebar.
+指定当前页面在侧边栏中的排序
 
-- By filling in a positive number, the page will appear in the front, while the smaller number comes to the front.
-- By filling in a negative number, the page will appear in the end, while the greater number comes to the front. (e.g. -1 is after -2)
+- 当填写正数的时候，页面将排在靠前的位置，数字越小出现的位置越前。
+- 当填写负数的时候，页面将排在靠后的位置，数字越大出现的位置越前（比如 -1 在 -2 之后）。
 
 ## dir
 
@@ -100,14 +100,14 @@ Page order in sidebar.
 ### dir.text
 
 - 类型: `string`
-- 默认值: README.md 的标题
+- 默认值: `README.md` 的标题
 
 分组标题。
 
 ### dir.icon
 
 - 类型: `string`
-- 默认值: README.md 的图标
+- 默认值: `README.md` 的图标
 
 分组图标。
 
@@ -127,7 +127,7 @@ Page order in sidebar.
 
 ::: note
 
-设置为 `true` 意味着将分组链接设置为 README.md 链接。
+设置为 `true` 意味着将分组链接设置为 `README.md` 链接。
 
 :::
 
@@ -138,7 +138,7 @@ Page order in sidebar.
 
 是否索引当前目录
 
-## dir.order
+### dir.order
 
 - 类型: `number`
 

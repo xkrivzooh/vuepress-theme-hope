@@ -1,14 +1,12 @@
-import { useRouteLocale } from "@vuepress/client";
-import { computed, defineComponent, h } from "vue";
-import { RouterLink, useRoute } from "vue-router";
+import { usePageData, useRouteLocale } from "@vuepress/client";
+import { type VNode, computed, defineComponent, h } from "vue";
+import { RouterLink } from "vue-router";
 
 import { useThemeLocaleData } from "@theme-hope/composables/index";
 import {
   useArticles,
   useStars,
 } from "@theme-hope/modules/blog/composables/index";
-
-import type { VNode } from "vue";
 
 import "../styles/article-type.scss";
 
@@ -18,9 +16,9 @@ export default defineComponent({
   name: "ArticleType",
 
   setup() {
+    const page = usePageData();
     const localePath = useRouteLocale();
     const themeLocale = useThemeLocaleData();
-    const route = useRoute();
     const articles = useArticles();
     const stars = useStars();
 
@@ -43,12 +41,15 @@ export default defineComponent({
     return (): VNode =>
       h(
         "ul",
-        { class: "article-type-wrapper" },
+        { class: "vp-article-type-wrapper" },
         types.value.map((type) =>
           h(
             "li",
             {
-              class: ["article-type", { active: type.path === route.path }],
+              class: [
+                "vp-article-type",
+                { active: type.path === page.value.path },
+              ],
             },
             h(RouterLink, { to: type.path }, () => type.text)
           )

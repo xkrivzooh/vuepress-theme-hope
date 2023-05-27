@@ -1,6 +1,6 @@
 ---
 title: Demo
-icon: discover
+icon: laptop-code
 layout: Slide
 ---
 
@@ -74,11 +74,11 @@ You can use all kinds of markup in slides.
 
 You can use all kinds of markup in slides.
 
-### This is a H3
+### This is an H3
 
 Headings will transform to UPPERCASE by default.
 
-Here is paragraph with some **bold**, _italic_, ~~strike-through~~ text and a [link](https://mrhope.site), and it can auto break itself so you don’t need to worry the length.
+Here is paragraph with some **bold**, _italic_, ~~strike-through~~ text and a [link](https://mrhope.site), and it can auto break itself, so you don't need to worry the length.
 
 --
 
@@ -331,7 +331,7 @@ Multiple elements can appear at the same index.
 
 <!-- .element: class="r-fit-text" -->
 
-Transition can be changed by setting the `transition` config option globally or `data-transition` attribute on specific slide.
+Transition can be changed by setting the `transition` config option globally or `data-transition` attribute on slide.
 
 Possible values:
 
@@ -408,7 +408,7 @@ Press `Esc` or `O` to enter overview mode when the presentation is active
 
 ### Full Screen
 
-Press `F` or `F11` to enter fullscreen when the presentation is active
+Press `F` or `F11` to enter full-screen when the presentation is active
 
 --
 

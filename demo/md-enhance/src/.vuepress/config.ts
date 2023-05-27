@@ -2,7 +2,7 @@ import { defineUserConfig } from "@vuepress/cli";
 import { defaultTheme } from "@vuepress/theme-default";
 import { mdEnhancePlugin } from "vuepress-plugin-md-enhance";
 
-const base = <"/" | `/${string}/`>process.env.BASE || "/";
+const base = <"/" | `/${string}/`>process.env["BASE"] || "/";
 
 export default defineUserConfig({
   base,
@@ -25,6 +25,7 @@ export default defineUserConfig({
       "/demo/": [
         "/demo/align",
         "/demo/attrs",
+        "/demo/card",
         "/demo/chart",
         "/demo/echarts",
         "/demo/code-demo",
@@ -63,6 +64,7 @@ export default defineUserConfig({
     mdEnhancePlugin({
       align: true,
       attrs: true,
+      card: true,
       chart: true,
       codetabs: true,
       container: true,
@@ -71,17 +73,17 @@ export default defineUserConfig({
       figure: true,
       flowchart: true,
       gfm: true,
-      imageLazyload: true,
-      imageMark: true,
-      imageSize: true,
+      imgLazyload: true,
+      imgMark: true,
+      imgSize: true,
       include: true,
       mark: true,
       mermaid: true,
       playground: {
         presets: ["ts", "vue"],
       },
-      katex: {
-        mhchem: true,
+      mathjax: {
+        output: "chtml",
       },
       presentation: {
         plugins: ["highlight", "math", "search", "notes", "zoom"],

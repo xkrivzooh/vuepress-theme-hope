@@ -26,19 +26,19 @@ copyrightText: false
 @tab pnpm
 
 ```bash
-pnpm add -D vuepress-plugin-search-pro@next
+pnpm add -D vuepress-plugin-search-pro
 ```
 
 @tab yarn
 
 ```bash
-yarn add -D vuepress-plugin-search-pro@next
+yarn add -D vuepress-plugin-search-pro
 ```
 
 @tab npm
 
 ```bash
-npm i -D vuepress-plugin-search-pro@next
+npm i -D vuepress-plugin-search-pro
 ```
 
 :::
@@ -55,7 +55,7 @@ import { searchProPlugin } from "vuepress-plugin-search-pro";
 
 export default {
   plugins: [
-    ssearchProPlugin({
+    searchProPlugin({
       // your options
     }),
   ],
@@ -78,3 +78,9 @@ export default {
 ```
 
 :::
+
+<NetlifyBadge />
+
+<script setup lang="ts">
+import NetlifyBadge from "@NetlifyBadge";
+</script>

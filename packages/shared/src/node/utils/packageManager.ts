@@ -1,17 +1,20 @@
-import { existsSync } from "node:fs";
-import { dirname, resolve } from "node:path";
-import { execaSync } from "execa";
+import { fs, path } from "@vuepress/utils";
+import { execaCommandSync } from "execa";
 
 export type PackageManager = "npm" | "yarn" | "pnpm";
 
 const globalCache = new Map<string, boolean>();
 const localCache = new Map<string, PackageManager>();
 
+const NPM_LOCK = "package-lock.json";
+const YARN_LOCK = "yarn.lock";
+const PNPM_LOCK = "pnpm-lock.yaml";
+
 const isInstalled = (packageManager: PackageManager): boolean => {
   try {
     return (
-      execaSync(`${packageManager} --version`, { stdio: "ignore" }).exitCode ===
-      0
+      execaCommandSync(`${packageManager} --version`, { stdio: "ignore" })
+        .exitCode === 0
     );
   } catch (e) {
     return false;
@@ -19,7 +22,9 @@ const isInstalled = (packageManager: PackageManager): boolean => {
 };
 
 /**
- * Check if a global package manager is available
+ * Check if a package manager is installed globally.
+ *
+ * @param packageManager package manager
  */
 export const hasGlobalInstallation = (
   packageManager: PackageManager
@@ -39,6 +44,13 @@ export const hasGlobalInstallation = (
   return false;
 };
 
+/**
+ * Get the type of lock file.
+ *
+ * @param cwd current working directory
+ * @param deep whether to search in parent directories
+ * @returns the type of lock file
+ */
 export const getTypeofLockFile = (
   cwd = process.cwd(),
   deep = true
@@ -49,51 +61,60 @@ export const getTypeofLockFile = (
 
   if (status !== undefined) return status;
 
-  if (existsSync(resolve(cwd, "pnpm-lock.yaml"))) {
+  if (fs.existsSync(path.resolve(cwd, PNPM_LOCK))) {
     localCache.set(key, "pnpm");
 
     return "pnpm";
   }
 
-  if (existsSync(resolve(cwd, "yarn.lock"))) {
+  if (fs.existsSync(path.resolve(cwd, YARN_LOCK))) {
     localCache.set(key, "yarn");
 
     return "yarn";
   }
 
-  if (existsSync(resolve(cwd, "package-lock.json"))) {
+  if (fs.existsSync(path.resolve(cwd, NPM_LOCK))) {
     localCache.set(key, "npm");
 
     return "npm";
   }
 
-  let dir = cwd;
+  if (deep) {
+    let dir = cwd;
 
-  while (deep && dir !== dirname(dir)) {
-    dir = dirname(dir);
+    while (dir !== path.dirname(dir)) {
+      dir = path.dirname(dir);
 
-    if (existsSync(resolve(dir, "pnpm-lock.yaml"))) {
-      localCache.set(key, "pnpm");
+      if (fs.existsSync(path.resolve(dir, PNPM_LOCK))) {
+        localCache.set(key, "pnpm");
 
-      return "pnpm";
-    }
+        return "pnpm";
+      }
 
-    if (existsSync(resolve(dir, "yarn.lock"))) {
-      localCache.set(key, "yarn");
+      if (fs.existsSync(path.resolve(dir, YARN_LOCK))) {
+        localCache.set(key, "yarn");
 
-      return "yarn";
-    }
+        return "yarn";
+      }
 
-    if (existsSync(resolve(dir, "package-lock.json"))) {
-      localCache.set(key, "npm");
+      if (fs.existsSync(path.resolve(dir, NPM_LOCK))) {
+        localCache.set(key, "npm");
 
-      return "npm";
+        return "npm";
+      }
     }
   }
 
   return null;
 };
 
+/**
+ * Detect the package manager used in the current project.
+ *
+ * @param cwd current working directory
+ * @param deep whether to search in parent directories
+ * @returns the type of package manager
+ */
 export const detectPackageManager = (
   cwd = process.cwd(),
   deep = true

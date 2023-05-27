@@ -1,4 +1,4 @@
-import type { BaseCommentOptions } from "./base.js";
+import { type BaseCommentOptions } from "./base.js";
 
 export type GiscusRepo = `${string}/${string}`;
 
@@ -25,8 +25,6 @@ export type GiscusTheme =
   | `https://${string}`;
 
 export interface GiscusOptions extends BaseCommentOptions {
-  provider: "Giscus";
-
   /**
    * The name of repository to store discussions.
    *
@@ -96,7 +94,7 @@ export interface GiscusOptions extends BaseCommentOptions {
    *
    * 输入框的位置
    *
-   * @default 'top'
+   * @default "top"
    */
   inputPosition?: GiscusInputPosition;
 

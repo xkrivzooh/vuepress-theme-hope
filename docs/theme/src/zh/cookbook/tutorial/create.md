@@ -1,6 +1,7 @@
 ---
 title: 创建项目
-icon: add
+icon: folder-plus
+order: 2
 category:
   - 快速上手
   - 基础知识
@@ -29,14 +30,17 @@ tag:
 
 :::
 
-在终端中执行下列命令:
+在终端中执行下列命令之一:
 
 ```sh
-pnpm create vuepress-theme-hope@next my-docs
+# pnpm
+pnpm create vuepress-theme-hope my-docs
 
-# 或
+# yarn
+yarn create vuepress-theme-hope my-docs
 
-npm create vuepress-theme-hope@next my-docs
+# npm
+npm init vuepress-theme-hope my-docs
 ```
 
 ::: tip 文件夹参数

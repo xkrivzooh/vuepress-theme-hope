@@ -18,9 +18,54 @@
   }
 }
 
-// TODO: Add it upstream
-.external-link-icon {
-  @media print {
-    display: none;
+// rtl
+#{hope-config.$rtl-selector} a.header-anchor {
+  float: right;
+}
+
+// docsearch fix
+// stylelint-disable selector-class-pattern
+#docsearch-container {
+  min-width: 145.7px !important;
+
+  @media (max-width: hope-config.$pad) {
+    min-width: 36px !important;
   }
 }
+
+.DocSearch {
+  &.DocSearch-Button {
+    margin-left: 0;
+
+    @media (max-width: hope-config.$pad) {
+      min-width: 36px !important;
+    }
+  }
+
+  .DocSearch-Button-Placeholder {
+    display: inline-block;
+    padding: 4px 12px 4px 6px;
+    font-size: 14px;
+
+    @media (max-width: 719px) {
+      display: none;
+    }
+  }
+
+  .DocSearch-Search-Icon {
+    width: 1.25em;
+    height: 1.25em;
+  }
+
+  .DocSearch-Button-Keys {
+    @media (max-width: hope-config.$pad) {
+      display: none;
+    }
+  }
+
+  .DocSearch-Button-Key {
+    background: var(--bg-color);
+    box-shadow: none;
+  }
+}
+// stylelint-enable selector-class-pattern

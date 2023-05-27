@@ -1,40 +1,46 @@
-import { usePageFrontmatter, usePageLang, withBase } from "@vuepress/client";
-import { computed, defineComponent, h, onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
+import { usePageLang } from "@vuepress/client";
+import { type VNode, computed, defineComponent, h, onMounted, ref } from "vue";
+import { LoadingIcon } from "vuepress-shared/client";
 
-import type { VNode } from "vue";
-import type {
-  CommentPluginFrontmatter,
-  GiscusInputPosition,
-  GiscusMapping,
-  GiscusOptions,
-  GiscusRepo,
-  GiscusTheme,
+import {
+  type GiscusInputPosition,
+  type GiscusMapping,
+  type GiscusRepo,
+  type GiscusTheme,
 } from "../../shared/index.js";
+import { useGiscusOptions } from "../helpers/index.js";
 
 import "../styles/giscus.scss";
 
-declare const COMMENT_OPTIONS: GiscusOptions;
+// Note: Should be updated with https://github.com/giscus/giscus/tree/main/locales
+const SUPPORTED_LANGUAGES = [
+  "ar",
+  "de",
+  "gsw",
+  "en",
+  "es",
+  "fa",
+  "fr",
+  "id",
+  "it",
+  "ja",
+  "ko",
+  "nl",
+  "pl",
+  "pt",
+  "ro",
+  "ru",
+  "th",
+  "tr",
+  "uk",
+  "vi",
+  "zh-CN",
+  "zh-TW",
+] as const;
 
 type BooleanString = "0" | "1";
 
-export type GiscusLang =
-  | "de"
-  | "gsw"
-  | "en"
-  | "es"
-  | "fr"
-  | "id"
-  | "it"
-  | "ja"
-  | "ko"
-  | "pl"
-  | "ro"
-  | "ru"
-  | "tr"
-  | "vi"
-  | "zh-CN"
-  | "zh-TW";
+export type GiscusLang = (typeof SUPPORTED_LANGUAGES)[number];
 
 export type GiscusLoading = "lazy" | "eager";
 
@@ -55,37 +61,18 @@ export interface GiscusProps {
   loading?: GiscusLoading | undefined;
 }
 
-const giscusOption = COMMENT_OPTIONS;
-const enableGiscus = Boolean(
-  giscusOption.repo &&
-    giscusOption.repoId &&
-    giscusOption.category &&
-    giscusOption.categoryId
-);
-
-const SUPPORTED_LANGUAGES: GiscusLang[] = [
-  "de",
-  "gsw",
-  "en",
-  "es",
-  "fr",
-  "id",
-  "it",
-  "ja",
-  "ko",
-  "pl",
-  "ro",
-  "ru",
-  "tr",
-  "vi",
-  "zh-CN",
-  "zh-TW",
-];
-
 export default defineComponent({
   name: "GiscusComment",
 
   props: {
+    /**
+     * The path of the comment
+     */
+    identifier: {
+      type: String,
+      required: true,
+    },
+
     /**
      * Whether the component is in darkmode
      *
@@ -95,8 +82,17 @@ export default defineComponent({
   },
 
   setup(props) {
-    const frontmatter = usePageFrontmatter<CommentPluginFrontmatter>();
-    const route = useRoute();
+    const giscusOptions = useGiscusOptions();
+
+    const enableGiscus = Boolean(
+      giscusOptions.repo &&
+        giscusOptions.repoId &&
+        giscusOptions.category &&
+        giscusOptions.categoryId
+    );
+
+    const { repo, repoId, category, categoryId } = giscusOptions;
+
     const loaded = ref(false);
 
     const giscusLang = computed(() => {
@@ -111,57 +107,46 @@ export default defineComponent({
       return "en";
     });
 
-    const enableComment = computed(() => {
-      if (!enableGiscus) return false;
-      const pluginConfig = giscusOption.comment !== false;
-      const pageConfig = frontmatter.value.comment;
-
-      return (
-        // Enable in page
-        Boolean(pageConfig) ||
-        // not disabled in anywhere
-        (pluginConfig !== false && pageConfig !== false)
-      );
-    });
-
-    const config = computed<GiscusProps>(() => ({
-      repo: giscusOption.repo,
-      repoId: giscusOption.repoId,
-      category: giscusOption.category,
-      categoryId: giscusOption.categoryId,
-      lang: giscusLang.value,
-      theme: props.darkmode
-        ? giscusOption.darkTheme ?? "dark"
-        : giscusOption.lightTheme ?? "light",
-      mapping: giscusOption.mapping || "pathname",
-      term: withBase(route.path),
-      inputPosition: giscusOption.inputPosition || "top",
-      reactionsEnabled: giscusOption.reactionsEnabled !== false ? "1" : "0",
-      strict: giscusOption.strict !== false ? "1" : "0",
-      loading: giscusOption.lazyLoading !== false ? "lazy" : "eager",
-      emitMetadata: "0",
-    }));
+    const config = computed(
+      () =>
+        <GiscusProps>{
+          repo,
+          repoId,
+          category,
+          categoryId,
+          lang: giscusLang.value,
+          theme: props.darkmode
+            ? giscusOptions.darkTheme || "dark"
+            : giscusOptions.lightTheme || "light",
+          mapping: giscusOptions.mapping || "pathname",
+          term: props.identifier,
+          inputPosition: giscusOptions.inputPosition || "top",
+          reactionsEnabled:
+            giscusOptions.reactionsEnabled === false ? "0" : "1",
+          strict: giscusOptions.strict === false ? "0" : "1",
+          loading: giscusOptions.lazyLoading === false ? "eager" : "lazy",
+          emitMetadata: "0",
+        }
+    );
 
     onMounted(async () => {
-      await import("giscus");
+      await import(/* webpackChunkName: "giscus" */ "giscus");
       loaded.value = true;
     });
 
-    return (): VNode =>
-      h(
-        "div",
-        {
-          class: [
-            "giscus-wrapper",
-            { "input-top": giscusOption.inputPosition !== "bottom" },
-          ],
-          style: {
-            display: enableComment.value ? "block" : "none",
-          },
-        },
-        loaded.value
-          ? h("giscus-widget", config.value)
-          : h("div", { style: "text-align:center" }, "Loading...")
-      );
+    return (): VNode | null =>
+      enableGiscus
+        ? h(
+            "div",
+            {
+              class: [
+                "giscus-wrapper",
+                { "input-top": giscusOptions.inputPosition !== "bottom" },
+              ],
+              id: "comment",
+            },
+            loaded.value ? h("giscus-widget", config.value) : h(LoadingIcon)
+          )
+        : null;
   },
 });

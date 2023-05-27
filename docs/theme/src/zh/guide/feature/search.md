@@ -8,7 +8,7 @@ tag:
   - 搜索
 ---
 
-主题对 [`vuepress-plugin-search-pro`][search-pro]、 [`@vuepress/plugin-docsearch`][docsearch] 和 [`@vuepress/plugin-search`][search] 提供了内置支持。你只需要添加并配置所需的搜索插件，就能够在导航栏获得一个搜索框。
+主题对 <ProjectLink name="search-pro" path="/zh/">`vuepress-plugin-search-pro`</ProjectLink>、 [`@vuepress/plugin-docsearch`][docsearch] 和 [`@vuepress/plugin-search`][search] 提供了内置支持。你只需要添加并配置所需的搜索插件，就能够在导航栏获得一个搜索框。
 
 如果你需要搜索插件，请通过 [**VuePress 配置文件**](../../cookbook/vuepress/config.md) 的 `plugins` 选项应用它。
 
@@ -37,19 +37,19 @@ tag:
    @tab pnpm
 
    ```bash
-   pnpm add -D vuepress-plugin-search-pro@next
+   pnpm add -D vuepress-plugin-search-pro
    ```
 
    @tab yarn
 
    ```bash
-   yarn add -D vuepress-plugin-search-pro@next
+   yarn add -D vuepress-plugin-search-pro
    ```
 
    @tab npm
 
    ```bash
-   npm i -D vuepress-plugin-search-pro@next
+   npm i -D vuepress-plugin-search-pro
    ```
 
    :::
@@ -117,64 +117,9 @@ tag:
 
 ::: info 更多
 
-关于搜索插件的可用选项，详见 [插件文档][search-pro]。
+关于搜索插件的可用选项，详见 <ProjectLink name="search-pro" path="/zh/">插件文档</ProjectLink>。
 
 :::
-
-### `@vuepress/plugin-search` 本地化翻译
-
-如果你正在提供中文文档，你可以将其设置到插件选项中的 `locales` 中。
-
-:::: details 中文多语言配置
-
-::: code-tabs#language
-
-@tab TS
-
-```ts
-// .vuepress/config.ts
-import { defineUserConfig } from "vuepress";
-import { searchPlugin } from "@vuepress/plugin-search";
-
-export default defineUserConfig({
-  plugins: [
-    searchPlugin({
-      // ...
-
-      locales: {
-        "/zh/": {
-          placeholder: "搜索",
-        },
-      },
-    }),
-  ],
-});
-```
-
-@tab JS
-
-```js
-// .vuepress/config.js
-import { searchPlugin } from "@vuepress/plugin-search";
-
-export default {
-  plugins: [
-    searchPlugin({
-      // ...
-
-      locales: {
-        "/zh/": {
-          placeholder: "搜索",
-        },
-      },
-    }),
-  ],
-};
-```
-
-:::
-
-::::
 
 ## 使用 `@vuepress/plugin-docsearch`
 
@@ -594,6 +539,60 @@ export default {
 
 :::
 
-[docsearch]: https://v2.vuepress.vuejs.org/zh/reference/plugin/docsearch.html
-[search]: https://v2.vuepress.vuejs.org/zh/reference/plugin/search.html
-[search-pro]: https://vuepress-theme-hope.github.io/v2/search-pro/zh/
+### `@vuepress/plugin-search` 本地化翻译
+
+如果你正在提供中文文档，你可以将其设置到插件选项中的 `locales` 中。
+
+:::: details 中文多语言配置
+
+::: code-tabs#language
+
+@tab TS
+
+```ts
+// .vuepress/config.ts
+import { defineUserConfig } from "vuepress";
+import { searchPlugin } from "@vuepress/plugin-search";
+
+export default defineUserConfig({
+  plugins: [
+    searchPlugin({
+      // ...
+
+      locales: {
+        "/zh/": {
+          placeholder: "搜索",
+        },
+      },
+    }),
+  ],
+});
+```
+
+@tab JS
+
+```js
+// .vuepress/config.js
+import { searchPlugin } from "@vuepress/plugin-search";
+
+export default {
+  plugins: [
+    searchPlugin({
+      // ...
+
+      locales: {
+        "/zh/": {
+          placeholder: "搜索",
+        },
+      },
+    }),
+  ],
+};
+```
+
+:::
+
+::::
+
+[docsearch]: https://vuejs.press/zh/reference/plugin/docsearch.html
+[search]: https://vuejs.press/zh/reference/plugin/search.html

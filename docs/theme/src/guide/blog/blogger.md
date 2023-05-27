@@ -1,6 +1,6 @@
 ---
 title: Blogger Info
-icon: blog
+icon: circle-info
 order: 2
 category:
   - Blog
@@ -22,7 +22,7 @@ You can config blogger avatar and name displayed through `blog.avatar` and `blog
 
 ::: note
 
-If you don’t set those options, they automatically fall back to the site logo (`logo` in theme options) and site name.
+If you don't set those options, they automatically fall back to the site logo (`logo` in theme options) and site name.
 
 :::
 
@@ -43,7 +43,7 @@ You can also config your social media links with `blog.medias` option.
 - If the social media icon is available below, you can set `MediaName: MediaLink` directly.
 - Otherwise, you should pass in a tuple `MediaName: [MediaLink , MediaSvgIconString or MediaSvgIconPath]`,
 
-  The second element in the tuple must be a valid SVG string or a full path of a existing SVG file.
+  The second element in the tuple must be a valid SVG string or a full path of an existing SVG file.
 
 ::: tip Available social media:
 
@@ -52,6 +52,7 @@ You can also config your social media links with `blog.medias` option.
 - `"Bitbucket"`
 - `"Dingding"`
 - `"Discord"`
+- `"Douban"`
 - `"Dribbble"`
 - `"Email"`
 - `"Evernote"`
@@ -72,6 +73,8 @@ You can also config your social media links with `blog.medias` option.
 - `"Reddit"`
 - `"Rss"`
 - `"Steam"`
+- `"Skype"`
+- `"Telegram"`
 - `"Twitter"`
 - `"Wechat"`
 - `"Weibo"`
@@ -98,7 +101,7 @@ const __dirname = getDirname(import.meta.url);
 export default defineUserConfig({
   theme: hopeTheme({
     blog: {
-      media: {
+      medias: {
         // GitHub Icon is available
         GitHub: "https://github.com/Mister-Hope",
         // A custom Media called "MediaX" (just an example)
@@ -133,7 +136,7 @@ const __dirname = getDirname(import.meta.url);
 export default {
   theme: hopeTheme({
     blog: {
-      media: {
+      medias: {
         // GitHub Icon is available
         GitHub: "https://github.com/Mister-Hope",
         // A custom Media called "MediaX" (just an example)

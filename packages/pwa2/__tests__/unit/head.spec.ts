@@ -1,8 +1,8 @@
-import { describe, it, expect } from "vitest";
-import { injectLinksToHead } from "../../src/node/injectHead";
+import { type HeadConfig } from "@vuepress/core";
+import { describe, expect, it } from "vitest";
 
-import type { HeadConfig } from "@vuepress/core";
-import type { PWAOptions } from "../../src/shared";
+import { type PWAOptions } from "../../src/node/index.js";
+import { injectLinksToHead } from "../../src/node/injectHead.js";
 
 const options: PWAOptions = {
   favicon: "/favicon.ico",
@@ -12,12 +12,10 @@ const options: PWAOptions = {
       {
         src: "/assets/icon/chrome-192.png",
         sizes: "192x192",
-        type: "image/png",
       },
       {
         src: "/assets/icon/chrome-512.png",
         sizes: "512x512",
-        type: "image/png",
       },
       {
         src: "/assets/icon/chrome-mask-192.png",
@@ -82,7 +80,6 @@ describe("Test head function", () => {
           rel: "icon",
           href: "/assets/icon/chrome-192.png",
           sizes: "192x192",
-          type: "image/png",
         },
       ],
       [
@@ -91,7 +88,6 @@ describe("Test head function", () => {
           rel: "icon",
           href: "/assets/icon/chrome-512.png",
           sizes: "512x512",
-          type: "image/png",
         },
       ],
       [

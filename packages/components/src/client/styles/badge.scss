@@ -14,16 +14,16 @@
   padding: 0 6px;
   border-radius: 3px;
 
-  background: var(--c-brand, #3eaf7c);
+  background: var(--vp-tc);
   color: var(--white);
 
   font-size: 14px;
   line-height: 18px;
 
-  transition: background var(--color-transition), color var(--color-transition);
+  transition: background var(--vp-ct), color var(--vp-ct);
 
   & + & {
-    margin-left: 5px;
+    margin-inline-start: 5px;
   }
 
   // compatible with toc

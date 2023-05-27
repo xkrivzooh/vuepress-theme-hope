@@ -1,11 +1,51 @@
 ---
 title: Common Errors
-icon: warn
+icon: triangle-exclamation
 category:
   - FAQ
 ---
 
-## `TypeError: Invalid value used as weak map key`
+## `useXXX() is called without provider`
+
+Such errors are usually caused by incorrectly containing multiple versions of `@vue/xxx`, `@vuepress/xxx`, `vue` or `vue-router` in the project.
+
+Make sure you are using the latest `vuepress` and `vuepress-theme-hope` versions and all related packages. You can use `vp-update` helper for that
+
+::: code-tabs#shell
+
+@tab pnpm
+
+```bash
+pnpm dlx vp-update
+```
+
+@tab yarn
+
+```bash
+yarn dlx vp-update
+```
+
+@tab npm
+
+```bash
+npx vp-update
+```
+
+:::
+
+::: warning
+
+Any official packages starting with `@vuepress/` should be upgrade to the same version as VuePress.
+
+I.E.: if you are using `@vuepress/plugin-search` and `@vuepress/utils`, you should ensure they have the same version number as `vuepress`.
+
+Besides, any plugin inside `vuepress-theme-hope` should be the same version as vuepress-theme-hope.
+
+Furthermore, if you're using another third-party plugin, make sure it's compatible with the version of VuePress you're upgrading to.
+
+:::
+
+## `[Vue warn]: Failed to resolve component: XXX`
 
 If you are facing error like this, you are probably using non-standard tags in your project.
 
@@ -13,7 +53,7 @@ There are tags like `<center>` or `<font>`, which is in HTML1.0 spec, but marked
 
 To remove them, run theme with `--debug` flag, and you will get warning logs telling you tags that probably not be recognized.
 
-To use them anyway, check [here](https://v2.vuepress.vuejs.org/guide/markdown.html#non-standard-html-tags) to get a workaround.
+To use them anyway, check [here](https://vuejs.press/guide/markdown.html#non-standard-html-tags) to get a workaround.
 
 ## `Hydration completed but contains mismatches.`
 
@@ -27,17 +67,53 @@ Auto Minify in CloudFlare incorrectly handle HTML spaces and line breaks, which 
 
 :::
 
-Also you can check these:
+Also, you can check these:
 
 - If you only encounter this problem on certain pages, please check whether the page has additional components you added.
 
-  If so, these components are likely to have different rendering results between SSR and the client. You can try to make their behavior consistent, or wrap your components with the `<ClientOnly />` component provided by `@vuepress/client`.
+  If so, these components are likely to have different rendering results between SSR[^ssr] and CSR[^csr]. You can try to make their behavior consistent, or wrap your components with the `<ClientOnly />` component provided by `@vuepress/client`.
+
+[^ssr]: **SSR**: **S**erver **S**ide **R**endering
+[^csr]: **CSR**: **C**lient **S**ide **R**endering
 
 - If you have this problem in all pages, please also follow the previous step to check the components you added in the layout or global components.
 
-## `xxx isn’t assign with a lang, and will return 'en-US' instead.`
+## `You are not allowed to use plugin XXX yourself in vuepress config file.`
 
-If you see `xxx isn’t assign with a lang, and will return 'en-US' instead.` while the dev process is starting up, please check whether you set lang for every language.
+This means you are calling a theme bundled plugin yourself in vuepress config file.
+
+In most cases, when you use some plugins with theme together, the theme will handle some of the plugin options automatically for you, so when you want to customize these plugins, you should set their options in `plugin.PLUGIN_NAME` under theme options to let the theme call those plugins for you. For details, see [Plugin Config](../config/plugins/intro.md).
+
+## `FATAL ERROR: XXX - JavaScript heap out of memory`
+
+This means that your `max_old_space_size` setting of Node.js is too small to build this application. You can try to increase the `max_old_space_size` by setting the `NODE_OPTIONS` environment variable.
+
+`max_old_space_size` is in unit of MB, by default it is half size of your machine memory.
+
+This value can be greater than the actual memory size of your machine.
+
+- For small projects, usually it won't take more than 2 GB (2048 MB).
+- For large projects, usually it won't take more than 4 GB (4048 MB)
+- If you are enabling blog feature together with lots of markdown enhance features on large sites, usually it won't take more than 8 GB (8192 MB)
+
+::: details Ways of increasing
+
+With GitHub workflow, set `env` in your workflow file.
+
+```diff
+  - name: Build project
++   env:
++     NODE_OPTIONS: --max_old_space_size=8192
+    run: pnpm run build
+```
+
+On windows, you can follow [this guide](https://www.technewstoday.com/how-to-set-windows-environment-variables/).
+
+:::
+
+## `xxx isn't assign with a lang, and will return 'en-US' instead.`
+
+If you see `xxx isn't assign with a lang, and will return 'en-US' instead.` while the dev process is starting up, please check whether you set lang for every language.
 
 Even if you only have one language, you still need to [set language](../config/i18n.md#setting-language).
 
@@ -45,62 +121,16 @@ Even if you only have one language, you still need to [set language](../config/i
 
 Using object format sidebar config means you want to set different sidebar based on routes.
 
-- If you want to avoid this warning, you need to add sidebar config for rootLocale path, since all pages will fallback to that.
+- If you want to avoid this warning, you need to add sidebar config for rootLocale path, since all pages will fall back to that.
 - If you want to disable sidebar in current route, set `sidebar: false` in frontmatter.
-- If you want to disable sidebar in current folder, add `currentFolderRoute: false` in sidebar config.
-- If you want to tell theme that you only want sidebar in routes you set, add `rootLocalePath: false` in sidebar config to tell theme sidebar config is disabled by default.
+- If you want to disable sidebar in current folder, add `[currentFolderRoute]: false` in sidebar config.
+- If you want to tell theme that you only want sidebar in routes you set, add `[rootLocalePath]: false` in sidebar config to tell theme sidebar config is disabled by default.
 
-## `useXXX() is called without provider`
+## HotReload not working in DevServer
 
-Such errors are usually caused by incorrectly containing multiple versions of `@vue/xxx`, `@vuepress/xxx`, `vue` or `vue-router` in the project.
+Some configuration has high performance impact on dev server, so their hot reload are disabled by default. You can enable it manually via `hotReload: true` in theme options.
 
-Make sure you are using the latest `vuepress` and `vuepress-theme-hope` versions:
-
-::: code-tabs#shell
-
-@tab pnpm
-
-```bash
-pnpm add vuepress@next vuepress-theme-hope@next
-```
-
-@tab yarn
-
-```bash
-yarn add vuepress@next vuepress-theme-hope@next
-```
-
-@tab npm
-
-```bash
-npm i vuepress@next vuepress-theme-hope@next
-```
-
-:::
-
-Also, upgrade dependencies to ensure your project only contains a single version of the relevant package:
-
-::: code-tabs#shell
-
-@tab pnpm
-
-```bash
-pnpm i && pnpm up
-```
-
-@tab yarn
-
-```bash
-yarn && yarn upgrade
-```
-
-@tab npm
-
-```bash
-npm i && npm update
-```
-
-:::
+These include categories and tags for blog, structured sidebar and git-based information.
 
 ## Some page settings are invalid
 

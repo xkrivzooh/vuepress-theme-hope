@@ -1,7 +1,7 @@
 ---
 title: 代码块分组
 icon: code
-index: 3
+order: 3
 category:
   - Markdown
 tag:
@@ -56,7 +56,7 @@ export default {
 
 ## 使用
 
-此功能选项卡功能相同，但它是专门为代码块构建的。
+此功能和[选项卡功能](./tabs.md)相同，但它是专门为代码块构建的。
 
 代码选项卡只会渲染 `@tab` 标记后的代码块，其他 Markdown 内容将被忽略。
 
@@ -69,19 +69,19 @@ export default {
 @tab pnpm
 
 ```bash
-pnpm add -D vuepress-theme-hope@next
+pnpm add -D vuepress-theme-hope
 ```
 
 @tab yarn
 
 ```bash
-yarn add -D vuepress-theme-hope@next
+yarn add -D vuepress-theme-hope
 ```
 
 @tab:active npm
 
 ```bash
-npm i -D vuepress-theme-hope@next
+npm i -D vuepress-theme-hope
 ```
 
 :::
@@ -93,19 +93,19 @@ npm i -D vuepress-theme-hope@next
 @tab pnpm
 
 ```bash
-pnpm add -D vuepress-plugin-md-enhance@next
+pnpm add -D vuepress-plugin-md-enhance
 ```
 
 @tab yarn
 
 ```bash
-yarn add -D vuepress-plugin-md-enhance@next
+yarn add -D vuepress-plugin-md-enhance
 ```
 
 @tab:active npm
 
 ```bash
-npm i -D vuepress-plugin-md-enhance@next
+npm i -D vuepress-plugin-md-enhance
 ```
 
 :::
@@ -120,19 +120,19 @@ npm i -D vuepress-plugin-md-enhance@next
 @tab pnpm
 
 ```bash
-pnpm add -D vuepress-theme-hope@next
+pnpm add -D vuepress-theme-hope
 ```
 
 @tab yarn
 
 ```bash
-yarn add -D vuepress-theme-hope@next
+yarn add -D vuepress-theme-hope
 ```
 
 @tab:active npm
 
 ```bash
-npm i -D vuepress-theme-hope@next
+npm i -D vuepress-theme-hope
 ```
 
 :::
@@ -144,19 +144,19 @@ npm i -D vuepress-theme-hope@next
 @tab pnpm
 
 ```bash
-pnpm add -D vuepress-plugin-md-enhance@next
+pnpm add -D vuepress-plugin-md-enhance
 ```
 
 @tab yarn
 
 ```bash
-yarn add -D vuepress-plugin-md-enhance@next
+yarn add -D vuepress-plugin-md-enhance
 ```
 
 @tab:active npm
 
 ```bash
-npm i -D vuepress-plugin-md-enhance@next
+npm i -D vuepress-plugin-md-enhance
 ```
 
 :::

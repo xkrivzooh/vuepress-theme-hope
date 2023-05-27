@@ -1,5 +1,5 @@
-declare module "mermaid/dist/mermaid.esm.min.mjs" {
+declare module "@mermaid" {
   import Mermaid from "mermaid";
 
-  export default Mermaid.default;
+  export default Mermaid;
 }

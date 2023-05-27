@@ -1,6 +1,6 @@
 ---
 title: 侧边栏
-icon: sidebar
+icon: fas fa-window-maximize fa-rotate-270
 order: 2
 category:
   - 布局
@@ -84,7 +84,7 @@ export default defineUserConfig({
       {
         text: "指南",
         link: "/zh/guide/README.md",
-        icon: "creative",
+        icon: "lightbulb",
         // 仅在 `/zh/guide/` 激活
         activeMatch: "^/zh/guide/$",
       },
@@ -92,7 +92,7 @@ export default defineUserConfig({
       {
         text: "常见问题",
         link: "/zh/faq.md",
-        icon: "question",
+        icon: "circle-question",
         // 会在 `/zh/faq` 开头的路径激活
         // 所以当你前往 `/zh/faq/xxx.html` 时也会激活
         activeMatch: "^/zh/faq",
@@ -114,7 +114,7 @@ export default {
       {
         text: "指南",
         link: "/zh/guide/README.md",
-        icon: "creative",
+        icon: "lightbulb",
         // 仅在 `/zh/guide/` 激活
         activeMatch: "^/zh/guide/$",
       },
@@ -122,7 +122,7 @@ export default {
       {
         text: "常见问题",
         link: "/zh/faq.md",
-        icon: "question",
+        icon: "circle-question",
         // 会在 `/zh/faq` 开头的路径激活
         // 所以当你前往 `/zh/faq/xxx.html` 时也会激活
         activeMatch: "^/zh/faq",
@@ -718,7 +718,7 @@ interface SidebarDirInfo {
 }
 ```
 
-如果对应文件夹不存在 README.md 文件，则只有分组标题会从文件夹名称中生成。
+如果对应文件夹不存在 `README.md` 文件，则只有分组标题会从文件夹名称中生成。
 
 #### 自定义排序
 
@@ -765,9 +765,9 @@ headerDepth: 2
 
 ::: note
 
-有效最大值取决于你通过 [markdown.extractHeaders.level](https://v2.vuepress.vuejs.org/zh/reference/config.html#markdown-extractheaders) 提取了哪些级别的标题。
+有效最大值取决于你通过 [markdown.headers.level](https://vuejs.press/zh/reference/config.html#markdown.headers) 提取了哪些级别的标题。
 
-由于 [markdown.extractHeaders.level](https://v2.vuepress.vuejs.org/zh/reference/config.html#markdown-extractheaders) 的默认值是 `[2, 3]` ，因此 `headerDepth` 的默认最大值是 `2` 。
+由于 [markdown.headers.level](https://vuejs.press/zh/reference/config.html#markdown.headers) 的默认值是 `[2, 3]` ，因此 `headerDepth` 的默认最大值是 `2` 。
 
 :::
 
@@ -820,7 +820,7 @@ export default {
 
 ## 多语言
 
-主题的侧边栏支持 [多语言](https://v2.vuepress.vuejs.org/zh/guide/i18n.html)，所以你可以为每个语言单独设置侧边栏:
+主题的侧边栏支持 [多语言](https://vuejs.press/zh/guide/i18n.html)，所以你可以为每个语言单独设置侧边栏:
 
 ::: code-tabs#language
 
@@ -931,7 +931,7 @@ export default sidebar(/* 你的侧边栏配置 */);
 ```ts
 import { sidebar } from "vuepress-theme-hope";
 
-@include(../../../.vuepress/sidebar/zh.ts{3-})
+<!-- @include: ../../../.vuepress/sidebar/zh.ts{3-} -->
 ```
 
 @tab JS
@@ -939,7 +939,7 @@ import { sidebar } from "vuepress-theme-hope";
 ```js
 import { sidebar } from "vuepress-theme-hope";
 
-@include(../../../.vuepress/sidebar/zh.ts{3-})
+<!-- @include: ../../../.vuepress/sidebar/zh.ts{3-} -->
 ```
 
 :::

@@ -1,28 +1,27 @@
-import { Logger } from "vuepress-shared/node";
+import { type App, type Page } from "@vuepress/core";
+import { Logger, keys } from "vuepress-shared/node";
 
-import type { App, Page } from "@vuepress/core";
-import type { PageMap } from "./typings/index.js";
+import { type PageMap } from "./typings/index.js";
 
-export const logger = new Logger("vuepress-plugin-blog2");
+export const PLUGIN_NAME = "vuepress-plugin-blog2";
+
+export const logger = new Logger(PLUGIN_NAME);
 
 export const getPageMap = (
-  filter: (page: Page) => boolean,
-  app: App
+  { options, pages }: App,
+  filter: (page: Page) => boolean
 ): PageMap => {
+  const localePaths = keys(options.locales);
   const pageMap: PageMap = {};
 
   // initialize pageMap
-  Object.keys({
-    // make sure root locale exists
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    "/": {},
-    ...app.options.locales,
-  }).forEach((path) => {
+  // extra check to ensure at least one locale exists
+  (localePaths.length ? localePaths : ["/"]).forEach((path) => {
     pageMap[path] = [];
   });
 
-  app.pages.filter(filter).forEach((page) => {
-    pageMap[page.pathLocale].push(page);
+  pages.filter(filter).forEach((page) => {
+    if (page.path !== "/404.html") pageMap[page.pathLocale].push(page);
   });
 
   return pageMap;

@@ -1,6 +1,6 @@
 ---
 title: Footnote
-icon: footnote
+icon: quote-left
 ---
 
 Let the Markdown file in your VuePress site support footnotes.
@@ -51,7 +51,7 @@ export default {
 
 - Use `[^Anchor text]: ...` to describe footnote content
 
-- If there are multiple paragraph in footnote, the paragraph show be double indented
+- If there are multiple paragraphs in footnote, the paragraph show be double indented
 
 ## Demo
 

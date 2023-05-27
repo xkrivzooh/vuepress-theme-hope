@@ -16,8 +16,8 @@ You need to set `layout: BlogHome` and `home: true` in the frontmatter of homepa
 
 <!-- more -->
 
-![Homepage screenshot](./assets/blog-light.png#light)
-![Homepage screenshot](./assets/blog-dark.png#dark)
+![Homepage screenshot](./assets/blog-light.jpg#light)
+![Homepage screenshot](./assets/blog-dark.jpg#dark)
 
 ## Homepage information
 
@@ -47,3 +47,8 @@ You can set them via `projects`, which is an array where each element is an obje
 For complete configuration items, see [Blog Home Frontmatter Configuration](../../config/frontmatter/blog-home.md).
 
 :::
+
+## Living Demo
+
+- [A blog homepage for current docs](../../demo/blog-home.md)
+- [A customized blog homepage for current docs](../../demo/custom-blog-home.md)

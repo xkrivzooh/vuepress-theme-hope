@@ -1,6 +1,7 @@
 ---
 title: 配置项目
-icon: config
+icon: gears
+order: 5
 category:
   - 快速上手
   - 基础知识
@@ -109,7 +110,7 @@ export default defineUserConfig({
 
 ::: info 站点配置
 
-你可以前往 [VuePress2 → 参考 → 配置](https://v2.vuepress.vuejs.org/zh/reference/config.html) 查看所有 VuePress 配置。
+你可以前往 [VuePress2 → 参考 → 配置](https://vuejs.press/zh/reference/config.html) 查看所有 VuePress 配置。
 
 :::
 

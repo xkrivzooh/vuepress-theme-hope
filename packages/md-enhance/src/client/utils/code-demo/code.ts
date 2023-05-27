@@ -1,9 +1,9 @@
-import { getConfig, preProcessorConfig } from "./utils.js";
-
 import type Babel from "@babel/core";
-import type { Code, CodeType } from "./typings.js";
-import type { PreProcessorType } from "./utils.js";
-import type { CodeDemoOptions } from "../../../shared/index.js";
+import { keys } from "vuepress-shared/client";
+
+import { type Code, type CodeType } from "./typings.js";
+import { getConfig, preProcessorConfig } from "./utils.js";
+import { type CodeDemoOptions } from "../../../shared/index.js";
 
 declare global {
   interface Window {
@@ -12,7 +12,7 @@ declare global {
 }
 
 export const getCode = (code: Record<string, string>): CodeType => {
-  const languages = Object.keys(code);
+  const languages = keys(code);
   const result: CodeType = {
     html: [],
     js: [],
@@ -20,7 +20,7 @@ export const getCode = (code: Record<string, string>): CodeType => {
     isLegal: false,
   };
 
-  (<PreProcessorType[]>["html", "js", "css"]).forEach((type) => {
+  (["html", "js", "css"] as const).forEach((type) => {
     const match = languages.filter((language) =>
       preProcessorConfig[type].types.includes(language)
     );
@@ -94,6 +94,11 @@ export const getNormalCode = (
   };
 };
 
+const VUE_TEMPLATE_REG = /<template>([\s\S]+)<\/template>/u;
+const VUE_SCRIPT_REG = /<script(\s*lang=(['"])(.*?)\2)?>([\s\S]+)<\/script>/u;
+const VUE_STYLE_REG =
+  /<style(\s*lang=(['"])(.*?)\2)?\s*(?:scoped)?>([\s\S]+)<\/style>/u;
+
 export const getVueCode = (
   code: CodeType,
   config: Partial<CodeDemoOptions>
@@ -101,14 +106,9 @@ export const getVueCode = (
   const codeConfig = getConfig(config);
 
   const vueTemplate = code.html[0] || "";
-  const htmlBlock = /<template>([\s\S]+)<\/template>/u.exec(vueTemplate);
-  const jsBlock = /<script(\s*lang=(['"])(.*?)\2)?>([\s\S]+)<\/script>/u.exec(
-    vueTemplate
-  );
-  const cssBlock =
-    /<style(\s*lang=(['"])(.*?)\2)?\s*(?:scoped)?>([\s\S]+)<\/style>/u.exec(
-      vueTemplate
-    );
+  const htmlBlock = VUE_TEMPLATE_REG.exec(vueTemplate);
+  const jsBlock = VUE_SCRIPT_REG.exec(vueTemplate);
+  const cssBlock = VUE_STYLE_REG.exec(vueTemplate);
   const html = htmlBlock ? htmlBlock[1].replace(/^\n|\n$/g, "") : "";
   const [js = "", jsLang = ""] = jsBlock
     ? [jsBlock[4].replace(/^\n|\n$/g, ""), jsBlock[3]]

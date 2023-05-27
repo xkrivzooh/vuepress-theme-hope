@@ -1,6 +1,6 @@
 ---
 title: Task list
-icon: check
+icon: square-check
 category:
   - Markdown
 tag:
@@ -55,7 +55,7 @@ export default {
 
 ## Syntax
 
-- Use `- [ ] some text` to render a unchecked task item.
+- Use `- [ ] some text` to render an unchecked task item.
 - Use `- [x] some text` to render a checked task item. (Capital `X` is also supported)
 
 ## Demo

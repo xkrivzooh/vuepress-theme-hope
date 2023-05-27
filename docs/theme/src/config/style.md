@@ -1,6 +1,6 @@
 ---
 title: Style config
-icon: style
+icon: wand-magic-sparkles
 order: 6
 category:
   - Config
@@ -9,9 +9,9 @@ tag:
   - Style
 ---
 
-You can change the theme’s styles in `.vuepress/styles` by setting variable values in the `config.scss` and `palette.scss` files.
+You can change the theme's styles in `.vuepress/styles` by setting variable values in the `config.scss` and `palette.scss` files.
 
-Also you can add your own styles in `.vuepress/styles/index.scss`.
+Also, you can add your own styles in `.vuepress/styles/index.scss`.
 
 <!-- more -->
 
@@ -27,21 +27,20 @@ Responsive breakpoints:
 - `$tablet`
 - `$mobile`
 
-Code block:
+Theme Colors:
 
-- `$code-light-theme`: code block theme in lightmode
-- `$code-dark-theme`: code block theme in darkmode
+- `$theme-colors`: theme colors you want to use besides primary theme color
 
-Content class: `$content-class`
+Code block (Only available with shiki):
+
+- `$code-bg-color`: background color for code blocks
+- `$code-color`: font color for code blocks
 
 Color list: `$colors`
 
 ::: details Demo
 
 ```scss
-// modify code theme in lightmode
-$code-light-theme: "coy";
-
 // update pc breakpoint
 $pc: 1920px;
 ```
@@ -50,7 +49,7 @@ $pc: 1920px;
 
 ::: details Default value
 
-@[code{7-}](../../../../packages/theme/templates/config.scss)
+@[code{7-}](../../../../packages/theme/templates/palette/config.scss)
 
 :::
 
@@ -75,7 +74,8 @@ Available color variables:
 - `$theme-color`: theme color
 - `$text-color`: text color
 - `$bg-color`: background color
-- `$bg-color-secondary`: another "lighter" background color
+- `$bg-color-secondary`: another "light" background color
+- `$bg-color-tertiary`: another "lighter" background color
 - `$border-color`: border color
 - `$box-shadow`: shadow color using on elements
 - `$card-shadow`: shadow color using on cards
@@ -97,7 +97,7 @@ $border-color: (
 
 ::: details Default value
 
-@[code{4-60}](../../../../packages/theme/templates/color.scss)
+@[code{4-60}](../../../../packages/theme/templates/palette/color.scss)
 
 :::
 
@@ -127,11 +127,11 @@ Content:
 Fonts:
 
 - `$font-family`: font family used on normal text
-- `$font-family-fancy:` font family used on fancy elements
+- `$font-family-heading:` font family used on heading elements
 
 Code:
 
-- `$font-family-code`: font family used on code
+- `$font-family-mono`: font family used on code
 - `$line-numbers-width`: width of line number in code blocks
 
 Transition:
@@ -153,7 +153,7 @@ $font-family: 'Georgia, -apple-system, "Nimbus Roman No9 L", "PingFang SC", "Hir
 
 ::: details Default value
 
-@[code](../../../../packages/theme/templates/layout.scss)
+@[code](../../../../packages/theme/templates/palette/layout.scss)
 
 :::
 

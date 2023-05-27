@@ -1,6 +1,6 @@
 ---
 title: Mermaid
-icon: diagram
+icon: chart-pie
 category:
   - Markdown
 tag:
@@ -8,7 +8,7 @@ tag:
   - Markdown
 ---
 
-Let the Markdown file support [mermaid](https://mermaid-js.github.io/mermaid/#/) in your VuePress site.
+Let the Markdown file support [mermaid](https://mermaid.js.org/) in your VuePress site.
 
 <!-- more -->
 
@@ -63,15 +63,45 @@ export default {
 ```
 ````
 
+Besides using mermaid, you can also use the following code blocks:
+
+- class: `classDiagram`
+- c4c: `C4Context`
+- er: `erDiagram`
+- gantt: `gantt`
+- "git-graph": `gitGraph`
+- journey: `journey`
+- mindmap: `mindmap`
+- pie: `pie`
+- sequence: `sequenceDiagram`
+- state: `stateDiagram-v2`
+- timeline: `timeline`
+
+You do not need to declare diagram type and intent your code.
+
+When the diagram supports setting title, you can add the title directly after fence info:
+
+```sequence Chart Title
+sequence diagram body
+...
+```
+
 ## Usage
 
-Please see [mermaid](https://mermaid-js.github.io/mermaid/#/).
+Please see [mermaid](https://mermaid.js.org/).
+
+## Advanced
+
+Besides setting `true` to enable mermaid, you can also pass in an object to customize the mermaid configuration.
 
 ## Demo
 
 ### Flowchart
 
 ```mermaid
+---
+title: Flowchart
+---
 flowchart TB
     c1-->a2
     subgraph one
@@ -92,6 +122,9 @@ flowchart TB
 
 ````md
 ```mermaid
+---
+title: Flowchart
+---
 flowchart TB
     c1-->a2
     subgraph one
@@ -113,7 +146,7 @@ flowchart TB
 
 ### Sequence Diagram
 
-```sequence
+```sequence Greetings
 Alice ->> Bob: Hello Bob, how are you?
 Bob-->>John: How about you John?
 Bob--x Alice: I am good thanks!
@@ -127,7 +160,7 @@ Alice->John: Yes... John, how are you?
 ::: details Code
 
 ````md
-```sequence
+```sequence Greetings
 Alice ->> Bob: Hello Bob, how are you?
 Bob-->>John: How about you John?
 Bob--x Alice: I am good thanks!
@@ -143,33 +176,57 @@ Alice->John: Yes... John, how are you?
 
 ### Class Diagram
 
-```class
-class Square~Shape~{
-    int id
-    List~int~ position
-    setPoints(List~int~ points)
-    getPoints() List~int~
+```class Animal Example
+note "From Duck till Zebra"
+Animal <|-- Duck
+note for Duck "can fly\ncan swim\ncan dive\ncan help in debugging"
+Animal <|-- Fish
+Animal <|-- Zebra
+Animal : +int age
+Animal : +String gender
+Animal: +isMammal()
+Animal: +mate()
+class Duck{
+  +String beakColor
+  +swim()
+  +quack()
 }
-
-Square : -List~string~ messages
-Square : +setMessages(List~string~ messages)
-Square : +getMessages() List~string~
+class Fish{
+  -int sizeInFeet
+  -canEat()
+}
+class Zebra{
+  +bool is_wild
+  +run()
+}
 ```
 
 ::: details Code
 
 ````md
-```class
-class Square~Shape~{
-    int id
-    List~int~ position
-    setPoints(List~int~ points)
-    getPoints() List~int~
+```class Animal Example
+note "From Duck till Zebra"
+Animal <|-- Duck
+note for Duck "can fly\ncan swim\ncan dive\ncan help in debugging"
+Animal <|-- Fish
+Animal <|-- Zebra
+Animal : +int age
+Animal : +String gender
+Animal: +isMammal()
+Animal: +mate()
+class Duck{
+  +String beakColor
+  +swim()
+  +quack()
 }
-
-Square : -List~string~ messages
-Square : +setMessages(List~string~ messages)
-Square : +getMessages() List~string~
+class Fish{
+  -int sizeInFeet
+  -canEat()
+}
+class Zebra{
+  +bool is_wild
+  +run()
+}
 ```
 ````
 
@@ -177,43 +234,25 @@ Square : +getMessages() List~string~
 
 ### State Diagram
 
-```state
-[*] --> Active
+```state Check if n is negative
 
-state Active {
-    [*] --> NumLockOff
-    NumLockOff --> NumLockOn : EvNumLockPressed
-    NumLockOn --> NumLockOff : EvNumLockPressed
-    --
-    [*] --> CapsLockOff
-    CapsLockOff --> CapsLockOn : EvCapsLockPressed
-    CapsLockOn --> CapsLockOff : EvCapsLockPressed
-    --
-    [*] --> ScrollLockOff
-    ScrollLockOff --> ScrollLockOn : EvScrollLockPressed
-    ScrollLockOn --> ScrollLockOff : EvScrollLockPressed
-}
+state if_state <<choice>>
+[*] --> IsPositive
+IsPositive --> if_state
+if_state --> False: if n < 0
+if_state --> True : if n >= 0
 ```
 
 ::: details Code
 
 ````md
-```state
-[*] --> Active
+```state Check if n is negative
 
-state Active {
-    [*] --> NumLockOff
-    NumLockOff --> NumLockOn : EvNumLockPressed
-    NumLockOn --> NumLockOff : EvNumLockPressed
-    --
-    [*] --> CapsLockOff
-    CapsLockOff --> CapsLockOn : EvCapsLockPressed
-    CapsLockOn --> CapsLockOff : EvCapsLockPressed
-    --
-    [*] --> ScrollLockOff
-    ScrollLockOff --> ScrollLockOn : EvScrollLockPressed
-    ScrollLockOn --> ScrollLockOff : EvScrollLockPressed
-}
+state if_state <<choice>>
+[*] --> IsPositive
+IsPositive --> if_state
+if_state --> False: if n < 0
+if_state --> True : if n >= 0
 ```
 ````
 
@@ -221,7 +260,7 @@ state Active {
 
 ### Entity Relationship Diagrams
 
-```er
+```er Er Example
 CAR ||--o{ NAMED-DRIVER : allows
 CAR {
     string registrationNumber
@@ -239,7 +278,7 @@ PERSON {
 ::: details Code
 
 ````md
-```er
+```er Er Example
 CAR ||--o{ NAMED-DRIVER : allows
 CAR {
     string registrationNumber
@@ -360,7 +399,7 @@ Add another diagram to demo page    :48h
 ### Pie Chart Diagrams
 
 ```pie
-title What Voldemort doesn’t have?
+title What Voldemort doesn't have?
   "FRIENDS" : 2
   "FAMILY" : 3
   "NOSE" : 45
@@ -370,7 +409,7 @@ title What Voldemort doesn’t have?
 
 ````md
 ```pie
-title What Voldemort doesn’t have?
+title What Voldemort doesn't have?
   "FRIENDS" : 2
   "FAMILY" : 3
   "NOSE" : 45
@@ -604,6 +643,36 @@ root((VuePress))
       (feed2)
       (sitemap2)
       (seo2)
+```
+````
+
+:::
+
+### Timeline
+
+```timeline
+title Timeline of Industrial Revolution
+section 17th-20th century
+    Industry 1.0 : Machinery, Water power, Steam <br>power
+    Industry 2.0 : Electricity, Internal combustion engine, Mass production
+    Industry 3.0 : Electronics, Computers, Automation
+section 21st century
+    Industry 4.0 : Internet, Robotics, Internet of Things
+    Industry 5.0 : Artificial intelligence, Big data,3D printing
+```
+
+::: details Code
+
+````md
+```timeline
+title Timeline of Industrial Revolution
+section 17th-20th century
+    Industry 1.0 : Machinery, Water power, Steam <br>power
+    Industry 2.0 : Electricity, Internal combustion engine, Mass production
+    Industry 3.0 : Electronics, Computers, Automation
+section 21st century
+    Industry 4.0 : Internet, Robotics, Internet of Things
+    Industry 5.0 : Artificial intelligence, Big data,3D printing
 ```
 ````
 

@@ -1,43 +1,31 @@
-import { rollupTypescript } from "../../scripts/rollup.js";
+import { bundle } from "../../scripts/rollup.js";
 
 export default [
-  ...rollupTypescript("node/index", {
-    external: [
-      "@vuepress/shared",
-      "@vuepress/utils",
-      "cheerio",
-      "chokidar",
-      "vuepress-plugin-sass-palette",
-      "vuepress-shared/node",
-    ],
+  ...bundle("node/index", {
+    external: ["cheerio", "chokidar", "slimsearch"],
     dtsExternal: ["vuepress-shared"],
   }),
-  ...rollupTypescript("client/components/SearchResult", {
+  ...bundle(
+    {
+      base: "client",
+      files: ["components/SearchResult", "config", "index", "worker/index"],
+    },
+    {
+      external: [
+        "@internal/pagesComponents",
+        "slimsearch",
+        "vuepress-plugin-search-pro/result",
+      ],
+      copy: [["client/styles", "client"]],
+    }
+  ),
+  ...bundle("worker/index", {
     resolve: true,
-    external: [
-      "@vuepress/client",
-      "@vueuse/core",
-      "body-scroll-lock",
-      "vue",
-      "vue-router",
-      "vuepress-shared/client",
-      /^@temp\//,
-      /\.scss$/,
-    ],
-    copy: [["client/styles", "client"]],
-    dtsExternal: [/\.scss$/],
-  }),
-  ...rollupTypescript("client/config", {
-    resolve: true,
-    external: [
-      /^@temp\//,
-      "@vuepress/client",
-      "vue",
-      "vuepress-plugin-search-pro/result",
-      "vuepress-shared/client",
-      /\.scss$/,
-    ],
-    copy: [["client/styles", "client"]],
-    dtsExternal: [/\.scss$/],
+    dts: false,
+    external: [/^@internal\//],
+    replace: {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      __VUEPRESS_SSR__: false,
+    },
   }),
 ];

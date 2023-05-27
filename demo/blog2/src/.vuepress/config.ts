@@ -2,7 +2,7 @@ import { defineUserConfig } from "@vuepress/cli";
 import defaultTheme from "@vuepress/theme-default";
 import { blogPlugin } from "vuepress-plugin-blog2";
 
-const base = <"/" | `/${string}/`>process.env.BASE || "/";
+const base = <"/" | `/${string}/`>process.env["BASE"] || "/";
 
 export default defineUserConfig({
   base,
@@ -43,14 +43,24 @@ export default defineUserConfig({
         filePathRelative ? filePathRelative.startsWith("posts/") : false,
 
       // getting article info
-      getInfo: ({ frontmatter, title, excerpt }) => ({
+      getInfo: ({ frontmatter, title, data }) => ({
         title,
         author: frontmatter.author || "",
         date: frontmatter.date || null,
         category: frontmatter.category || [],
         tag: frontmatter.tag || [],
-        excerpt,
+        excerpt:
+          // support manually set excerpt through frontmatter
+          typeof frontmatter.excerpt === "string"
+            ? frontmatter.excerpt
+            : data?.excerpt || "",
       }),
+
+      // generate excerpt for all pages excerpt those users choose to disable
+      excerptFilter: ({ frontmatter }) =>
+        !frontmatter["home"] &&
+        frontmatter["excerpt"] !== false &&
+        typeof frontmatter["excerpt"] !== "string",
 
       category: [
         {

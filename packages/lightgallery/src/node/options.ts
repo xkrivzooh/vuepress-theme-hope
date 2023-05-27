@@ -1,5 +1,3 @@
-import type { LightGallerySettings } from "lightgallery/lg-settings.js";
-
 /**
  * LightGallery plugins
  */
@@ -21,7 +19,7 @@ export interface LightGalleryOptions {
    *
    * 图片选择器
    *
-   * @default '.theme-default-content :not(a) > img'
+   * @default ".theme-default-content :not(a) > img:not([no-view])"
    */
   selector?: string;
 
@@ -54,14 +52,7 @@ export interface LightGalleryOptions {
    *
    * 如果你使用的主题有切换动画，建议配置此选项为 `切换动画时长 + 200`。
    *
-   * @default 500
+   * @default 800
    */
   delay?: number;
-
-  /**
-   * 传递给 lightgallery 的额外选项
-   *
-   * Options which will pass to `lightgallery`
-   */
-  options?: LightGallerySettings;
 }

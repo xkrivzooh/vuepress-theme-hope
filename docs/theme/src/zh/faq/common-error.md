@@ -1,11 +1,75 @@
 ---
 title: 常见错误
-icon: warn
+icon: triangle-exclamation
 category:
   - FAQ
 ---
 
-## `TypeError: Invalid value used as weak map key`
+## `useXXX() is called without provider`
+
+此类错误通常是因为项目中错误的含有多个 `@vue/xxx`, `@vuepress/xxx`, `vue` 或 `vue-router` 版本引起的。
+
+请确保你正在使用最新的 `vuepress` 和 `vuepress-theme-hope` 版本:
+
+::: code-tabs#shell
+
+@tab pnpm
+
+```bash
+pnpm add @vuepress/client@next vuepress@next vuepress-theme-hope vue@latest -E
+```
+
+@tab yarn
+
+```bash
+yarn add vuepress@next vuepress-theme-hope@latest -E
+```
+
+@tab npm
+
+```bash
+npm i vuepress@next vuepress-theme-hope@latest -E
+```
+
+:::
+
+同时，升级依赖以确保你的项目只包含单个版本的相关包:
+
+::: code-tabs#shell
+
+@tab pnpm
+
+```bash
+pnpm dlx vp-update
+```
+
+@tab yarn
+
+```bash
+yarn dlx vp-update
+```
+
+@tab npm
+
+```bash
+npx vp-update
+```
+
+:::
+
+::: warning
+
+任何以 `@vuepress/` 开头的官方包应该和 VuePress 保持相同版本。
+
+比如，如果你正在使用 `@vuepress/plugin-search` 和 `@vuepress/utils`，你应该确保他们和 `vuepress` 版本相同。
+
+另外，`vuepress-theme-hope` 仓库的插件应与 `vuepress-theme-hope` 版本相同。
+
+此外，如果你使用了其他第三方插件，请确保它兼容你要升级到的 VuePress 版本。
+
+:::
+
+## `[Vue warn]: Failed to resolve component: XXX`
 
 如果你遇到这样的错误，你可能在项目中使用了非标准标签。
 
@@ -13,7 +77,7 @@ category:
 
 如果要删除它们，请使用 `--debug` Flag 运行主题，你将收到警告日志，告诉你可能无法识别的标签。
 
-如果你仍然想使用它们，请查看 [此处](https://v2.vuepress.vuejs.org/zh/guide/markdown.html#%E9%9D%9E%E6%A0%87%E5%87%86%E7%9A%84-html-%E6%A0%87%E7%AD%BE) 以获得解决方法。
+如果你仍然想使用它们，请查看 [此处](https://vuejs.press/zh/guide/markdown.html#%E9%9D%9E%E6%A0%87%E5%87%86%E7%9A%84-html-%E6%A0%87%E7%AD%BE) 以获得解决方法。
 
 ## `Hydration completed but contains mismatches.`
 
@@ -31,11 +95,45 @@ CloudFlare 的 Auto Minify 会错误的对 HTML 的空格和换行进行处理�
 
 - 如果你只是在个别页面遇到了这个问题，请检查该界面是否有你额外添加的组件。
 
-  如果有，那这些组件大概率在 SSR 和客户端拥有不同的渲染结果，你可以尝试让其行为一致，或用 `@vuepress/client` 提供的 `<ClientOnly />` 组件包裹你的组件。
+  如果有，那这些组件大概率在 SSR[^ssr] 和 CSR[^csr] 拥有不同的渲染结果，你可以尝试让其行为一致，或用 `@vuepress/client` 提供的 `<ClientOnly />` 组件包裹你的组件。
+
+[^ssr]: **SSR**: **S**erver **S**ide **R**endering，服务端渲染
+[^csr]: **CSR**: **C**lient **S**ide **R**endering，客户端渲染
 
 - 如果你在所有页面都遇到了这个问题，请同样按照上一步检查你在布局或全局组件中添加的组件。
 
-## `xxx isn’t assign with a lang, and will return 'en-US' instead.`
+## `You are not allowed to use plugin XXX yourself in vuepress config file.`
+
+这意味着你在 VuePress 配置文件中自己调用主题捆绑插件。
+
+大多数情况下，当你将一些插件与主题一起使用时，主题会自动为你处理一些插件选项，所以当你想自定义这些插件时，你应该在主题选项下的 `plugin.PLUGIN_NAME` 中将它们的选项设置为 让主题为你调用这些插件。详见 [插件配置](../config/plugins/intro.md)。
+
+## `FATAL ERROR: XXX - JavaScript heap out of memory`
+
+这意味着你的 Node.js 的 `max_old_space_size` 设置太小而无法构建此应用程序。 你可以尝试通过设置 `NODE_OPTIONS` 环境变量来增加 `max_old_space_size`。
+
+`max_old_space_size` 以 MB 为单位，默认情况下 `max_old_space_size` 是机器内存大小的一半。该值可以大于你机器的实际内存大小。
+
+- 对于小型项目，通常不会超过 2 GB (2048 MB)。
+- 对于大型项目，通常不会超过 4 GB (4048 MB)
+- 如果你在大型网站上同时启用博客功能和大量 Markdown 增强功能，通常不会超过 8 GB (8192 MB)
+
+::: details 增加方法
+
+使用 GitHub 工作流时，在你的工作流文件中设置 `env`:
+
+```diff
+  - name: Build project
++   env:
++     NODE_OPTIONS: --max_old_space_size=8192
+    run: pnpm run build
+```
+
+在 Windows，你可以参考 [此指南](https://blog.csdn.net/weixin_37204973/article/details/82504570).
+
+:::
+
+## `xxx isn't assign with a lang, and will return 'en-US' instead.`
 
 如果你在开发进程启动时看到 `xxx is not assign with a lang, and will return 'en-US'.`，请检查是否为每种语言设置了语言。
 
@@ -47,60 +145,14 @@ CloudFlare 的 Auto Minify 会错误的对 HTML 的空格和换行进行处理�
 
 - 如果你想避免这个警告，你需要为当前语言根路径添加侧边栏配置，因为所有页面都会回退到那个配置。
 - 如果你想在当前路由中禁用侧边栏，请在 frontmatter 中设置 `sidebar: false`。
-- 如果要在当前文件夹中禁用侧边栏，请在侧边栏配置中添加 `currentFolderRoute: false`。
-- 如果你想告诉主题你仅在设置的路由中需要侧边栏，请在侧边栏配置中添加 `当前语言根路径: false` 以告诉主题侧边栏配置默认禁用。
+- 如果要在当前文件夹中禁用侧边栏，请在侧边栏配置中添加 `[当前文件夹路由]: false`。
+- 如果你想告诉主题你仅在设置的路由中需要侧边栏，请在侧边栏配置中添加 `[当前语言根路径]: false` 以告诉主题侧边栏配置默认禁用。
 
-## `useXXX() is called without provider`
+## 热更新在开发服务器中不工作
 
-此类错误通常是因为项目中错误的含有多个 `@vue/xxx`, `@vuepress/xxx`, `vue` 或 `vue-router` 版本引起的。
+某些配置对开发服务器有高性能影响，因此默认情况下禁用它们的热重载，你可以通过在主题选项中设置 `hotReload: true` 手动开启。
 
-请确保你正在使用最新的 `vuepress` 和 `vuepress-theme-hope` 版本:
-
-::: code-tabs#shell
-
-@tab pnpm
-
-```bash
-pnpm add vuepress@next vuepress-theme-hope@next
-```
-
-@tab yarn
-
-```bash
-yarn add vuepress@next vuepress-theme-hope@next
-```
-
-@tab npm
-
-```bash
-npm i vuepress@next vuepress-theme-hope@next
-```
-
-:::
-
-同时，升级依赖以确保你的项目只包含单个版本的相关包:
-
-::: code-tabs#shell
-
-@tab pnpm
-
-```bash
-pnpm i && pnpm up
-```
-
-@tab yarn
-
-```bash
-yarn && yarn upgrade
-```
-
-@tab npm
-
-```bash
-npm i && npm update
-```
-
-:::
+其中包括博客的类别和标签、结构化侧边栏和基于 git 的信息。
 
 ## 部分页面设置无效
 

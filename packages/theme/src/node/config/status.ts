@@ -1,7 +1,10 @@
-import type { App } from "@vuepress/core";
-import type { ThemeOptions } from "../../shared/index.js";
+import { type App } from "@vuepress/core";
+import { isPlainObject, keys } from "vuepress-shared/node";
+
+import { type ThemeOptions } from "../../shared/index.js";
 
 export interface ThemeStatus {
+  enableAutoCatalog: boolean;
   enableBlog: boolean;
   enableEncrypt: boolean;
   enableSlide: boolean;
@@ -11,6 +14,7 @@ export interface ThemeStatus {
   supportPageview: boolean;
 }
 
+/** @private */
 export const getStatus = (
   app: App,
   themeOptions: ThemeOptions
@@ -19,6 +23,7 @@ export const getStatus = (
   const { plugins = {} } = themeOptions;
 
   return {
+    enableAutoCatalog: plugins.autoCatalog !== false,
     enableBlog: Boolean(plugins.blog),
     enableEncrypt: Boolean(
       themeOptions.encrypt &&
@@ -26,14 +31,13 @@ export const getStatus = (
     ),
     enableSlide: Boolean(plugins.mdEnhance && plugins.mdEnhance.presentation),
     enableReadingTime: plugins.readingTime !== false,
-    blogType:
-      typeof plugins.blog === "object"
-        ? plugins.blog?.type?.map(({ key, path }) => ({
-            key,
-            path: path || `/${key}/`,
-          })) || []
-        : [],
-    hasMultipleLanguages: Object.keys(locales).length > 1,
+    blogType: isPlainObject(plugins.blog)
+      ? plugins.blog?.type?.map(({ key, path }) => ({
+          key,
+          path: path || `/${key}/`,
+        })) || []
+      : [],
+    hasMultipleLanguages: keys(locales).length > 1,
     supportPageview: Boolean(
       plugins.comment && plugins.comment.provider === "Waline"
     ),

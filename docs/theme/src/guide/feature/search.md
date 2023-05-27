@@ -8,7 +8,7 @@ tag:
   - Search
 ---
 
-The theme adds built-in support for [`vuepress-plugin-search-pro`][search-pro], [`@vuepress/plugin-docsearch`][docsearch] and [`@vuepress/plugin-search`][search]. Just install the plugin you want and config it, you will get a search box in navbar.
+The theme adds built-in support for <ProjectLink name="search-pro">`vuepress-plugin-search-pro`</ProjectLink>, [`@vuepress/plugin-docsearch`][docsearch] and [`@vuepress/plugin-search`][search]. Just install the plugin you want and config it, you will get a search box in navbar.
 
 To use search plugin, you need to apply it via `plugins` in the [**VuePress config file**](../../cookbook/vuepress/config.md).
 
@@ -37,19 +37,19 @@ The theme can ONLY apply plugins it bundles, so `plugins` field in theme options
    @tab pnpm
 
    ```bash
-   pnpm add -D vuepress-plugin-search-pro@next
+   pnpm add -D vuepress-plugin-search-pro
    ```
 
    @tab yarn
 
    ```bash
-   yarn add -D vuepress-plugin-search-pro@next
+   yarn add -D vuepress-plugin-search-pro
    ```
 
    @tab npm
 
    ```bash
-   npm i -D vuepress-plugin-search-pro@next
+   npm i -D vuepress-plugin-search-pro
    ```
 
    :::
@@ -117,7 +117,7 @@ The theme can ONLY apply plugins it bundles, so `plugins` field in theme options
 
 ::: info More
 
-See [Plugin Docs][search-pro] for available options.
+See <ProjectLink name="search-pro">Plugin Docs</ProjectLink> for available options.
 
 :::
 
@@ -409,6 +409,5 @@ See [Plugin Docs][search] for available options.
 
 :::
 
-[docsearch]: https://v2.vuepress.vuejs.org/reference/plugin/docsearch.html
-[search]: https://v2.vuepress.vuejs.org/reference/plugin/search.html
-[search-pro]: https://vuepress-theme-hope.github.io/v2/search-pro/
+[docsearch]: https://vuejs.press/reference/plugin/docsearch.html
+[search]: https://vuejs.press/reference/plugin/search.html

@@ -1,6 +1,6 @@
 ---
 title: 指南
-icon: creative
+icon: lightbulb
 ---
 
 此插件会使用 Lightgallery 让正文内的图片在点击时进入浏览模式浏览。
@@ -15,9 +15,31 @@ icon: creative
 
 你被警告了！
 
-如果你对此表示担忧，你可以考虑使用 [vuepress-plugin-photo-swipe](https://vuepress-theme-hope.github.io/v2/photo-swipe/zh/)。
+如果你对此表示担忧，你可以考虑使用 <ProjectLink name="photo-swipe" path="/zh/">vuepress-plugin-photo-swipe</ProjectLink>。
 
 :::
+
+## 自定义 LightGallery 选项
+
+你可以通过在客户端配置文件中导入和调用 `defineLightGalleryConfig` 来将选项传递给 [`lightgallery`](https://www.lightgalleryjs.com/)：
+
+```ts
+// .vuepress/client.ts
+import { defineClientConfig } from "@vuepress/client";
+import { defineLightGalleryConfig } from "vuepress-plugin-lightgallery/client";
+
+defineLightGalleryConfig({
+  // 在此设置 lightgallery 选项
+});
+
+export default defineClientConfig({
+  // ...
+});
+```
+
+## 操作延迟
+
+如果你的主题在页面切换时会添加动画，你可能需要延迟 lightgallery 重新查找页面图片的时间点。你可以通过 `delay` 选项来配置这一延迟，默认的值为 `800` (单位为毫秒)。
 
 ## 演示
 

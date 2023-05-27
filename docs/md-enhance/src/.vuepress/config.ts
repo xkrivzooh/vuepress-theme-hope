@@ -1,13 +1,11 @@
-import { getDirname, path } from "@vuepress/utils";
-import { config } from "docs-shared";
+import { config, getDirname, path } from "docs-shared";
 import theme from "./theme.js";
 
 const __dirname = getDirname(import.meta.url);
 
 export default config(
   {
-    base: `md-enhance`,
-    indexName: "vuepress-theme-hope-md-enhance",
+    name: "md-enhance",
   },
   {
     locales: {
@@ -34,6 +32,10 @@ export default config(
     ],
 
     alias: {
+      "@FlowChartPlayground": path.resolve(
+        __dirname,
+        "./components/FlowChartPlayground"
+      ),
       "@KatexPlayground": path.resolve(
         __dirname,
         "./components/KatexPlayground"

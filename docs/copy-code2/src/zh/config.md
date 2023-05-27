@@ -1,6 +1,6 @@
 ---
 title: 插件选项
-icon: config
+icon: gears
 ---
 
 ## selector
@@ -42,7 +42,7 @@ icon: config
 ## delay
 
 - 类型: `number`
-- 默认值: `500`
+- 默认值: `800`
 
 注册复制按钮的延时，单位 ms。
 
@@ -55,9 +55,14 @@ icon: config
   ```ts
   interface CopyCodeLocaleData {
     /**
-     * 复制按钮文字
+     * 复制文字
      */
     copy: string;
+
+    /**
+     * 已复制文字
+     */
+    copied: string;
 
     /**
      * 复制成功提示消息文字
@@ -79,7 +84,8 @@ icon: config
 - **简体中文** (zh-CN)
 - **繁体中文** (zh-TW)
 - **英文(美国)** (en-US)
-- **德语** (de-AT)
+- **德语** (de-DE)
+- **德语(澳大利亚)** (de-AT)
 - **俄语** (ru-RU)
 - **乌克兰语** (uk-UA)
 - **越南语** (vi-VN)
@@ -91,5 +97,8 @@ icon: config
 - **日语** (ja-JP)
 - **土耳其语** (tr-TR)
 - **韩语** (ko-KR)
+- **芬兰语** (fi-FI)
+- **印尼语** (id-ID)
+- **荷兰语** (nl-NL)
 
 :::

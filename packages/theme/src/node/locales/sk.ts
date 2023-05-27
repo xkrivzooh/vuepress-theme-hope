@@ -1,4 +1,4 @@
-import type { ThemeLocaleData } from "../../shared/index.js";
+import { type ThemeLocaleData } from "../../shared/index.js";
 
 export const skLocale: ThemeLocaleData = {
   lang: "sk-SK",
@@ -23,6 +23,7 @@ export const skLocale: ThemeLocaleData = {
     lastUpdated: "Posledná aktualizácia",
     contributors: "Prispievatelia",
     editLink: "Uprav túto stránku",
+    print: "Tlač",
   },
 
   blogLocales: {
@@ -60,6 +61,7 @@ export const skLocale: ThemeLocaleData = {
 
   routeLocales: {
     skipToContent: "Preskočiť na hlavný obsah",
+    notFoundTitle: "Stránka nenájdená",
     notFoundMsg: [
       "Nič tu nieje.",
       "Ako si sa sem dostal?",

@@ -1,6 +1,6 @@
 ---
 title: Waline
-icon: waline
+icon: w
 ---
 
 Welcome to Waline. In just a few steps, you can enable Waline to provide comments and page views on your site.
@@ -27,7 +27,7 @@ Welcome to Waline. In just a few steps, you can enable Waline to provide comment
 
    ::: note
 
-   If you haven’t logged in, we recommend you to sign in with GitHub.
+   If you haven't logged in, we recommend you to sign in with GitHub.
 
    :::
 
@@ -43,7 +43,7 @@ Welcome to Waline. In just a few steps, you can enable Waline to provide comment
 
    ![deploy](/assets/image/vercel-4.png)
 
-1. Click `Settings` menu on the top, and `Environment Variables` button on the side to go to environment variables setting page. Then set `LEAN_ID`, `LEAN_KEY` and `LEAN_MASTER_KEY`. The variables’ value should be the ones you got in the previous step. `APP ID` is the value of `LEAN_ID`, and `APP Key` to `LEAN_KEY`, `Master Key` to `LEAN_MASTER_KEY`.
+1. Click `Settings` menu on the top, and `Environment Variables` button on the side to go to environment variables setting page. Then set `LEAN_ID`, `LEAN_KEY` and `LEAN_MASTER_KEY`. The variables' value should be the ones you got in the previous step. `APP ID` is the value of `LEAN_ID`, and `APP Key` to `LEAN_KEY`, `Master Key` to `LEAN_MASTER_KEY`.
 
    ![set environment variables](/assets/image/vercel-5.png)
 
@@ -80,7 +80,7 @@ Welcome to Waline. In just a few steps, you can enable Waline to provide comment
 
 ### Using plugin
 
-Set `provider: "waline"` in the plugin options, and set `serverURL` as the link obtained in the previous step.
+Set `provider: "Waline"` in the plugin options, and set `serverURL` as the link obtained in the previous step.
 
 Then, place the `<CommentService>` component at a suitable location in your site (usually at the bottom of the page), you will be able to see the comment box.
 

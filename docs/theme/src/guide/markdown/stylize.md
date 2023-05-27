@@ -1,6 +1,6 @@
 ---
 title: Stylize
-icon: style
+icon: wand-magic-sparkles
 category:
   - Markdown
 tag:
@@ -132,7 +132,7 @@ export default {
 
 <!-- markdownlint-disable MD033 -->
 
-Another example is you want a to set all the emphasis `n’t` words to red color, so that `Setting this to a invalid syntax *doesn’t* have any effect.` becomes: "Setting this to a invalid syntax <span style="color:red">doesn’t</span> have any effect."
+Another example is you want to set all the emphasis `n't` words to red color, so that `Setting this to a invalid syntax *doesn't* have any effect.` becomes: "Setting this to an invalid syntax <span style="color:red">doesn't</span> have any effect."
 
 <!-- markdownlint-enable MD033 -->
 
@@ -151,7 +151,7 @@ export default defineUserConfig({
       mdEnhance: {
         stylize: [
           {
-            matcher: /n’t$/,
+            matcher: /n't$/,
             replacer: ({ tag, attrs, content }) => {
               if (tag === "em")
                 return {
@@ -179,7 +179,7 @@ export default {
     mdEnhancePlugin({
       stylize: [
         {
-          matcher: /n’t$/,
+          matcher: /n't$/,
           replacer: ({ tag, attrs, content }) => {
             if (tag === "em")
               return {
@@ -197,7 +197,7 @@ export default {
 
 :::
 
-If you want to skip some words in some pages, you can set `noStylize` in page frontmatter with an array containing content you don’t want to stylize.
+Also, you can use `stylize` in frontmatter to provide extra stylize rules for content of the page.
 
 ::: info Performance
 

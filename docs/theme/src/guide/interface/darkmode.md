@@ -1,6 +1,6 @@
 ---
 title: Darkmode
-icon: contrast
+icon: circle-half-stroke
 order: 1
 category:
   - Interface
@@ -27,13 +27,13 @@ Available options:
 
 - `"switch"`: switch between dark, light and auto (default)
 - `"toggle"`: toggle between lightmode and darkmode
-- `"auto"`: Automatically decide whether to apply dark mode based on user device’s color-scheme or current time
+- `"auto"`: Automatically decide whether to apply dark mode based on user device's color-scheme or current time
 - `"enable"`: only dark mode
 - `"disable"`: disable dark mode
 
 ## Global Variables
 
-`$isDarkMode` is available in all Markdown files.
+`$isDarkmode` is available in all Markdown files.
 
 <script setup lang="ts">
 import AppearanceSwitch from "@theme-hope/modules/outlook/components/AppearanceSwitch"

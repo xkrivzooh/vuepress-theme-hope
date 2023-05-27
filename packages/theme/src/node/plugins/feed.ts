@@ -1,62 +1,62 @@
-import { feedPlugin } from "vuepress-plugin-feed2";
-import { deepMerge } from "vuepress-shared/node";
+import { type Plugin } from "@vuepress/core";
+import { type FeedOptions, feedPlugin } from "vuepress-plugin-feed2";
+import {
+  deepAssign,
+  entries,
+  fromEntries,
+  getAuthor,
+  keys,
+} from "vuepress-shared/node";
 
-import type { Plugin } from "@vuepress/core";
-import type { FeedOptions } from "vuepress-plugin-feed2";
-import type { ThemeData } from "../../shared/index.js";
+import { type ThemeData } from "../../shared/index.js";
 
+/**
+ * @private
+ *
+ * Resolve options for vuepress-plugin-feed2
+ */
 export const getFeedPlugin = (
   themeData: ThemeData,
-  options?: Omit<FeedOptions, "hostname">,
+  options: Omit<FeedOptions, "hostname"> = {},
   hostname?: string,
+  favicon?: string,
   legacy = false
 ): Plugin | null => {
   // disable feed if no options for feed plugin
-  if (!Object.keys(options || {}).length) return null;
+  if (!keys(options).length) return null;
 
-  return feedPlugin(
-    // @ts-ignore
-    deepMerge(
-      {
-        hostname,
-        ...(themeData.author ? { author: themeData.author } : {}),
-        locales: Object.entries(themeData.locales).map(
-          ([localePath, { author, copyright }]) => [
+  const globalAuthor = getAuthor(themeData.author);
+
+  const defaultOptions: FeedOptions = {
+    // @ts-expect-error
+    hostname,
+    channel: {
+      ...(favicon ? { icon: favicon } : {}),
+      ...(themeData.locales["/"].logo
+        ? { image: themeData.locales["/"].logo }
+        : {}),
+      ...(globalAuthor.length ? { author: globalAuthor[0] } : {}),
+    },
+    locales: fromEntries(
+      entries(themeData.locales).map(
+        ([localePath, { logo, author, copyright }]) => {
+          const localeAuthor = getAuthor(author);
+
+          return [
             localePath,
-            { author, channel: { copyright } },
-          ]
-        ),
-      },
-      options || {},
-      {
-        customElements: [
-          // @vuepress/plugin-external-link
-          "ExternalLinkIcon",
-
-          // vuepress-plugin-components
-          "Badge",
-          "BiliBili",
-          "CodePen",
-          "PDF",
-          "StackBlitz",
-          "VideoPlayer",
-          "YouTube",
-
-          // vuepress-plugin-md-enhance
-          "ChartJS",
-          "CodeDemo",
-          "CodeTabs",
-          "ECharts",
-          "FlowChart",
-          "Mermaid",
-          "Playground",
-          "Presentation",
-          "Tabs",
-          "VuePlayground",
-          ...(options?.customElements || []),
-        ],
-      }
+            {
+              channel: {
+                ...(favicon ? { icon: favicon } : {}),
+                ...(logo ? { image: logo } : {}),
+                ...(localeAuthor.length ? { author: localeAuthor[0] } : {}),
+                ...(typeof copyright === "string" ? { copyright } : {}),
+              },
+            },
+          ];
+        }
+      )
     ),
-    legacy
-  );
+  };
+
+  return feedPlugin(deepAssign(defaultOptions, options), legacy);
 };

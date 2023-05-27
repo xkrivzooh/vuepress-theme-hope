@@ -1,23 +1,28 @@
 ---
-title: Plugin options
-icon: config
+title: Config
+icon: gears
 ---
 
-## selector
+## Plugin options
+
+### selector
 
 - Type: `string | string[]`
-- Default: `".theme-default-content :not(a) > img"`
+- Default: `".theme-default-content :not(a) > img:not([no-view])"`
 
 Image selector
 
-## options
+### scrollToClose
 
-Options passed to [`photo-swipe`](http://photoswipe.com/)
+- Type: `boolean`
+- Default: `true`
 
-## delay
+Whether close the current image when scrolling.
+
+### delay
 
 - Type: `number`
-- Default: `500`
+- Default: `800`
 
 The delay of operating dom, in ms.
 
@@ -27,7 +32,7 @@ If the theme you are using has a switching animation, it is recommended to confi
 
 :::
 
-## locales
+### locales
 
 - Type: `PhotoSwipeLocaleConfig`
 
@@ -83,7 +88,8 @@ Locales config for photo-swipe plugin.
 - **Simplified Chinese** (zh-CN)
 - **Traditional Chinese** (zh-TW)
 - **English (United States)** (en-US)
-- **German** (de-AT)
+- **German** (de-DE)
+- **German (Australia)** (de-AT)
 - **Russian** (ru-RU)
 - **Ukrainian** (uk-UA)
 - **Vietnamese** (vi-VN)
@@ -95,5 +101,25 @@ Locales config for photo-swipe plugin.
 - **Japanese** (ja-JP)
 - **Turkish** (tr-TR)
 - **Korean** (ko-KR)
+- **Finnish** (fi-FI)
+- **Indonesian** (id-ID)
+- **Dutch** (nl-NL)
 
 :::
+
+## Client Config
+
+### definePhotoSwipeOptions
+
+Options passed to [`photo-swipe`](http://photoswipe.com/)
+
+```ts
+// .vuepress/client.ts
+import { definePhotoSwipeOptions } from "vuepress-plugin-photo-swipe/client";
+
+definePhotoSwipeOptions({
+  // set photoswipe options here
+});
+
+export default {};
+```

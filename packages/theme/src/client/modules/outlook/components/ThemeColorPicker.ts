@@ -1,8 +1,9 @@
-import { defineComponent, h, onMounted, PropType } from "vue";
-
-import type { VNode } from "vue";
+import { type PropType, type VNode, defineComponent, h, onMounted } from "vue";
+import { entries, keys } from "vuepress-shared/client";
 
 import "../styles/theme-color-picker.scss";
+
+const THEME_COLOR_KEY = "VUEPRESS_THEME_COLOR";
 
 export default defineComponent({
   name: "ThemeColorPicker",
@@ -22,29 +23,25 @@ export default defineComponent({
   setup(props) {
     const setThemeColor = (theme = ""): void => {
       const classes = document.documentElement.classList;
-      const themes = Object.keys(props.themeColor).map(
-        (color) => `theme-${color}`
-      );
+      const themes = keys(props.themeColor);
 
       if (!theme) {
-        localStorage.removeItem("theme");
+        localStorage.removeItem(THEME_COLOR_KEY);
         classes.remove(...themes);
 
         return;
       }
 
       classes.remove(
-        ...themes.filter(
-          (themeColorClass) => themeColorClass !== `theme-${theme}`
-        )
+        ...themes.filter((themeColorClass) => themeColorClass !== theme)
       );
 
-      classes.add(`theme-${theme}`);
-      localStorage.setItem("theme", theme);
+      classes.add(theme);
+      localStorage.setItem(THEME_COLOR_KEY, theme);
     };
 
     onMounted(() => {
-      const theme = localStorage.getItem("theme");
+      const theme = localStorage.getItem(THEME_COLOR_KEY);
 
       if (theme) setThemeColor(theme);
     });
@@ -58,7 +55,7 @@ export default defineComponent({
             onClick: () => setThemeColor(),
           })
         ),
-        ...Object.entries(props.themeColor).map(([color, value]) =>
+        entries(props.themeColor).map(([color, value]) =>
           h(
             "li",
             h("span", {

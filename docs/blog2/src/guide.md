@@ -1,6 +1,6 @@
 ---
 title: Guide
-icon: creative
+icon: lightbulb
 ---
 
 With `vuepress-plugin-blog2`, you can easily bring blog feature into your theme.
@@ -76,7 +76,7 @@ The flowchart above may help you understand its design goal and how the plugin w
 
 ## Collecting Articles
 
-The plugin filters all pages using `filter` option to drop pages you don’t want.
+The plugin filters all pages using `filter` option to drop pages you don't want.
 
 ::: note
 
@@ -88,9 +88,9 @@ You can fully customize pages to collect through option `filter`, which accepts 
 
 ## Gathering Info
 
-You should set `getInfo` option with a function accepting `Page` as argument and returning a object containing the info you want.
+You should set `getInfo` option with a function accepting `Page` as argument and returning an object containing the info you want.
 
-The plugin will collect all the info you want and write them to `routeMeta` field of each page, so you will be able to get these information through Composition API later.
+The plugin will collect all the info you want and write them to `routeMeta` field of each page, so you will be able to get this information through Composition API later.
 
 ::: details Demo
 
@@ -115,14 +115,14 @@ export default {
         return true;
       },
 
-      getInfo: ({ excerpt, frontmatter, git = {} }) => {
+      getInfo: ({ frontmatter, git = {}, data = {} }) => {
         // getting page info
         const info: Record<string, any> = {
           author: frontmatter.author || "",
           categories: frontmatter.categories || [],
           date: frontmatter.date || git.createdTime || null,
           tags: frontmatter.tags || [],
-          excerpt: page.excerpt,
+          excerpt: data.excerpt || "",
         };
 
         return info;
@@ -153,9 +153,9 @@ Basically, you would want 2 types of collection in your blog:
 
 After understanding description of these 2 types, you can set `category` and `type` options, each accepts an array, and each element represents a configuration.
 
-Let’s start with 2 examples here.
+Let's start with 2 examples here.
 
-Imagine you are setting tags for each articles with `tag` field in page frontmatter. You want a tag mapping page in `/tag/` with `TagMap` layout , and group each tag list with tagName in `/tag/tagName` with `TagList` layout, you probably need a configuration like this:
+Imagine you are setting tags for each articles with `tag` field in page frontmatter. You want a tag mapping page in `/tag/` with `TagMap` layout, and group each tag list with tagName in `/tag/tagName` with `TagList` layout, you probably need a configuration like this:
 
 ```ts
 // theme entrance
@@ -235,13 +235,142 @@ So you can invoke `useBlogCategory()` and `useBlogType()` directly, and the resu
 
 Also, you can pass `key` you want as argument, then you will get information bind to that key.
 
+So with node side settings above, you can get information about "tag" and "star" in client side:
+
+`TagMap` layout:
+
+```vue
+<template>
+  <div>
+    <h1>Tag page</h1>
+    <ul>
+      <li v-for="({ items, path }, name) in categoryMap.map">
+        <RouterLink :key="name" :to="path" class="category">
+          {{ name }}
+          <span class="category-num">
+            {{ items.length }}
+          </span>
+        </RouterLink>
+      </li>
+    </ul>
+  </div>
+</template>
+<script setup lang="ts">
+import { useBlogCategory } from "vuepress-plugin-blog2";
+
+const categoryMap = useBlogCategory("tag");
+</script>
+```
+
+`TagList` layout:
+
+```vue
+<template>
+  <div>
+    <h1>Tag page</h1>
+    <div class="category-wrapper">
+      <RouterLink
+        v-for="({ items, path }, name) in categoryMap.map"
+        :key="name"
+        :to="path"
+        class="category"
+      >
+        {{ name }}
+        <span class="category-num">
+          {{ items.length }}
+        </span>
+      </RouterLink>
+    </div>
+    <div class="article-wrapper" v-if="categoryMap.currentItems">
+      <div v-if="!categoryMap.currentItems.length">Nothing in here.</div>
+      <article
+        v-for="{ info, path } in categoryMap.currentItems"
+        class="article"
+        @click="$router.push(path)"
+      >
+        <header class="title">
+          {{
+            (isTimeline
+              ? `${new Date(info.date).toLocaleDateString()}: `
+              : "") + info.title
+          }}
+        </header>
+        <hr />
+        <div class="article-info">
+          <span v-if="info.author" class="author"
+            >Author: {{ info.author }}</span
+          >
+          <span v-if="info.date && !isTimeline" class="date"
+            >Date: {{ new Date(info.date).toLocaleDateString() }}</span
+          >
+          <span v-if="info.category" class="category"
+            >Category: {{ info.category.join(", ") }}</span
+          >
+          <span v-if="info.tag" class="tag"
+            >Tag: {{ info.tag.join(", ") }}</span
+          >
+        </div>
+        <div v-if="info.excerpt" class="excerpt" v-html="info.excerpt" />
+      </article>
+    </div>
+  </div>
+</template>
+<script setup lang="ts">
+import { useBlogCategory } from "vuepress-plugin-blog2";
+
+const categoryMap = useBlogCategory("tag");
+</script>
+```
+
+`StarList` layout:
+
+```vue
+<template>
+  <div class="article-wrapper" v-if="stars.items">
+    <div v-if="!stars.items.length">Nothing in here.</div>
+    <article
+      v-for="{ info, path } in stars.items"
+      class="article"
+      @click="$router.push(path)"
+    >
+      <header class="title">
+        {{
+          (isTimeline ? `${new Date(info.date).toLocaleDateString()}: ` : "") +
+          info.title
+        }}
+      </header>
+      <hr />
+      <div class="article-info">
+        <span v-if="info.author" class="author">Author: {{ info.author }}</span>
+        <span v-if="info.date && !isTimeline" class="date"
+          >Date: {{ new Date(info.date).toLocaleDateString() }}</span
+        >
+        <span v-if="info.category" class="category"
+          >Category: {{ info.category.join(", ") }}</span
+        >
+        <span v-if="info.tag" class="tag">Tag: {{ info.tag.join(", ") }}</span>
+      </div>
+      <div v-if="info.excerpt" class="excerpt" v-html="info.excerpt" />
+    </article>
+  </div>
+</template>
+<script setup lang="ts">
+import { useBlogType } from "vuepress-plugin-blog2/client";
+
+import ArticleList from "../components/ArticleList.vue";
+import ParentLayout from "@vuepress/theme-default/layouts/Layout.vue";
+
+const stars = useBlogType("star");
+</script>
+```
+
 For return types, please see [Composition API Return Types](./config.md#composition-api).
 
 ## I18n Support
 
-This plugin adds native i18n support, so your settings will be automatically apply to each language.
+This plugin adds native i18n support, so your settings will be automatically applied to each language.
 
-For example, if user has following locales config, and you are setting the "star" example above:
+For example, if user has the following locales' config, and you are setting the "star" example above:
 
 ```ts
 // .vuepress/config.ts
@@ -261,20 +390,20 @@ Then `/zh/star/` and `/star/` will both be available, and only articles under th
 
 ## Generating Excerpt
 
-This plugin provides a built-in excerpt generator, which can be enabled by setting `excerpt` option to `true` .
+This plugin provides a built-in excerpt generator, which can be enabled by setting `excerpt` option to `true`.
 
 ::: info Excerpt introduction
 
 An excerpt is an HTML fragment that is used to display a short description of an article in the blog list, so the excerpt has the following restrictions:
 
-- It doesn't support Vue components and other Vue syntax, so these contents will be removed when generating. If you have custom components (non-Vue components), set `isCustomElement` option.
+- It doesn't support any unknown tags (including all Vue components) and Vue syntax, so these contents will be removed when generating. If you have custom components (non-Vue components), set `isCustomElement` option.
 - Since the snippet is an HTML fragment, you will not be able to import any images via relative paths or aliases, they will be removed directly. If you want to keep images, please use absolute path based on `.vuepress/public` or full URL to ensure they can be accessed in other places.
 
 :::
 
-The excerpt generator will try find a valid excerpt separator from markdown contents, if it finds one, it will use content before the separator. The sperator is default `<!-- more -->`, and you can customize it by setting `excerptSeparator` option.
+The excerpt generator will try to find a valid excerpt separator from markdown contents, if it finds one, it will use content before the separator. The separator is default `<!-- more -->`, and you can customize it by setting `excerptSeparator` option.
 
-If it cannot find a valid separator, it will parse content from the beginning of markdown file, and stop till it's length reaches a preset value. The value is default `300`, and you can customize it by setting `excerptLength` option.
+If it cannot find a valid separator, it will parse content from the beginning of markdown file, and stop till its length reaches a preset value. The value is default `300`, and you can customize it by setting `excerptLength` option.
 
 To choose which page should generate excerpt, you can use `excerptFilter` option.
 

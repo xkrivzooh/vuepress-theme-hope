@@ -1,10 +1,17 @@
-import { computed, defineComponent, h, onMounted, ref, shallowRef } from "vue";
+import { type Repl, type ReplProps, type ReplStore } from "@vue/repl";
+import {
+  type VNode,
+  computed,
+  defineComponent,
+  h,
+  onMounted,
+  ref,
+  shallowRef,
+} from "vue";
+import { LoadingIcon, deepAssign } from "vuepress-shared/client";
 
-import { CODE_SVG, LoadingIcon } from "./icons.js";
+import { useVuePlaygroundConfig } from "../helpers/index.js";
 import { getVuePlaygroundSettings } from "../utils/index.js";
-
-import type { Repl, ReplProps, ReplStore } from "@vue/repl";
-import type { VNode } from "vue";
 
 import "@vue/repl/style.css";
 import "../styles/vue-playground.scss";
@@ -39,24 +46,27 @@ export default defineComponent({
   },
 
   setup(props) {
+    const vuePlaygroundOptions = useVuePlaygroundConfig();
     const loading = ref(true);
     const component = shallowRef<typeof Repl>();
-    const store = ref<ReplStore>();
+    const store = shallowRef<ReplStore>();
 
     const playgroundOptions = computed(() =>
-      getVuePlaygroundSettings(props.settings)
+      deepAssign(
+        {},
+        vuePlaygroundOptions,
+        getVuePlaygroundSettings(props.settings)
+      )
     );
 
-    // eslint-disable-next-line vue/no-ref-object-destructure
-    const showCode = ref(playgroundOptions.value.showCode || false);
-
     const setupRepl = async (): Promise<void> => {
-      const { ReplStore, Repl } = await import("@vue/repl");
+      const { ReplStore, Repl } = await import(
+        /* webpackChunkName: "vue-repl" */ "@vue/repl"
+      );
 
       component.value = Repl;
       store.value = new ReplStore({
         serializedState: decodeURIComponent(props.files),
-        showOutput: true,
       });
 
       if (playgroundOptions.value.vueVersion)
@@ -70,36 +80,24 @@ export default defineComponent({
 
     return (): (VNode | null)[] => [
       h("div", { class: "vue-playground-wrapper" }, [
-        h("div", { class: "title-wrapper" }, [
-          props.title
-            ? h("div", { class: "title" }, decodeURIComponent(props.title))
-            : null,
-          h("div", { class: "actions" }, [
-            h("action", {
-              class: "button",
-              innerHTML: CODE_SVG,
-              onClick: () => {
-                showCode.value = !showCode.value;
-              },
-            }),
-          ]),
-        ]),
+        props.title
+          ? h("div", { class: "header" }, decodeURIComponent(props.title))
+          : null,
         h(
           "div",
           {
-            class: [
-              "repl-container",
-              showCode.value ? "show-code" : "hide-code",
-            ],
+            class: "repl-container",
           },
           [
             loading.value
-              ? h("div", { class: "preview-loading-wrapper" }, h(LoadingIcon))
+              ? h(LoadingIcon, { class: "preview-loading", height: 192 })
               : null,
             component.value
               ? h(component.value, <ReplProps>{
                   store: store.value,
+                  autoResize: true,
                   ...playgroundOptions.value,
+                  layout: "horizontal",
                 })
               : null,
           ]

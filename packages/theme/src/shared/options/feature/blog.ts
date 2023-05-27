@@ -1,4 +1,4 @@
-import type { PageInfo } from "../../info.js";
+import { type PageInfo } from "../../info.js";
 
 export interface BlogLocaleData extends Record<string, string> {
   /** 文章文字 */
@@ -17,7 +17,7 @@ export interface BlogLocaleData extends Record<string, string> {
   all: string;
   /** 个人介绍 */
   intro: string;
-  /** 搜藏文字 */
+  /** 收藏文字 */
   star: string;
 }
 
@@ -136,7 +136,7 @@ export interface BlogLocaleOptions {
    *
    * 是否在侧边栏展示博主信息
    *
-   * @default 'mobile'
+   * @default "mobile"
    */
   sidebarDisplay?: "mobile" | "none" | "always";
 
@@ -145,7 +145,7 @@ export interface BlogLocaleOptions {
    *
    * 时间轴自定义文字
    *
-   * @default 'Yesterday once more'
+   * @default "Yesterday once more"
    */
   timeline?: string;
 
@@ -163,7 +163,7 @@ export interface BlogLocaleOptions {
    *
    * 文章列表中展示的文章信息
    *
-   * @default ["Author", "Original", "Date", "PageView", "Category", "Tag", "ReadingTime"]
+   * @default ["Author", "Original", "Date", "PageView", "ReadingTime", "Category", "Tag"]
    */
   articleInfo?: PageInfo[];
 }

@@ -1,8 +1,9 @@
-import { deepMerge } from "vuepress-shared/node";
-import type {
-  PlaygroundData,
-  PlaygroundOptions,
-  VuePresetPlaygroundOptions,
+import { deepAssign, entries, fromEntries } from "vuepress-shared/node";
+
+import {
+  type PlaygroundData,
+  type PlaygroundOptions,
+  type VuePresetPlaygroundOptions,
 } from "../../typings/index.js";
 
 const VUE_SUPPORTED_EXTENSIONS = [
@@ -16,7 +17,7 @@ const VUE_SUPPORTED_EXTENSIONS = [
 ];
 
 const DEFAULT_VUE_CDN = "https://sfc.vuejs.org/vue.runtime.esm-browser.js";
-const DEFAULT_VUE_SR_CDN =
+const DEFAULT_VUE_SERVER_RENDERER_CDN =
   "https://sfc.vuejs.org/server-renderer.esm-browser.js";
 
 export const getVuePlaygroundPreset = (
@@ -34,8 +35,8 @@ export const getVuePlaygroundPreset = (
       ...localSettings,
     };
 
-    const fileInfo = Object.fromEntries(
-      Object.entries(files)
+    const fileInfo = fromEntries(
+      entries(files)
         .filter(([, { ext }]) => VUE_SUPPORTED_EXTENSIONS.includes(ext))
         .map(([key, { content }]) => {
           if (key === "import-map.json") {
@@ -49,7 +50,7 @@ export const getVuePlaygroundPreset = (
             return [
               key,
               JSON.stringify(
-                deepMerge(
+                deepAssign(
                   {
                     imports: {
                       // insure vue exists
@@ -58,13 +59,16 @@ export const getVuePlaygroundPreset = (
                       ...(settings.ssr
                         ? {
                             // eslint-disable-next-line @typescript-eslint/naming-convention
-                            "vue/server-renderer": DEFAULT_VUE_SR_CDN,
+                            "vue/server-renderer":
+                              DEFAULT_VUE_SERVER_RENDERER_CDN,
                           }
                         : {}),
                     },
                   },
                   importMap
-                )
+                ),
+                null,
+                2
               ),
             ];
           }
@@ -79,7 +83,7 @@ export const getVuePlaygroundPreset = (
           imports: {
             vue: DEFAULT_VUE_CDN,
             // eslint-disable-next-line @typescript-eslint/naming-convention
-            "vue/server-renderer": DEFAULT_VUE_SR_CDN,
+            "vue/server-renderer": DEFAULT_VUE_SERVER_RENDERER_CDN,
           },
         },
         null,

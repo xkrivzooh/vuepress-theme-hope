@@ -1,11 +1,14 @@
-import { getDirname, path } from "@vuepress/utils";
-import { config } from "docs-shared";
+import { config, getDirname, path } from "docs-shared";
 import theme from "./theme.js";
 
 const __dirname = getDirname(import.meta.url);
 
 export default config(
-  { indexName: "vuepress-theme-hope-theme-v2" },
+  {
+    name: "hope",
+    base: "",
+    indexName: "theme-v2",
+  },
   {
     head: [
       [
@@ -28,11 +31,6 @@ export default config(
         title: "vuepress-theme-hope",
         description: "一个具有强大功能的 vuepress 主题✨",
       },
-      "/ru/": {
-        lang: "ru-RU",
-        title: "vuepress-theme-hope",
-        description: "Тема vuepress с множеством функций✨",
-      },
     },
 
     theme,
@@ -45,16 +43,21 @@ export default config(
     ],
 
     alias: {
+      "@FlowChartPlayground": path.resolve(
+        __dirname,
+        "./components/FlowChartPlayground"
+      ),
       "@IconDisplay": path.resolve(__dirname, "./components/IconDisplay"),
       "@KatexPlayground": path.resolve(
         __dirname,
         "./components/KatexPlayground"
       ),
-      "@NetlifyBadge": path.resolve(__dirname, "./components/NetlifyBadge"),
+      "@ToggleRTLButton": path.resolve(
+        __dirname,
+        "./components/ToggleRTLButton"
+      ),
     },
 
-    define: () => ({
-      IS_NETLIFY: "NETLIFY" in process.env,
-    }),
+    clientConfigFile: path.resolve(__dirname, "./client.ts"),
   }
 );

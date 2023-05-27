@@ -16,7 +16,7 @@ export default theme("pwa2", {
         "/demo",
         {
           text: version,
-          icon: "note",
+          icon: "bookmark",
           children: [
             {
               text: "V1 Docs",
@@ -37,7 +37,7 @@ export default theme("pwa2", {
         "/zh/demo",
         {
           text: version,
-          icon: "note",
+          icon: "bookmark",
           children: [
             {
               text: "V1 文档",
@@ -54,7 +54,6 @@ export default theme("pwa2", {
   plugins: {
     mdEnhance: {
       codetabs: true,
-      container: true,
       footnote: true,
     },
 

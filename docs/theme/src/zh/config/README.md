@@ -1,7 +1,8 @@
 ---
 title: 配置
-icon: config
+icon: gears
 index: false
+star: true
 category:
   - 配置
 tag:

@@ -1,6 +1,6 @@
 ---
 title: 指南
-icon: creative
+icon: lightbulb
 ---
 
 此插件会使页面正文内的图片在点击时进入浏览模式浏览。
@@ -31,11 +31,25 @@ icon: creative
 
 ## 自定义 PhotoSwipe 选项
 
-你可以通过 `options` 来将额外选项传递给 [`photo-swipe`](http://photoswipe.com/)
+你可以通过在客户端配置文件中导入和调用 `definePhotoSwipeOptions` 来将选项传递给 [`photo-swipe`](http://photoswipe.com/)：
+
+```ts
+// .vuepress/client.ts
+import { defineClientConfig } from "@vuepress/client";
+import { definePhotoSwipeOptions } from "vuepress-plugin-photo-swipe/client";
+
+definePhotoSwipeOptions({
+  // 在此设置 photoswipe 选项
+});
+
+export default defineClientConfig({
+  // ...
+});
+```
 
 ## 操作延迟
 
-如果你的主题在页面切换时会添加动画，你可能需要延迟 photo-swipe 重新查找页面图片的时间点。你可以通过 `delay` 选项来配置这一延迟，默认的值为 `500` (单位为毫秒)。
+如果你的主题在页面切换时会添加动画，你可能需要延迟 photo-swipe 重新查找页面图片的时间点。你可以通过 `delay` 选项来配置这一延迟，默认的值为 `800` (单位为毫秒)。
 
 ## 多语言配置
 
@@ -58,8 +72,8 @@ export default defineUserConfig({
   },
 
   plugins: [
-    copyCodePlugin({
-      photoSwipePlugin: {
+    photoSwipePlugin({
+      locales: {
         "/": {
           // 覆盖分享标签文字
           share: "分享给伙伴",
@@ -74,4 +88,4 @@ export default defineUserConfig({
 });
 ```
 
-For specific options, see [Config → Locale Settings](./config.md#locales).
+对于具体的选项，详见 [配置 → 多语言设置](./config.md#locales).

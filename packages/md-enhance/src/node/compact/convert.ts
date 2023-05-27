@@ -1,5 +1,11 @@
+import { colors } from "@vuepress/utils";
+
 import { deprecatedLogger, droppedLogger } from "./utils.js";
-import type { MarkdownEnhanceOptions } from "../options.js";
+import {
+  type LinksCheckStatus,
+  type MarkdownEnhanceOptions,
+} from "../options.js";
+import { logger } from "../utils.js";
 
 /** @deprecated */
 export const convertOptions = (
@@ -13,7 +19,22 @@ export const convertOptions = (
   deprecatedLogger({
     options,
     deprecatedOption: "lazyload",
-    newOption: "imageLazyload",
+    newOption: "imgLazyload",
+  });
+  deprecatedLogger({
+    options,
+    deprecatedOption: "imageLazyload",
+    newOption: "imgLazyload",
+  });
+  deprecatedLogger({
+    options,
+    deprecatedOption: "imageMark",
+    newOption: "imgMark",
+  });
+  deprecatedLogger({
+    options,
+    deprecatedOption: "imageSize",
+    newOption: "imgSize",
   });
   deprecatedLogger({
     options,
@@ -38,4 +59,21 @@ export const convertOptions = (
   droppedLogger(options, "enableAll");
   droppedLogger(options, "lineNumbers");
   droppedLogger(options, "imageFix");
+
+  if ("linkCheck" in options) {
+    logger.warn(
+      `${colors.magenta(
+        "linkCheck"
+      )} is deprecated, please use ${colors.magenta("checkLinks")} instead`
+    );
+
+    options.checkLinks = {
+      status:
+        typeof options["linkCheck"] === "boolean"
+          ? options["linkCheck"]
+            ? "always"
+            : "never"
+          : (options["linkCheck"] as LinksCheckStatus),
+    };
+  }
 };

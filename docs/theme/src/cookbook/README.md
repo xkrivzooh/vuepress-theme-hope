@@ -1,12 +1,12 @@
 ---
 title: Cookbook
-icon: guide
+icon: signs-post
 article: false
 ---
 
 ## Tutorial
 
-Here is a step by step tutorial for newcomers:
+Here is a step-by-step tutorial for newcomers:
 
 1. [Runtime Setup](tutorial/env.md)
 
@@ -30,12 +30,14 @@ Here is a step by step tutorial for newcomers:
 
 - [VuePress Intro](vuepress/README.md)
 
-## Advanced Tutorial
+## Customizing
 
-- [Using Components](advanced/component.md)
+- [Using Components](customize/component.md)
 
-- [Customize Style](advanced/style.md)
+- [Customizing layouts](customize/layout.md)
 
-- [Replacing Component](advanced/replace.md)
+- [Customizing colors](customize/color.md)
 
-- [Theme Extending](advanced/extend.md)
+- [Customizing fonts](customize/font.md)
+
+- [Customizing effects](customize/effect.md)

@@ -1,6 +1,6 @@
 ---
 title: Config Migration Guide
-icon: config
+icon: gears
 category:
   - Migration
 tag:
@@ -107,6 +107,8 @@ tag:
 
 - remove `displayAllHeaders`
 
+- support generating sidebar automatically from file structure
+
 ### Navbar Sidebar Config Unified
 
 - change `items` in navbar config to `children`
@@ -201,7 +203,7 @@ Move all plugin related options under `plugins`.
 
 - move `comment` moved to `plugins.comment`
 
-  - Adds support for `twikoo` and `giscus` ![New](https://img.shields.io/badge/-New-brightgreen)
+  - Adds support for `artalk`, `twikoo` and `giscus` ![New](https://img.shields.io/badge/-New-brightgreen)
 
   - Vssue is currently missing ![warning](https://img.shields.io/badge/-warning-yellow)
 
@@ -219,7 +221,9 @@ Move all plugin related options under `plugins`.
 
 - move `feed` to `plugins.feed`
 
-  - Supports removing custom components and elements through `plugins.feed.customElements` options ![NEW](https://img.shields.io/badge/-new-brightgreen)
+  - Supports removing custom components and elements through `plugins.feed.preservedElements` options ![NEW](https://img.shields.io/badge/-new-brightgreen)
+
+  - Visualized atom and rss feeds, configurable with `plugins.feed.atomXslFilename` `plugins.feed.atomXslTemplate` `plugins.feed.rssXslFilename` and `plugins.feed.rssXslTemplate` ![NEW](https://img.shields.io/badge/-new-brightgreen)
 
   - Customize feed generation via `plugins.feed.getter` option ![NEW](https://img.shields.io/badge/-new-brightgreen)
 
@@ -253,11 +257,11 @@ Move all plugin related options under `plugins`.
 
     The plugin now check your Markdown links and warn you when broken links are detected.
 
-    You can control this behavior with `plugins.mdEnhance.linkCheck` option
+    You can control this behavior with `plugins.mdEnhance.checkLinks` option
 
   - image mark support ![New](https://img.shields.io/badge/-New-brightgreen)
 
-    Use `#light` and `#dark` suffix to mark images to display them in light mode or dark mode via `plugins.mdEnhance.imageMark` option
+    Use `#light` and `#dark` suffix to mark images to display them in light mode or dark mode via `plugins.mdEnhance.imgMark` option
 
   - Chart.js support ![New](https://img.shields.io/badge/-New-brightgreen)
 
@@ -277,7 +281,7 @@ Move all plugin related options under `plugins`.
     ::: chart Title
 
     ```js
-    module.exports = {
+    const config = {
       // chart.js config
     };
     ```
@@ -303,7 +307,7 @@ Move all plugin related options under `plugins`.
     ::: echarts Title
 
     ```js
-    module.exports = {
+    const option = {
       // chart.js config
     };
     ```
@@ -313,15 +317,19 @@ Move all plugin related options under `plugins`.
 
   - content include support ![New](https://img.shields.io/badge/-New-brightgreen)
 
-    use `@include()` to include other file content in Markdown via `plugins.mdEnhance.include` options.
+    use `@include` to include other file content in Markdown via `plugins.mdEnhance.include` options.
 
-    Use `@include(filename)` to include a file.
+    Use `<!-- @include: filename -->` to include a file.
 
     To partially import the file, you can specify the range of lines to be included:
 
-    - `@include(filename{start-end})`
-    - `@include(filename{start-})`
-    - `@include(filename{-end})`
+    - `<!-- @include: filename{start-end} -->`
+    - `<!-- @include: filename{start-} -->`
+    - `<!-- @include: filename{-end} -->`
+
+    Also, you can include file region:
+
+    - `<!-- @include: filename#region -->`
 
   - tabs support ![New](https://img.shields.io/badge/-New-brightgreen)
 
@@ -347,7 +355,7 @@ Move all plugin related options under `plugins`.
 
   - remove `plugins.mdEnhance.enableAll` ![removed](https://img.shields.io/badge/-removed-red)
 
-    There are too many noob users who don’t know what they are doing, and they just enable this option without using all the feature provided, yet they complain about load speed.
+    There are too many noob users who don't know what they are doing, and they just enable this option without using all the feature provided, yet they complain about load speed.
 
   - remove `plugins.mdEnhance.lineNumbers` ![removed](https://img.shields.io/badge/-removed-red)
 
@@ -399,14 +407,15 @@ Move all plugin related options under `plugins`.
 
   - Canonical link ![New](https://img.shields.io/badge/-New-brightgreen)
 
-    You can set canonical link via `plugin.seo.canonicalLink` option. It's useful when your docs
+    You can set canonical link via `plugin.seo.canonicalLink` option. It's useful when your docs are deployed in several places.
 
   - `seo.customMeta` renamed to `plugin.seo.customHead` ![changed](https://img.shields.io/badge/-changed-yellow)
 
     Now you can edit all head tags instead of only meta in V1.
-    are deployed in several places.
 
 - move `sitemap` to `plugins.sitemap`
+
+  - Visualized sitemap, configurable with `plugins.sitemap.sitemapXSLFilename` and `plugins.sitemap.sitemapXSLTemplate` ![New](https://img.shields.io/badge/-New-brightgreen)
 
   - `plugin.sitemap.priority` ![New](https://img.shields.io/badge/-New-brightgreen): setting default value for priority
 

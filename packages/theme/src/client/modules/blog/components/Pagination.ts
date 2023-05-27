@@ -1,8 +1,9 @@
-import { computed, defineComponent, h, onMounted, ref, VNode } from "vue";
+import { type VNode, computed, defineComponent, h, onMounted, ref } from "vue";
 import { Message } from "vuepress-shared/client";
 
 import { useThemeLocaleData } from "@theme-hope/composables/index";
 
+import "vuepress-shared/client/styles/message.scss";
 import "../styles/pagination.scss";
 
 export default defineComponent({
@@ -31,10 +32,7 @@ export default defineComponent({
     current: { type: Number, default: 1 },
   },
 
-  emits: {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    updateCurrentPage: (_page: number) => true,
-  },
+  emits: ["updateCurrentPage"],
 
   setup(props, { emit }) {
     let message: Message;
@@ -110,10 +108,10 @@ export default defineComponent({
     return (): VNode =>
       h(
         "div",
-        { class: "pagination-wrapper" },
+        { class: "vp-pagination" },
         enable.value
-          ? h("div", { class: "pagination-list" }, [
-              h("div", { class: "page-number" }, [
+          ? h("div", { class: "vp-pagination-list" }, [
+              h("div", { class: "vp-pagination-number " }, [
                 // prev button
                 props.current > 1
                   ? h(
@@ -129,7 +127,7 @@ export default defineComponent({
                   : null,
 
                 // left ellipsis
-                ...(displayLeftEllipsis.value
+                displayLeftEllipsis.value
                   ? [
                       h(
                         "div",
@@ -141,10 +139,9 @@ export default defineComponent({
                       ),
                       h("div", { class: "ellipsis" }, "..."),
                     ]
-                  : []),
-
+                  : null,
                 // numbers
-                ...indexes.value.map((num) =>
+                indexes.value.map((num) =>
                   h(
                     "div",
                     {
@@ -158,7 +155,7 @@ export default defineComponent({
                 ),
 
                 // right ellipsis
-                ...(displayRightEllipsis.value
+                displayRightEllipsis.value
                   ? [
                       h("div", { class: "ellipsis" }, "..."),
                       h(
@@ -170,8 +167,7 @@ export default defineComponent({
                         totalPages.value
                       ),
                     ]
-                  : []),
-
+                  : null,
                 // next button
                 props.current < totalPages.value
                   ? h(
@@ -186,7 +182,7 @@ export default defineComponent({
                     )
                   : null,
               ]),
-              h("div", { class: "navigate-wrapper" }, [
+              h("div", { class: "vp-pagination-nav" }, [
                 h(
                   "label",
                   { for: "navigation-text" },
@@ -208,7 +204,7 @@ export default defineComponent({
                 h(
                   "button",
                   {
-                    class: "navigate",
+                    class: "vp-pagination-button",
                     role: "navigation",
                     title: locale.value.action,
                     onClick: () => jumpPage(input.value),

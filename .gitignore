@@ -1,5 +1,5 @@
 # Node modules
-node_modules/
+**/node_modules/**
 
 # Build files
 docs-shared/lib/
@@ -7,14 +7,11 @@ packages/*/lib/
 tools/*/lib/
 
 # Vuepress Cache
-.cache/
+**/.vuepress/.cache/**
 # Vuepress Temp
-.temp/
+**/.vuepress/.temp/**
 # Vuepress Output
 dist/
-
-# Rollup Cache
-.rollup.cache/
 
 # npm config
 .npmrc

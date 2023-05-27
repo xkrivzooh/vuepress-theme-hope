@@ -1,8 +1,16 @@
 import { fs } from "@vuepress/utils";
-import { logger, TEMPLATE_FOLDER } from "../utils.js";
+import {
+  entries,
+  isArray,
+  isString,
+  startsWith,
+  values,
+} from "vuepress-shared/node";
 
-import type { ThemeData } from "../../shared/index.js";
+import { type ThemeData } from "../../shared/index.js";
+import { TEMPLATE_FOLDER, logger } from "../utils.js";
 
+/** @private */
 export const checkSocialMediaIcons = (
   themeData: ThemeData
 ): Record<string, string> => {
@@ -12,7 +20,7 @@ export const checkSocialMediaIcons = (
     key: string,
     value: string | [string, string]
   ): string | false => {
-    if (typeof value === "string") {
+    if (isString(value)) {
       const templatePath = `${TEMPLATE_FOLDER}socialMediaIcons/${key.toLocaleLowerCase()}.svg`;
 
       if (fs.existsSync(templatePath)) {
@@ -26,9 +34,9 @@ export const checkSocialMediaIcons = (
       return false;
     }
 
-    if (Array.isArray(value)) {
+    if (isArray(value)) {
       // it’s a svg string
-      if (value[1].startsWith("<svg")) {
+      if (startsWith(value[1], "<svg")) {
         icons[key] = value[1];
 
         return value[0];
@@ -51,23 +59,21 @@ export const checkSocialMediaIcons = (
     return false;
   };
 
-  Object.entries(themeData.blog?.medias || {}).forEach(([key, value]) => {
+  entries(themeData.blog?.medias || {}).forEach(([key, value]) => {
     const result = checkIcon(key, value);
 
-    if (result) themeData.blog.medias![key] = result;
-    else delete themeData.blog.medias![key];
+    if (result) themeData.blog!.medias![key] = result;
+    else delete themeData.blog!.medias![key];
   });
 
   if (themeData.locales)
-    Object.entries(themeData.locales).forEach(([, localeConfig]) => {
-      Object.entries(localeConfig.blog?.medias || {}).forEach(
-        ([key, value]) => {
-          const result = checkIcon(key, value);
+    values(themeData.locales).forEach((localeConfig) => {
+      entries(localeConfig.blog?.medias || {}).forEach(([key, value]) => {
+        const result = checkIcon(key, value);
 
-          if (result) localeConfig.blog.medias![key] = result;
-          else delete localeConfig.blog.medias![key];
-        }
-      );
+        if (result) localeConfig.blog!.medias![key] = result;
+        else delete localeConfig.blog!.medias![key];
+      });
     });
 
   return icons;

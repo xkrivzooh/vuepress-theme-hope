@@ -1,6 +1,6 @@
 ---
 title: 指南
-icon: creative
+icon: lightbulb
 ---
 
 这个插件基本上是面向插件和主题开发的。
@@ -69,7 +69,7 @@ $colorA: blue !default;
 $colorB: green !default;
 ```
 
-你可以在插件 Sass 文件中中获取到如下变量:
+你可以在插件 Sass 文件中获取到如下变量:
 
 ```scss
 // Vue 单文件组件的 <style lang="scss"> 块或脚本中直接导入的 Scss 文件中
@@ -244,10 +244,8 @@ $moveTransition: "width 0.3s ease";
 @use "@sass-palette/helper";
 
 $theme-color-light: (
-  light: color.scale(helper.get-color($theme-color, $isDark: false), $lightness:
-        10%),
-  dark: color.scale(helper.get-color($theme-color, $isDark: true), $lightness:
-        10%),
+  light: color.scale(helper.get-color($theme-color), $lightness: 10%),
+  dark: color.scale(helper.get-dark-color($theme-color), $lightness: 10%),
 ) !default;
 ```
 

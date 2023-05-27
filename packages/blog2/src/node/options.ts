@@ -1,7 +1,10 @@
-import type { Page } from "@vuepress/core";
-import type { PageExcerptOptions } from "vuepress-shared/node";
+import { type Page } from "@vuepress/core";
+import { type PageExcerptOptions } from "vuepress-shared/node";
 
-import type { BlogCategoryOptions, BlogTypeOptions } from "./typings/index.js";
+import {
+  type BlogCategoryOptions,
+  type BlogTypeOptions,
+} from "./typings/index.js";
 
 export interface BlogPluginPageData {
   /**
@@ -84,7 +87,7 @@ export interface BlogOptions extends PageExcerptOptions {
    *
    * 注入文章信息至路由元数据时使用的键名。
    *
-   * @default '_blog'
+   * @default "_blog"
    */
   metaScope?: string;
 
@@ -93,7 +96,7 @@ export interface BlogOptions extends PageExcerptOptions {
    *
    * Slugify 函数
    *
-   * @default (name) => name.replace(/ _/g, '-').toLowerCase()
+   * @default (name) => name.replace(/ _/g, "-").toLowerCase()
    */
   slugify?: (name: string) => string;
 

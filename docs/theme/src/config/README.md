@@ -1,6 +1,7 @@
 ---
 title: Config
-icon: config
+icon: gears
+star: true
 index: false
 category:
   - Config

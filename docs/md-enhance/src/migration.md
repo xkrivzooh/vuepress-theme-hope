@@ -1,6 +1,6 @@
 ---
 title: V2 Migration
-icon: change
+icon: code-compare
 ---
 
 ## Legacy Mode
@@ -13,11 +13,11 @@ You can pass the second argument `true` to enable legacy mode when calling `mdEn
 
   The plugin now check your Markdown links and warn you when broken links are detected.
 
-  You can control this behavior with `linkCheck` option
+  You can control this behavior with `checkLinks` option
 
 - image mark support
 
-  Use `#light` and `#dark` suffix to mark images to display them in light mode or dark mode via `imageMark` option.
+  Use `#light` and `#dark` suffix to mark images to display them in light mode or dark mode via `imgMark` option.
 
 - `v-pre` support
 
@@ -49,7 +49,7 @@ You can pass the second argument `true` to enable legacy mode when calling `mdEn
   ::: chart Title
 
   ```js
-  module.exports = {
+  const config = {
     // chart.js config
   };
   ```
@@ -75,7 +75,7 @@ You can pass the second argument `true` to enable legacy mode when calling `mdEn
   ::: echarts Title
 
   ```js
-  module.exports = {
+  const option = {
     // chart.js config
   };
   ```
@@ -85,15 +85,19 @@ You can pass the second argument `true` to enable legacy mode when calling `mdEn
 
 - content include support
 
-  use `@include()` to include other file content in Markdown via `include` options.
+  Use `<!-- @include: -->` to include other file content in Markdown via `include` options.
 
-  Use `@include(filename)` to include a file.
+  Use `<!-- @include: filename -->` to include a file.
 
   To partially import the file, you can specify the range of lines to be included:
 
-  - `@include(filename{start-end})`
-  - `@include(filename{start-})`
-  - `@include(filename{-end})`
+  - `<!-- @include: filename{start-end} -->`
+  - `<!-- @include: filename{start-} -->`
+  - `<!-- @include: filename{-end} -->`
+
+  Also, you can include file region:
+
+  - `<!-- @include: filename#region -->`
 
 - tabs support
 
@@ -161,7 +165,7 @@ You can pass the second argument `true` to enable legacy mode when calling `mdEn
   ::: code-group-item pnpm
 
   ```bash
-  pnpm create vuepress-theme-hope@next [dir]
+  pnpm create vuepress-theme-hope [dir]
   ```
 
   :::
@@ -169,7 +173,7 @@ You can pass the second argument `true` to enable legacy mode when calling `mdEn
   ::: code-group-item npm:active
 
   ```bash
-  npm init vuepress-theme-hope@next [dir]
+  npm init vuepress-theme-hope [dir]
   ```
 
   :::
@@ -185,13 +189,13 @@ You can pass the second argument `true` to enable legacy mode when calling `mdEn
   @tab pnpm
 
   ```bash
-  pnpm create vuepress-theme-hope@next [dir]
+  pnpm create vuepress-theme-hope [dir]
   ```
 
   @tab:active npm
 
   ```bash
-  npm init vuepress-theme-hope@next [dir]
+  npm init vuepress-theme-hope [dir]
   ```
 
   :::
@@ -201,7 +205,7 @@ You can pass the second argument `true` to enable legacy mode when calling `mdEn
 
 - `enableAll` removed
 
-  There are too many noob users who don’t know what they are doing, and they just enable this option without using all the feature provided, yet they complain about load speed.
+  There are too many noob users who don't know what they are doing, and they just enable this option without using all the feature provided, yet they complain about load speed.
 
 - `lineNumbers` removed
 
@@ -209,4 +213,4 @@ You can pass the second argument `true` to enable legacy mode when calling `mdEn
 
 - `imageFix` removed
 
-  Mr.Hope already made a PR to fix broken image links in Markdown, so it’s no longer needed
+  Mr.Hope already made a PR to fix broken image links in Markdown, so it's no longer needed

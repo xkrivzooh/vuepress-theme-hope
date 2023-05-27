@@ -1,13 +1,20 @@
-import { deepMerge } from "vuepress-shared/node";
-import { compressToEncodedURIComponent } from "./ventors/lzstring.js";
-import { optionDeclarations } from "./ventors/optionDelcarations.js";
+import { type CompilerOptions } from "typescript";
+import {
+  deepAssign,
+  endsWith,
+  entries,
+  isPlainObject,
+  keys,
+} from "vuepress-shared/node";
 
-import type { CompilerOptions } from "typescript";
-import type {
-  PlaygroundData,
-  PlaygroundOptions,
-  TSPresetPlaygroundOptions,
+import { compressToEncodedURIComponent } from "./ventors/lzstring.js";
+import { optionDeclarations } from "./ventors/optionDeclarations.js";
+import {
+  type PlaygroundData,
+  type PlaygroundOptions,
+  type TSPresetPlaygroundOptions,
 } from "../../typings/index.js";
+import { logger } from "../../utils.js";
 
 /** Gets a query string representation (hash + queries) */
 export const getURL = (
@@ -16,7 +23,7 @@ export const getURL = (
 ): string => {
   const hash = `#code/${compressToEncodedURIComponent(code)}`;
 
-  const queryString = Object.entries(compilerOptions)
+  const queryString = entries(compilerOptions)
     .map(([key, value]) => {
       const item = optionDeclarations.find((option) => option.name === key)!;
 
@@ -24,7 +31,7 @@ export const getURL = (
 
       const { type } = item;
 
-      if (typeof type === "object") {
+      if (isPlainObject(type)) {
         const result = type[value as keyof typeof type];
 
         return result?.toString() || "";
@@ -49,14 +56,14 @@ export const getTSPlaygroundPreset = ({
     settings,
     key,
   }: PlaygroundData): Record<string, string> => {
-    const tsfiles = Object.keys(files).filter((key) => key.endsWith(".ts"));
+    const tsfiles = keys(files).filter((key) => endsWith(key, ".ts"));
 
     if (tsfiles.length !== 1)
-      console.error("TS playground only support 1 ts file");
+      logger.error("TS playground only support 1 ts file");
 
     const link = `${service}${getURL(
       files[tsfiles[0]].content,
-      deepMerge(
+      deepAssign(
         {},
         <CompilerOptions>settings || {},
         <CompilerOptions>compilerOptions

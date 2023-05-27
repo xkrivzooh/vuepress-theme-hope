@@ -1,28 +1,30 @@
-import { defineComponent, h } from "vue";
+import { type SlotsType, type VNode, defineComponent, h } from "vue";
 
-import BloggerInfo from "@theme-hope/modules/blog/components/BloggerInfo";
-import InfoList from "@theme-hope/modules/blog/components/InfoList";
 import CommonWrapper from "@theme-hope/components/CommonWrapper";
 import SkipLink from "@theme-hope/components/SkipLink";
-import { useMobile } from "@theme-hope/composables/index";
-
-import type { VNode } from "vue";
+import { useWindowSize } from "@theme-hope/composables/index";
+import BloggerInfo from "@theme-hope/modules/blog/components/BloggerInfo";
+import InfoList from "@theme-hope/modules/blog/components/InfoList";
 
 import "../styles/page.scss";
 
 export default defineComponent({
   name: "BlogWrapper",
 
+  slots: Object as SlotsType<{
+    default: () => VNode | VNode[];
+  }>,
+
   setup(_props, { slots }) {
-    const isMobile = useMobile();
+    const { isMobile } = useWindowSize();
 
     return (): VNode[] => [
       h(SkipLink),
       h(
         CommonWrapper,
-        { noSidebar: true },
+        { noSidebar: true, noToc: true },
         {
-          default: () => slots["default"]?.(),
+          default: () => slots.default(),
           navScreenBottom: () => h(BloggerInfo),
           ...(isMobile.value ? { sidebar: () => h(InfoList) } : {}),
         }

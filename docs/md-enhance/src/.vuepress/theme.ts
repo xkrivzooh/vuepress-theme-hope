@@ -1,6 +1,9 @@
-import { pwa, theme } from "docs-shared";
+import { theme } from "docs-shared";
 import { enNavbarConfig, zhNavbarConfig } from "./navbar.js";
 import { enSidebarConfig, zhSidebarConfig } from "./sidebar.js";
+import { getDirname, path } from "docs-shared";
+
+const __dirname = getDirname(import.meta.url);
 
 export default theme("md-enhance", {
   locales: {
@@ -19,6 +22,7 @@ export default theme("md-enhance", {
     mdEnhance: {
       align: true,
       attrs: true,
+      card: true,
       chart: true,
       codetabs: true,
       container: true,
@@ -27,11 +31,21 @@ export default theme("md-enhance", {
       figure: true,
       flowchart: true,
       gfm: true,
-      imageLazyload: true,
-      imageMark: true,
-      imageSize: true,
-      include: true,
-      katex: true,
+      imgLazyload: true,
+      imgMark: true,
+      imgSize: true,
+      include: {
+        resolvePath: (file, cwd) => {
+          if (file.startsWith("@echarts"))
+            return file.replace(
+              "@echarts",
+              path.resolve(__dirname, "../echarts")
+            );
+
+          return file;
+        },
+      },
+      mathjax: true,
       mark: true,
       mermaid: true,
       playground: {
@@ -59,11 +73,5 @@ export default theme("md-enhance", {
       vPre: true,
       vuePlayground: true,
     },
-
-    pwa: pwa({
-      name: "vuepress-plugin-md-enhance",
-      shortName: "VuePress2 Markdown Enhance plugin",
-      guide: "/guide/",
-    }),
   },
 });

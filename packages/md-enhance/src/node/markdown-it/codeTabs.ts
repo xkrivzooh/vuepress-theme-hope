@@ -1,37 +1,53 @@
-import { tabs } from "./tabs.js";
+import { tab } from "@mdit/plugin-tab";
+import { type PluginSimple } from "markdown-it";
 
-import type { PluginSimple } from "markdown-it";
+import { stringifyProp } from "./utils.js";
 
 export const codeTabs: PluginSimple = (md) => {
-  tabs(md, {
+  tab(md, {
     name: "code-tabs",
-    component: "CodeTabs",
-    getter: (tokens, index) => {
-      let inCodeTab = false;
-      let foundFence = false;
-      const codeTabsData: { content: string }[] = [];
 
-      for (let i = index; i < tokens.length; i++) {
+    tabsOpenRenderer: ({ active, data }, tokens, index) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const { meta } = tokens[index];
+      const titles = data.map(({ title }) => md.renderInline(title));
+      const tabsData = data.map((item, index) => {
+        const { id = titles[index] } = item;
+
+        return { id };
+      });
+
+      return `<CodeTabs id="${index}" :data='${stringifyProp(tabsData)}'${
+        active !== -1 ? ` :active="${active}"` : ""
+      }${
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        meta.id ? ` tab-id="${meta.id as string}"` : ""
+      }>
+${titles
+  .map(
+    (title, index) => `\
+<template #title${index}="{ value, isActive }">${title}</template>
+`
+  )
+  .join("")}\
+`;
+    },
+
+    tabsCloseRenderer: () => `\
+</CodeTabs>
+`,
+
+    tabOpenRenderer: ({ index }, tokens, tokenIndex) => {
+      let foundFence = false;
+
+      // hide all elements excerpt the first fence
+      for (let i = tokenIndex; i < tokens.length; i++) {
         const { block, type } = tokens[i];
 
         if (block) {
-          if (type === "code-tabs_tabs_close") {
-            break;
-          }
+          if (type === "code-tabs_tab_close") break;
 
-          if (type === "tab_close") {
-            inCodeTab = false;
-            continue;
-          }
-
-          if (type === "tab_open") {
-            // found a code tab
-            inCodeTab = true;
-            foundFence = false;
-            continue;
-          }
-
-          if (inCodeTab && type === "fence" && !foundFence) {
+          if (type === "fence" && !foundFence) {
             foundFence = true;
             continue;
           }
@@ -41,7 +57,13 @@ export const codeTabs: PluginSimple = (md) => {
         }
       }
 
-      return codeTabsData;
+      return `\
+<template #tab${index}="{ value, isActive }">
+`;
     },
+
+    tabCloseRenderer: () => `\
+</template>
+`,
   });
 };

@@ -1,6 +1,6 @@
 ---
 title: Contribution Guide
-icon: creative
+icon: lightbulb
 category:
   - FAQ
 ---
@@ -25,7 +25,7 @@ If you have not installed pnpm, please install it using the following command.
 
 ```sh
 corepack enable
-corepack prepare pnpm@7.18.2 --activate
+corepack prepare pnpm@latest --activate
 ```
 
 :::
@@ -46,6 +46,7 @@ The project is a monorepo, managed by pnpm.
 ├── demo → Demo projects
 │
 ├── docs → document directory
+│ ├── auto-catalog → auto-catalog plugin document
 │ ├── blog → blog2 plugin document
 │ ├── comment → comment2 plugin document
 │ ├── components → components plugin document
@@ -56,16 +57,15 @@ The project is a monorepo, managed by pnpm.
 │ ├── photo-swipe → photo-swipe document
 │ ├── pwa → pwa2 plugin document
 │ ├── reading-time → reading-time2 plugin document
+│ ├── rtl → rtl plugin document
 │ ├── remove-pwa → remove-pwa plugin document
 │ ├── sass-palette → sass-palette plugin document
-│ ├── shared → vuepress-shared document
 │ ├── search-pro → search-pro plugin document
 │ ├── seo → seo2 plugin document
 │ └── theme → theme document
 │
-├── docs-shared → common files for docs
-|
 ├── packages → project source code
+│ ├── auto-catalog → auto-catalog plugin
 │ ├── blog2 → blog2 plugin
 │ ├── comment2 → comment2 plugin
 │ ├── components → components plugin
@@ -78,6 +78,7 @@ The project is a monorepo, managed by pnpm.
 │ ├── pwa2 → pwa2 plugin
 │ ├── reading-time2 → reading-time2 plugin
 │ ├── remove-pwa → remove-pwa plugin
+│ ├── rtl → rtl plugin
 │ ├── sass-palette → sass-palette plugin
 │ ├── search-pro → search-pro plugin
 │ ├── seo2 → seo2 plugin
@@ -99,7 +100,7 @@ The project is a monorepo, managed by pnpm.
 
 ## Document Modification
 
-You can find the corresponding project in the docs directory so you can modify the corresponding Markdown directly.
+You can find the corresponding project in the docs directory, so you can modify the corresponding Markdown directly.
 
 After ensuring that the `pnpm lint` and `pnpm lint:md` commands emit no errors, you can commit to GitHub to open a PR.
 
@@ -182,6 +183,6 @@ The project uses `husky` to add Git Hooks for verification:
 
 If you cannot pass the above Git Hooks, you will not be able to complete `git commit`.
 
-If you have already contributed something, but cannot make a commit and don’t know how to fix it, you can add the `--no-verify` flag when committing to bypass Git Hooks.
+If you have already contributed something, but cannot make a commit and don't know how to fix it, you can add the `--no-verify` flag when committing to bypass Git Hooks.
 
 :::

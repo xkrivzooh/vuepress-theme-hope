@@ -10,7 +10,7 @@ tag:
 
 If you are a programmer, you may want your users to be able to copy the code you show in the text with one click.
 
-For this, `vuepress-theme-hope` use [vuepress-plugin-copy-code2][copy-code2] to provide a copy button on code blocks.
+For this, `vuepress-theme-hope` use <ProjectLink name="copy-code2">vuepress-plugin-copy-code2</ProjectLink> to provide a copy button on code blocks.
 
 ::: info
 
@@ -22,7 +22,7 @@ For this, `vuepress-theme-hope` use [vuepress-plugin-copy-code2][copy-code2] to 
 
 ## Usage
 
-After enabling, this plugin will automatically add a copy button to the bottom right corner of each code block.
+After enabling, this plugin will automatically add a copy button to the top right corner of each code block.
 
 By default, the button is only displayed on desktop mode. To display this button on mobile devices, set `plugins.copyCode.showInMobile` to `true` in theme options.
 
@@ -42,5 +42,3 @@ export default {
   }),
 };
 ```
-
-[copy-code2]: https://vuepress-theme-hope.github.io/v2/copy-code/

@@ -1,22 +1,35 @@
-import { defineComponent, h, onMounted, watch, ref } from "vue";
+import {
+  type SlotsType,
+  type VNode,
+  defineComponent,
+  h,
+  onMounted,
+  shallowRef,
+  watch,
+} from "vue";
 import { useRoute } from "vue-router";
 
 import { useThemeLocaleData } from "@theme-hope/composables/index";
 import SidebarLinks from "@theme-hope/modules/sidebar/components/SidebarLinks";
 import { useSidebarItems } from "@theme-hope/modules/sidebar/composables/index";
 
-import type { VNode } from "vue";
-
 import "../styles/sidebar.scss";
 
 export default defineComponent({
   name: "SideBar",
 
+  slots: Object as SlotsType<{
+    default?: () => VNode | VNode[];
+    top?: () => VNode | VNode[];
+    bottom?: () => VNode | VNode[];
+  }>,
+
   setup(_props, { slots }) {
     const route = useRoute();
     const themeLocale = useThemeLocaleData();
     const sidebarItems = useSidebarItems();
-    const sidebar = ref<HTMLElement>();
+
+    const sidebar = shallowRef<HTMLElement>();
 
     onMounted(() => {
       // scroll to active sidebar item
@@ -56,14 +69,17 @@ export default defineComponent({
       h(
         "aside",
         {
-          class: ["sidebar", { "hide-icon": !themeLocale.value.sidebarIcon }],
+          class: [
+            "sidebar",
+            { "hide-icon": themeLocale.value.sidebarIcon === false },
+          ],
+          id: "sidebar",
           ref: sidebar,
         },
         [
-          slots["top"]?.(),
-          slots["default"]?.() ||
-            h(SidebarLinks, { config: sidebarItems.value }),
-          slots["bottom"]?.(),
+          slots.top?.(),
+          slots.default?.() || h(SidebarLinks, { config: sidebarItems.value }),
+          slots.bottom?.(),
         ]
       );
   },

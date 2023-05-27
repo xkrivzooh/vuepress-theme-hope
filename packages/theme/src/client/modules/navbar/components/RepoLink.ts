@@ -1,22 +1,20 @@
-import { defineComponent, h, resolveComponent } from "vue";
-
+import { type VNode, defineComponent, h, resolveComponent } from "vue";
 import {
   BitbucketIcon,
-  GiteeIcon,
   GitHubIcon,
-  GitlabIcon,
+  GitLabIcon,
+  GiteeIcon,
   SourceIcon,
-} from "@theme-hope/modules/navbar/components/icons/index";
-import { useNavbarRepo } from "@theme-hope/modules/navbar/composables/index";
+} from "vuepress-shared/client";
 
-import type { VNode } from "vue";
+import { useNavbarRepo } from "@theme-hope/modules/navbar/composables/index";
 
 import "../styles/repo-link.scss";
 
 export default defineComponent({
   name: "RepoLink",
 
-  components: { BitbucketIcon, GiteeIcon, GitHubIcon, GitlabIcon, SourceIcon },
+  components: { BitbucketIcon, GiteeIcon, GitHubIcon, GitLabIcon, SourceIcon },
 
   setup() {
     const repo = useNavbarRepo();

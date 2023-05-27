@@ -1,6 +1,6 @@
 ---
 title: 样式配置
-icon: style
+icon: wand-magic-sparkles
 order: 6
 category:
   - 配置
@@ -27,21 +27,20 @@ tag:
 - `$tablet`
 - `$mobile`
 
-代码块:
+主题色:
 
-- `$code-light-theme`: 日间模式代码块主题
-- `$code-dark-theme`: 夜间模式代码块主题
+- `$theme-colors`: 除了主要主题色之外，你想使用的其他主题颜色
 
-内容类名: `$content-class`
+代码块 (仅限 shiki):
+
+- `$code-bg-color`: 代码块的背景颜色
+- `$code-color`: 代码块的字体颜色
 
 颜色列表: `$colors`
 
 ::: details 例子
 
 ```scss
-// 修改日间模式代码主题
-$code-light-theme: "coy";
-
 // 修改电脑响应式布局断点
 $pc: 1920px;
 ```
@@ -50,7 +49,7 @@ $pc: 1920px;
 
 ::: details 默认值
 
-@[code{7-}](../../../../../packages/theme/templates/config.scss)
+@[code{7-}](../../../../../packages/theme/templates/palette/config.scss)
 
 :::
 
@@ -68,14 +67,15 @@ $pc: 1920px;
 
 ### 颜色设置
 
-对于所有颜色，如果其在浅色模式和深色模式颜色相同，可直接设置；否则，请设置一个 Map 类型的 Sass 变量分别给出浅色和深色模式下的颜色值。
+对于所有颜色，如果其在浅色模式和深色模式颜色相同，可直接设置；否则，请设置一个 Map 类型的 Sass 变量分别给出浅色和深色模式下的颜色。此变量键名为 `light` 和 `dark`，值为颜色值。
 
 可用的颜色变量:
 
 - `$theme-color`: 主题色
 - `$text-color`: 字体颜色
 - `$bg-color`: 背景色
-- `$bg-color-secondary`: 另一套更浅的背景色
+- `$bg-color-secondary`: 另一个浅背景色
+- `$bg-color-tertiary`: 另一个更浅的背景色
 - `$border-color`: 边框颜色
 - `$box-shadow`: 元素阴影色
 - `$card-shadow`: 卡片阴影色
@@ -97,7 +97,7 @@ $border-color: (
 
 ::: details 默认值
 
-@[code{4-60}](../../../../../packages/theme/templates/color.scss)
+@[code{4-60}](../../../../../packages/theme/templates/palette/color.scss)
 
 :::
 
@@ -127,11 +127,11 @@ $border-color: (
 字体:
 
 - `$font-family`: 普通文本上使用的字体
-- `$font-family-fancy:` 用于花哨元素的字体
+- `$font-family-heading:` 用于标题元素的字体
 
 代码:
 
-- `$font-family-code`: 代码上使用的字体
+- `$font-family-mono`: 代码上使用的字体
 - `$line-numbers-width`: 代码块中行号的宽度
 
 过渡:
@@ -153,7 +153,7 @@ $font-family: 'Georgia, -apple-system, "Nimbus Roman No9 L", "PingFang SC", "Hir
 
 ::: details 默认值
 
-@[code](../../../../../packages/theme/templates/layout.scss)
+@[code](../../../../../packages/theme/templates/palette/layout.scss)
 
 :::
 

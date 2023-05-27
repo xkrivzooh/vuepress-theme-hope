@@ -1,33 +1,36 @@
-import { useRouteLocale } from "@vuepress/client";
+import { usePageData, useRouteLocale } from "@vuepress/client";
+import { isPlainObject, isString } from "@vuepress/shared";
 import { useEventListener } from "@vueuse/core";
-import { disableBodyScroll, clearAllBodyScrollLocks } from "body-scroll-lock";
 import {
+  type VNode,
   computed,
   defineComponent,
   h,
-  onBeforeUnmount,
-  onMounted,
   ref,
   toRef,
+  watch,
 } from "vue";
-import { RouterLink, useRoute, useRouter } from "vue-router";
+import { RouterLink, useRouter } from "vue-router";
 import { useLocaleConfig } from "vuepress-shared/client";
 
+import { SearchLoading } from "./SearchLoading.js";
+import { HeadingIcon, HeartIcon, HistoryIcon, TitleIcon } from "./icons.js";
 import {
-  CloseIcon,
-  HeadingIcon,
-  HeartIcon,
-  HistoryIcon,
-  TitleIcon,
-} from "./icons.js";
-import { useSearchHistory, useSearchResults } from "../composables/index.js";
+  useSearchQueryHistory,
+  useSearchResult,
+  useSearchResultHistory,
+} from "../composables/index.js";
 import {
   searchProClientCustomFiledConfig,
   searchProLocales,
 } from "../define.js";
-
-import type { VNode } from "vue";
-import type { MatchedItem, Word } from "../utils/index.js";
+import {
+  type MatchedItem,
+  ResultField,
+  ResultType,
+  type Word,
+} from "../typings/index.js";
+import { CLOSE_ICON } from "../utils/index.js";
 
 import "../styles/search-result.scss";
 
@@ -46,43 +49,49 @@ export default defineComponent({
     },
   },
 
-  emits: {
-    close: () => true,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    updateQuery: (_query: string) => true,
-  },
+  emits: ["close", "updateQuery"],
 
   setup(props, { emit }) {
+    const page = usePageData();
     const router = useRouter();
-    const route = useRoute();
     const routeLocale = useRouteLocale();
     const locale = useLocaleConfig(searchProLocales);
-    const { history, addHistory, removeHistory } = useSearchHistory();
+    const { addQueryHistory } = useSearchQueryHistory();
+    const { enabled, resultHistory, addResultHistory, removeResultHistory } =
+      useSearchResultHistory();
 
     const query = toRef(props, "query");
-    const searchResults = useSearchResults(query);
+    const { results, searching } = useSearchResult(query);
 
     const activatedResultIndex = ref(0);
     const activatedResultContentIndex = ref(0);
-    const searchResult = ref<HTMLElement>();
 
-    const hasResults = computed(() => searchResults.value.length > 0);
+    const hasHistory = computed(() => resultHistory.value.length > 0);
+    const hasResults = computed(() => results.value.length > 0);
     const activatedResult = computed(
-      () => searchResults.value[activatedResultIndex.value] || null
+      () => results.value[activatedResultIndex.value] || null
     );
+
+    const getRealPath = (item: MatchedItem): string =>
+      router.resolve({
+        name: item[ResultField.key],
+        ...(ResultField.anchor in item
+          ? { hash: `#${item[ResultField.anchor]}` }
+          : {}),
+      }).fullPath;
 
     const activePreviousResult = (): void => {
       activatedResultIndex.value =
         activatedResultIndex.value > 0
           ? activatedResultIndex.value - 1
-          : searchResults.value.length - 1;
+          : results.value.length - 1;
       activatedResultContentIndex.value =
         activatedResult.value.contents.length - 1;
     };
 
     const activeNextResult = (): void => {
       activatedResultIndex.value =
-        activatedResultIndex.value < searchResults.value.length - 1
+        activatedResultIndex.value < results.value.length - 1
           ? activatedResultIndex.value + 1
           : 0;
       activatedResultContentIndex.value = 0;
@@ -106,24 +115,26 @@ export default defineComponent({
     };
 
     const getVNodes = (display: Word[]): (VNode | string)[] =>
-      display.map((word) =>
-        typeof word === "string" ? word : h(word[0], word[1])
-      );
+      display.map((word) => (isString(word) ? word : h(word[0], word[1])));
 
     const getDisplay = (matchedItem: MatchedItem): (VNode | string)[] => {
-      if (matchedItem.type === "custom") {
+      if (matchedItem[ResultField.type] === ResultType.custom) {
         const formatterConfig =
-          searchProClientCustomFiledConfig[matchedItem.index] || "$content";
+          searchProClientCustomFiledConfig[matchedItem[ResultField.index]] ||
+          "$content";
 
-        const [prefix, suffix = ""] =
-          typeof formatterConfig === "object"
-            ? formatterConfig[routeLocale.value].split("$content")
-            : formatterConfig.split("$content");
+        const [prefix, suffix = ""] = isPlainObject(formatterConfig)
+          ? formatterConfig[routeLocale.value].split("$content")
+          : formatterConfig.split("$content");
 
-        return getVNodes([prefix, ...matchedItem.display, suffix]);
+        return matchedItem[ResultField.display]
+          .map((display) => getVNodes([prefix, ...display, suffix]))
+          .flat();
       }
 
-      return getVNodes(matchedItem.display);
+      return matchedItem[ResultField.display]
+        .map((display) => getVNodes(display))
+        .flat();
     };
 
     const resetSearchResult = (): void => {
@@ -133,30 +144,39 @@ export default defineComponent({
       emit("close");
     };
 
-    onMounted(() => {
-      useEventListener("keydown", (event: KeyboardEvent) => {
-        if (!hasResults.value) return;
+    useEventListener("keydown", (event: KeyboardEvent) => {
+      if (!hasResults.value) return;
 
-        if (event.key === "ArrowUp") activePreviousResultContent();
-        else if (event.key === "ArrowDown") activeNextResultContent();
-        else if (event.key === "Enter") {
-          const item =
-            activatedResult.value.contents[activatedResultContentIndex.value];
+      if (event.key === "ArrowUp") {
+        activePreviousResultContent();
+      } else if (event.key === "ArrowDown") {
+        activeNextResultContent();
+      } else if (event.key === "Enter") {
+        const item =
+          activatedResult.value.contents[activatedResultContentIndex.value];
 
-          if (route.path !== item.path) {
-            addHistory(item);
-            void router.push(item.path);
-            resetSearchResult();
-          }
+        const path = getRealPath(item);
+
+        if (page.value.path !== path) {
+          addQueryHistory(props.query);
+          addResultHistory(item);
+          void router.push(path);
+          resetSearchResult();
         }
-      });
-
-      disableBodyScroll(searchResult.value!, { reserveScrollBarGap: true });
+      }
     });
 
-    onBeforeUnmount(() => {
-      clearAllBodyScrollLocks();
-    });
+    watch(
+      [activatedResultIndex, activatedResultContentIndex],
+      () => {
+        document
+          .querySelector(
+            ".search-pro-result-list-item.active .search-pro-result-item.active"
+          )
+          ?.scrollIntoView(false);
+      },
+      { flush: "post" }
+    );
 
     return (): VNode =>
       h(
@@ -165,16 +185,13 @@ export default defineComponent({
           class: [
             "search-pro-result",
             {
-              empty:
-                query.value === ""
-                  ? history.value.length === 0
-                  : !hasResults.value,
+              empty: query.value ? !hasResults.value : !hasHistory.value,
             },
           ],
-          ref: searchResult,
+          id: "search-pro-results",
         },
         query.value === ""
-          ? history.value.length
+          ? hasHistory.value
             ? h(
                 "ul",
                 { class: "search-pro-result-list" },
@@ -184,11 +201,11 @@ export default defineComponent({
                     { class: "search-pro-result-title" },
                     locale.value.history
                   ),
-                  history.value.map((item, historyIndex) =>
+                  resultHistory.value.map((item, historyIndex) =>
                     h(
                       RouterLink,
                       {
-                        to: item.path,
+                        to: getRealPath(item),
                         class: [
                           "search-pro-result-item",
                           {
@@ -198,41 +215,46 @@ export default defineComponent({
                           },
                         ],
                         onClick: () => {
-                          console.log("click");
                           resetSearchResult();
                         },
                       },
                       () => [
                         h(HistoryIcon, { class: "search-pro-result-type" }),
                         h("div", { class: "search-pro-result-content" }, [
-                          item.type === "content" && item.header
-                            ? h("div", { class: "content-header" }, item.header)
+                          item[ResultField.type] === ResultType.text &&
+                          item[ResultField.header]
+                            ? h(
+                                "div",
+                                { class: "content-header" },
+                                item[ResultField.header]
+                              )
                             : null,
                           h("div", getDisplay(item)),
                         ]),
-                        h(
-                          "button",
-                          {
-                            class: "search-pro-close-icon",
-                            onClick: (event: Event) => {
-                              event.preventDefault();
-                              event.stopPropagation();
-                              removeHistory(historyIndex);
-                            },
+                        h("button", {
+                          class: "search-pro-close-icon",
+                          innerHTML: CLOSE_ICON,
+                          onClick: (event: Event) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            removeResultHistory(historyIndex);
                           },
-                          h(CloseIcon)
-                        ),
+                        }),
                       ]
                     )
                   ),
                 ])
               )
-            : locale.value.emptyHistory
+            : enabled
+            ? locale.value.emptyHistory
+            : locale.value.emptyResult
+          : searching.value
+          ? h(SearchLoading, { hint: locale.value.searching })
           : hasResults.value
           ? h(
               "ul",
               { class: "search-pro-result-list" },
-              searchResults.value.map(({ title, contents }, index) => {
+              results.value.map(({ title, contents }, index) => {
                 const isCurrentResultActive =
                   activatedResultIndex.value === index;
 
@@ -258,7 +280,7 @@ export default defineComponent({
                       return h(
                         RouterLink,
                         {
-                          to: item.path,
+                          to: getRealPath(item),
                           class: [
                             "search-pro-result-item",
                             {
@@ -267,27 +289,30 @@ export default defineComponent({
                             },
                           ],
                           onClick: () => {
-                            addHistory(item);
+                            addQueryHistory(props.query);
+                            addResultHistory(item);
                             resetSearchResult();
                           },
                         },
                         () => [
-                          item.type === "content"
+                          item[ResultField.type] === ResultType.text
                             ? null
                             : h(
-                                item.type === "title"
+                                item[ResultField.type] === ResultType.title
                                   ? TitleIcon
-                                  : item.type === "heading"
+                                  : item[ResultField.type] ===
+                                    ResultType.heading
                                   ? HeadingIcon
                                   : HeartIcon,
                                 { class: "search-pro-result-type" }
                               ),
                           h("div", { class: "search-pro-result-content" }, [
-                            item.type === "content" && item.header
+                            item[ResultField.type] === ResultType.text &&
+                            item[ResultField.header]
                               ? h(
                                   "div",
                                   { class: "content-header" },
-                                  item.header
+                                  item[ResultField.header]
                                 )
                               : null,
                             h("div", getDisplay(item)),
