@@ -1,3 +1,4 @@
+import { type APIOptions, renderCodePen } from "create-codepen";
 import {
   type PropType,
   type VNode,
@@ -6,8 +7,6 @@ import {
   h,
   onMounted,
 } from "vue";
-
-import { loadCodePens } from "../utils/index.js";
 
 import "../styles/code-pen.scss";
 
@@ -104,9 +103,22 @@ export default defineComponent({
 
     const slugHash = computed(() => getInfo().slugHash || props.slugHash);
 
+    const options = computed(
+      () =>
+        <APIOptions>{
+          title: props.title,
+          user: user.value,
+          "slug-hash": slugHash.value,
+          "theme-id": props.theme,
+          height: props.height,
+          "default-tab": props.defaultTab.join(","),
+          preview: props.status === "preview" ? "true" : "",
+        }
+    );
+
     onMounted(() => {
       if (props.status !== "clicktorun")
-        loadCodePens(`.codepen-${slugHash.value}`);
+        renderCodePen(`.codepen-${slugHash.value}`, options.value);
     });
 
     return (): VNode =>
@@ -114,14 +126,6 @@ export default defineComponent({
         "div",
         {
           class: ["codepen-wrapper", `codepen-${slugHash.value}`],
-          "data-height": props.height,
-          "data-theme-id": props.theme,
-          "data-user": user.value,
-          "data-slug-hash": slugHash.value,
-          "data-default-tab": props.defaultTab.join(","),
-          "data-pen-title": props.title,
-          "data-preview": props.status === "preview",
-          user: props.user,
         },
         [
           props.status === "clicktorun"
@@ -131,7 +135,7 @@ export default defineComponent({
                   type: "button",
                   class: "codepen-button",
                   onClick: () => {
-                    loadCodePens(`.codepen-${slugHash.value}`);
+                    renderCodePen(`.codepen-${slugHash.value}`, options.value);
                   },
                 },
                 "Run Code"
