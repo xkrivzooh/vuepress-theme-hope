@@ -1,14 +1,14 @@
+import { usePageData } from "@vuepress/client";
 import { useFullscreen } from "@vueuse/core";
-import { computed, defineComponent, h, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { type VNode, computed, defineComponent, h, ref, watch } from "vue";
 
-import AppearanceSwitch from "@theme-hope/modules/outlook/components/AppearanceSwitch";
-import ToggleFullScreenButton from "@theme-hope/modules/outlook/components/ToggleFullScreenButton";
-import OutlookSettings from "@theme-hope/modules/outlook/components/OutlookSettings";
-import { OutlookIcon } from "@theme-hope/modules/outlook/components/icons/index";
 import { usePure, useThemeData } from "@theme-hope/composables/index";
-
-import type { VNode } from "vue";
+import AppearanceSwitch from "@theme-hope/modules/outlook/components/AppearanceSwitch";
+import OutlookSettings from "@theme-hope/modules/outlook/components/OutlookSettings";
+import { enableThemeColor } from "@theme-hope/modules/outlook/components/ThemeColor";
+import ToggleFullScreenButton from "@theme-hope/modules/outlook/components/ToggleFullScreenButton";
+import { OutlookIcon } from "@theme-hope/modules/outlook/components/icons/index";
+import { useDarkmode } from "@theme-hope/modules/outlook/composables/index";
 
 import "../styles/outlook-button.scss";
 
@@ -19,51 +19,40 @@ export default defineComponent({
     const { isSupported } = useFullscreen();
     const themeData = useThemeData();
     const pure = usePure();
-    const route = useRoute();
+    const page = usePageData();
+    const { canToggle } = useDarkmode();
+
     const open = ref(false);
-
-    const enableDarkmode = computed(
-      () =>
-        themeData.value.darkmode !== "disable" &&
-        themeData.value.darkmode !== "enable"
-    );
-
-    const enableThemeColor = computed(
-      () => !pure.value && Boolean(themeData.value.themeColor)
-    );
 
     const enableFullScreen = computed(
       () => !pure.value && themeData.value.fullscreen && isSupported
     );
 
     watch(
-      () => route.path,
+      () => page.value.path,
       () => {
         open.value = false;
       }
     );
 
     return (): VNode | null =>
-      enableDarkmode.value || enableFullScreen.value || enableThemeColor.value
+      canToggle.value || enableFullScreen.value || enableThemeColor
         ? h(
             "div",
             { class: "nav-item hide-in-mobile" },
             // only AppearanceSwitch is enabled
-            enableDarkmode.value &&
-              !enableFullScreen.value &&
-              !enableThemeColor.value
+            canToggle.value && !enableFullScreen.value && !enableThemeColor
               ? h(AppearanceSwitch)
               : // only FullScreen is enabled
-              enableFullScreen.value &&
-                !enableDarkmode.value &&
-                !enableThemeColor.value
+              enableFullScreen.value && !canToggle.value && !enableThemeColor
               ? h(ToggleFullScreenButton)
               : h(
                   "button",
                   {
+                    type: "button",
                     class: ["outlook-button", { open: open.value }],
                     tabindex: "-1",
-                    ariaHidden: true,
+                    "aria-hidden": true,
                   },
                   [
                     h(OutlookIcon),

@@ -1,5 +1,5 @@
 import { createRequire } from "node:module";
-import { fs, pwa, theme } from "docs-shared";
+import { fs, theme } from "docs-shared";
 
 const { version } = fs.readJsonSync(
   createRequire(import.meta.url).resolve(
@@ -7,6 +7,7 @@ const { version } = fs.readJsonSync(
   )
 );
 
+// the theme wrapper is located in <root>/docs-shared/src/theme-wrapper.ts
 export default theme("copy-code2", {
   locales: {
     "/": {
@@ -18,7 +19,7 @@ export default theme("copy-code2", {
         "/demo",
         {
           text: version,
-          icon: "note",
+          icon: "bookmark",
           children: [
             {
               text: "V1 Docs",
@@ -40,7 +41,7 @@ export default theme("copy-code2", {
         "/zh/demo",
         {
           text: version,
-          icon: "note",
+          icon: "bookmark",
           children: [
             {
               text: "V1 文档",
@@ -57,11 +58,7 @@ export default theme("copy-code2", {
   plugins: {
     mdEnhance: {
       codetabs: true,
+      imgMark: true,
     },
-
-    pwa: pwa({
-      name: "vuepress-plugin-copy-code2",
-      shortName: "VuePress2 Copy Code plugin",
-    }),
   },
 });

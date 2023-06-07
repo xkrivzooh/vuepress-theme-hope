@@ -1,24 +1,26 @@
+import { type PluginFunction } from "@vuepress/core";
 import { getDirname, path } from "@vuepress/utils";
 import { watch } from "chokidar";
+import { checkVersion } from "vuepress-shared/node";
 
 import { injectConfigModule } from "./inject.js";
+import { type SassPaletteOptions } from "./options.js";
 import {
   prepareConfigFile,
-  prepareInjectSass,
   prepareConfigSass,
+  prepareInjectSass,
   preparePaletteSass,
   prepareStyleSass,
 } from "./prepare.js";
-import { logger } from "./utils.js";
-
-import type { PluginFunction } from "@vuepress/core";
-import type { SassPaletteOptions } from "./options.js";
+import { PLUGIN_NAME, logger } from "./utils.js";
 
 const __dirname = getDirname(import.meta.url);
 
 export const sassPalettePlugin =
   (options: SassPaletteOptions): PluginFunction =>
   (app) => {
+    checkVersion(app, PLUGIN_NAME, "2.0.0-beta.62");
+
     if (app.env.isDebug) logger.info("Options:", options);
 
     const {
@@ -42,7 +44,7 @@ export const sassPalettePlugin =
     const userStyle = style ? app.dir.source(style) : null;
 
     return {
-      name: `vuepress-plugin-sass-palette`,
+      name: PLUGIN_NAME,
 
       multiple: true,
 

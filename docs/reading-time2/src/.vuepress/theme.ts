@@ -1,5 +1,5 @@
 import { createRequire } from "node:module";
-import { fs, pwa, theme } from "docs-shared";
+import { fs, theme } from "docs-shared";
 
 const { version } = fs.readJsonSync(
   createRequire(import.meta.url).resolve(
@@ -7,6 +7,7 @@ const { version } = fs.readJsonSync(
   )
 );
 
+// the theme wrapper is located in <root>/docs-shared/src/theme-wrapper.ts
 export default theme("reading-time2", {
   locales: {
     "/": {
@@ -16,7 +17,7 @@ export default theme("reading-time2", {
         "/config",
         {
           text: version,
-          icon: "note",
+          icon: "bookmark",
           children: [
             {
               text: "V1 Docs",
@@ -35,7 +36,7 @@ export default theme("reading-time2", {
         "/zh/config",
         {
           text: version,
-          icon: "note",
+          icon: "bookmark",
           children: [
             {
               text: "V1 文档",
@@ -51,13 +52,7 @@ export default theme("reading-time2", {
   plugins: {
     mdEnhance: {
       codetabs: true,
+      imgMark: true,
     },
-
-    pwa: pwa({
-      name: "vuepress-plugin-reading-time2",
-      shortName: "VuePress2 Reading Time plugin",
-      guide: false,
-      config: false,
-    }),
   },
 });

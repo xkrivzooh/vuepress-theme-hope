@@ -1,13 +1,19 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type { HopeLang } from "./types.js";
+import { type HopeLang } from "./types.js";
+import { fromEntries, keys } from "../../shared/index.js";
 
 export const lang2PathConfig = {
   "de-AT": "/de-at/",
+  "de-DE": "/de/",
   "en-US": "/en/",
   "es-ES": "/es/",
+  "fi-FI": "/fi/",
   "fr-FR": "/fr/",
+  "hu-HU": "/hu/",
+  "id-ID": "/id/",
   "ja-JP": "/ja/",
   "ko-KR": "/ko/",
+  "nl-NL": "/nl/",
   "pl-PL": "/pl/",
   "pt-BR": "/br/",
   "ru-RU": "/ru/",
@@ -19,8 +25,8 @@ export const lang2PathConfig = {
   "zh-TW": "/zh-tw/",
 };
 
-export const supportedLangs = Object.keys(lang2PathConfig);
+export const supportedLangs = keys(lang2PathConfig);
 
-export const path2langConfig = Object.fromEntries(
+export const path2langConfig = fromEntries(
   (supportedLangs as HopeLang[]).map((lang) => [lang2PathConfig[lang], lang])
 );

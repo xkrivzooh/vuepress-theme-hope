@@ -1,5 +1,8 @@
-import type { Code } from "./typings.js";
-import type { CodeDemoOptions } from "../../../shared/index.js";
+import { isPlainObject } from "@vuepress/shared";
+import { keys } from "vuepress-shared/client";
+
+import { type Code } from "./typings.js";
+import { type CodeDemoOptions } from "../../../shared/index.js";
 
 declare const CODE_DEMO_OPTIONS: CodeDemoOptions;
 
@@ -52,20 +55,21 @@ export const preProcessorConfig: Record<
 
 export const h = (
   tag: string,
-  attrs: Record<string, string>,
+  attrs?: Record<string, string>,
   children?: HTMLElement[]
 ): HTMLElement => {
   const node = document.createElement(tag);
 
-  attrs &&
-    Object.keys(attrs).forEach((key) => {
+  if (isPlainObject(attrs))
+    keys(attrs).forEach((key) => {
       if (!key.indexOf("data")) {
         const k = key.replace("data", "");
 
         node.dataset[k] = attrs[key];
-
+      } else {
         // @ts-ignore
-      } else node[key] = attrs[key];
+        node[key] = attrs[key];
+      }
     });
 
   if (children)
@@ -144,7 +148,7 @@ export const injectScript = (
     script.appendChild(
       document.createTextNode(
         // here we are fixing `document` variable back to shadowDOM
-        `{const document=window.document.querySelector('#${id} .code-demo-container').shadowRoot;\n${scriptText}}`
+        `{const document=window.document.querySelector('#${id} .vp-code-demo-display').shadowRoot;\n${scriptText}}`
       )
     );
     shadowRoot.appendChild(script);

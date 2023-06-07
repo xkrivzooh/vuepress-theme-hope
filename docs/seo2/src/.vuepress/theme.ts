@@ -1,10 +1,11 @@
 import { createRequire } from "node:module";
-import { fs, pwa, theme } from "docs-shared";
+import { fs, theme } from "docs-shared";
 
 const { version } = fs.readJsonSync(
   createRequire(import.meta.url).resolve("vuepress-plugin-seo2/package.json")
 );
 
+// the theme wrapper is located in <root>/docs-shared/src/theme-wrapper.ts
 export default theme("seo2", {
   locales: {
     "/": {
@@ -16,7 +17,7 @@ export default theme("seo2", {
         "/demo",
         {
           text: version,
-          icon: "note",
+          icon: "bookmark",
           children: [
             {
               text: "V1 Docs",
@@ -38,7 +39,7 @@ export default theme("seo2", {
         "/zh/demo",
         {
           text: version,
-          icon: "note",
+          icon: "bookmark",
           children: [
             {
               text: "V1 文档",
@@ -55,12 +56,7 @@ export default theme("seo2", {
   plugins: {
     mdEnhance: {
       codetabs: true,
+      imgMark: true,
     },
-
-    pwa: pwa({
-      name: "vuepress-plugin-seo2",
-      shortName: "VuePress2 SEO plugin",
-      guide: "/guide/",
-    }),
   },
 });

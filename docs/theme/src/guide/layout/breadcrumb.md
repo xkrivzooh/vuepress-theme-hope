@@ -1,6 +1,6 @@
 ---
 title: Path Navigation
-icon: navigation
+icon: bars-progress
 order: 3
 category:
   - Layout
@@ -9,23 +9,13 @@ tag:
   - Layout
 ---
 
-The theme adds Breadcrumb support, you can config it using `breadcrumb` in page frontmatter and theme options <Badge text="Support page config" /> [^support-page-config], the default value is `true`.
+The theme adds Breadcrumb support, you can configure it using `breadcrumb` in page frontmatter and theme options <Badge text="Support page config" /> [^support-page-config], the default value is `true`.
 
 Without any config, a Breadcrumb that matches the theme color is displayed at the top of the page content to help the reader understand the document structure.
 
 <!-- more -->
 
 You can also control the icon display of the path navigation using `breadcrumbIcon` field <Badge text="Support page config" />, the default value is `true`.
-
-::: warning Notice
-
-To ensure Breadcrumb working well, the `README.md` file should be included in each folder.
-
-Otherwise, the Breadcrumb will ignore that folder level because the component can not generate title and link.
-
-Please remember to set a title for **HOME PAGE**!
-
-:::
 
 [^support-page-config]: **Page config support**
 

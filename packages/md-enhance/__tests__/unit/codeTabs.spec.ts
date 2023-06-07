@@ -1,6 +1,8 @@
-import { describe, it, expect } from "vitest";
+import { createMarkdown } from "@vuepress/markdown";
 import MarkdownIt from "markdown-it";
-import { codeTabs } from "../../src/node/markdown-it/index.js";
+import { describe, expect, it } from "vitest";
+
+import { codeTabs } from "../../src/node/markdown-it/codeTabs.js";
 
 const markdownIt = MarkdownIt({ linkify: true }).use(codeTabs);
 
@@ -327,6 +329,25 @@ const a = 1;
 Another text again
 :::
     `)
+    ).toMatchSnapshot();
+  });
+
+  it("Should work with code import", () => {
+    const markdown = createMarkdown();
+
+    markdown.use(codeTabs);
+
+    expect(
+      markdown.render(`
+::: code-tabs
+@tab js
+\`\`\`js
+const a = 1;
+\`\`\`
+@tab:active ts
+@[code](./not-exist.spec.ts)
+:::
+`)
     ).toMatchSnapshot();
   });
 });

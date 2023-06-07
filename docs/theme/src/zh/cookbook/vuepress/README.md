@@ -1,6 +1,8 @@
 ---
 title: VuePress
-icon: vue
+icon: fab fa-vuejs
+dir:
+  order: 3
 category:
   - 教程知识
   - VuePress
@@ -40,4 +42,4 @@ VuePress 是一个以 Markdown 为中心的静态网站生成器。你可以使�
 
 ## VuePress 官方文档
 
-- [VuePress](https://v2.vuepress.vuejs.org/zh/)
+- [VuePress](https://vuejs.press/zh/)

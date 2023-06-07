@@ -1,21 +1,24 @@
 import { hashSync } from "bcrypt-ts/node";
+import { entries, fromEntries, isArray, isString } from "vuepress-shared/node";
+
+import { type EncryptConfig, type EncryptOptions } from "../../shared/index.js";
 import { logger } from "../utils.js";
 
-import type { EncryptConfig, EncryptOptions } from "../../shared/index.js";
-
-export const getEncryptConfig = (encrypt: EncryptOptions): EncryptConfig => {
+/** @private */
+export const getEncryptConfig = (
+  encrypt: EncryptOptions = {}
+): EncryptConfig => {
   const result: EncryptConfig = {};
 
-  if (encrypt.global) result.global = true;
-
   // handle global token
-  if (encrypt.admin)
-    if (typeof encrypt.admin === "string")
-      result.admin = [hashSync(encrypt.admin)];
-    else if (Array.isArray(encrypt.admin))
+  if (encrypt.admin) {
+    if (encrypt.global) result.global = true;
+
+    if (isString(encrypt.admin)) result.admin = [hashSync(encrypt.admin)];
+    else if (isArray(encrypt.admin))
       result.admin = encrypt.admin
         .map((globalToken) => {
-          if (typeof globalToken === "string") return hashSync(globalToken);
+          if (isString(globalToken)) return hashSync(globalToken);
 
           logger.error(`You config "themeConfig.encrypt.admin", but your config is invalid. 
 
@@ -30,17 +33,18 @@ export const getEncryptConfig = (encrypt: EncryptOptions): EncryptConfig => {
         
         Please check "admin" in your "themeConfig.encrypt" config. It can be string or string[], but you are providing ${typeof encrypt.admin}. Please fix it!`
       );
+  }
 
   if (encrypt.config)
-    result.config = Object.fromEntries(
-      Object.entries(encrypt.config)
+    result.config = fromEntries(
+      entries(encrypt.config)
         .map<[string, string[]] | null>(([key, tokens]) => {
-          if (typeof tokens === "string") return [key, [hashSync(tokens)]];
+          if (isString(tokens)) return [key, [hashSync(tokens)]];
 
-          if (Array.isArray(tokens)) {
+          if (isArray(tokens)) {
             const encryptedTokens = tokens
               .map((token) => {
-                if (typeof token === "string") return hashSync(token);
+                if (isString(token)) return hashSync(token);
 
                 logger.error(`You config "themeConfig.encrypt.config", but your config is invalid. 
         

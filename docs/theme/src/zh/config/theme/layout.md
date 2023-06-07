@@ -1,6 +1,6 @@
 ---
 title: 主题布局选项
-icon: config
+icon: object-group
 order: 3
 category:
   - 配置
@@ -33,9 +33,12 @@ tag:
 
 ### navbarLayout
 
-- 类型: `HopeNavbarLayoutOptions`
+- 类型: `NavbarLayoutOptions`
 
   ```ts
+  /**
+   * 导航栏组件
+   */
   type NavbarComponent =
     | "Brand"
     | "Links"
@@ -44,14 +47,17 @@ tag:
     | "Outlook"
     | "Repo";
 
-  interface HopeNavbarLayoutOptions {
-    left: NavbarComponent[];
-    center: NavbarComponent[];
-    right: NavbarComponent[];
+  /**
+   * 导航栏布局选项
+   */
+  interface NavbarLayoutOptions {
+    start?: (NavbarComponent | string)[];
+    center?: (NavbarComponent | string)[];
+    end?: (NavbarComponent | string)[];
   }
   ```
 
-- 默认值: `{ left: ["Brand"], center: ["Links"], right: ["Language", "Repo", "Outlook", "Search"] }`
+- 默认值: `{ start: ["Brand"], center: ["Links"], end: ["Language", "Repo", "Outlook", "Search"] }`
 
 自定义导航栏布局
 
@@ -65,9 +71,16 @@ tag:
 ### logoDark
 
 - 类型: `string`
-- 必填: 否
+- 默认值: `logo`
 
 夜间模式下导航栏图标，应为基于 `.vuepress/public` 文件夹的绝对路径。
+
+### navTitle
+
+- 类型: `string | false`
+- 默认值: `$siteLocale.title`
+
+导航栏标题
 
 ### repo
 
@@ -128,7 +141,7 @@ tag:
 
 是否在侧边栏显示图标。
 
-### sidebarSorter <Badge text="仅限 Root" />
+### sidebarSorter <Badge text="仅限 Root" type="warning" />
 
 - 类型: `SidebarSorter`
 
@@ -139,6 +152,7 @@ tag:
 
     title: string;
     order: number | null;
+    path?: string | null;
 
     frontmatter: ThemeNormalPageFrontmatter;
     pageData: ThemePageData;
@@ -334,7 +348,7 @@ tag:
 
 ### copyright
 
-- 类型: `string | boolean`
+- 类型: `string | false`
 - 默认值: `"Copyright © <作者>"`
 
 默认的版权信息，设置为 `false` 来默认禁用它。
@@ -354,6 +368,13 @@ tag:
 - 默认值: 当前 `locale` 的键名
 
 当前语言的主页路径，用于导航栏图标和返回主页按钮的链接。
+
+### rtl
+
+- 类型: `boolean`
+- 默认值: `false`
+
+是否使用 RTL 布局
 
 ### toc {#toc-heading}
 

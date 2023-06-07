@@ -1,6 +1,6 @@
 ---
 title: 目录页面
-icon: tree
+icon: network-wired
 order: 6
 category:
   - 布局
@@ -9,7 +9,7 @@ tag:
   - 布局
 ---
 
-VuePress Theme Hope 默认使用 [`vuepress-plugin-catalog`][auto-catalog] 为每个文件夹自动生成带有目录的 `README.md`。
+VuePress Theme Hope 默认使用 <ProjectLink name="auto-catalog" path="/zh/">`vuepress-plugin-catalog`</ProjectLink> 为每个文件夹自动生成带有目录的 `README.md`。
 
 <!-- more -->
 
@@ -19,6 +19,20 @@ VuePress Theme Hope 默认使用 [`vuepress-plugin-catalog`][auto-catalog] 为�
 
 你可以使用 `plugin.autoCatalog.exclude` 从目录生成中排除一些文件夹，也可以使用 `plugin.autoCatalog.frontmatter` 来控制 frontmatter 的生成。
 
-有关详细信息，请参阅 [Auto Catalog Plugin Docs][auto-catalog]。
+有关详细信息，请参阅 <ProjectLink name="auto-catalog" path="/zh/">Auto Catalog 插件文档</ProjectLink>。
 
-[auto-catalog]: https://vuepress-theme-hope.github.io/v2/zh/auto-catalog/
+## 示例
+
+主页目录:
+
+<!-- markdownlint-disable MD033 -->
+
+<div class="catalog-display-container">
+  <AutoCatalog base='/zh/' />
+</div>
+
+<!-- markdownlint-enable MD033 -->
+
+```md
+<AutoCatalog base='/zh/' />
+```

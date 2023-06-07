@@ -1,6 +1,6 @@
 ---
 title: Markdown
-icon: markdown
+icon: fab fa-markdown
 order: 3
 category:
   - Get Started
@@ -17,7 +17,7 @@ You should create and write Markdown files, so that VuePress can convert them to
 
 ## Markdown Introduction
 
-If you are a new comer and don’t know how to write Markdown, please read [Markdown Intro](../../cookbook/markdown/README.md) and [Markdown Demo](../../cookbook/markdown/demo.md).
+If you are a newcomer and don't know how to write Markdown, please read [Markdown Intro](../../cookbook/markdown/README.md) and [Markdown Demo](../../cookbook/markdown/demo.md).
 
 ## Markdown Config
 
@@ -25,7 +25,7 @@ VuePress introduce configuration for each Markdown page using Frontmatter.
 
 ::: info
 
-Frontmatter is a important concept in VuePress. If you don’t know it, you need to read [Frontmatter Introduction](../../cookbook/vuepress/page.md#frontmatter).
+Frontmatter is an important concept in VuePress. If you don't know it, you need to read [Frontmatter Introduction](../../cookbook/vuepress/page.md#frontmatter).
 
 :::
 
@@ -41,7 +41,7 @@ For these extended syntax, please see [Built-in Markdown Features](../../cookboo
 
 ### Theme Enhancement
 
-By using [`vuepress-plugin-md-enhance`][md-enhance], the theme extends more Markdown syntax and provides richer writing functions.
+By using <ProjectLink name="md-enhance">`vuepress-plugin-md-enhance`</ProjectLink>, the theme extends more Markdown syntax and provides richer writing functions.
 
 #### Custom Container
 
@@ -224,6 +224,18 @@ Support setting color scheme and size
 
 - [View Detail](../markdown/image.md)
 
+#### Card
+
+```card
+title: Mr.Hope
+desc: Where there is light, there is hope
+logo: https://mrhope.site/logo.svg
+link: https://mrhope.site
+color: rgba(253, 230, 138, 0.15)
+```
+
+- [View Detail](../markdown/card.md)
+
 #### Chart
 
 ::: chart A Scatter Chart
@@ -302,6 +314,9 @@ cond(no)->e
 #### Mermaid
 
 ```mermaid
+---
+title: Flowchart
+---
 flowchart TB
     c1-->a2
     subgraph one
@@ -331,7 +346,7 @@ $$
 
 #### Include files
 
-@include(../markdown/demo.snippet.md{5-9})
+<!-- @include: ../markdown/demo.snippet.md{9-13} -->
 
 - [View Detail](../markdown/include.md)
 
@@ -441,5 +456,3 @@ $$
 @slideend
 
 - [View Detail](../markdown/presentation.md)
-
-[md-enhance]: https://vuepress-theme-hope.github.io/v2/md-enhance/

@@ -1,5 +1,6 @@
-import { pwa, theme } from "docs-shared";
+import { theme } from "docs-shared";
 
+// the theme wrapper is located in <root>/docs-shared/src/theme-wrapper.ts
 export default theme("sass-palette", {
   locales: {
     "/": {
@@ -18,11 +19,7 @@ export default theme("sass-palette", {
   plugins: {
     mdEnhance: {
       codetabs: true,
+      imgMark: true,
     },
-
-    pwa: pwa({
-      name: "vuepress-plugin-sass-palette",
-      shortName: "VuePress2 Sass Palette plugin",
-    }),
   },
 });

@@ -1,21 +1,42 @@
-import type { LocaleConfig } from "@vuepress/core";
-import type { MermaidConfig } from "mermaid";
-import type {
-  AttrsOptions,
-  FigureOptions,
-  ImgMarkOptions,
-  IncludeOptions,
-  KatexOptions,
-  MarkdownEnhanceLocaleData,
-  MathjaxOptions,
-  StylizeOptions,
-  PlaygroundOptions,
-  PresentationOptions,
-  TasklistOptions,
-  TSPresetPlaygroundOptions,
-  VuePresetPlaygroundOptions,
+import { type LocaleConfig } from "@vuepress/core";
+import { type MermaidConfig } from "mermaid";
+
+import {
+  type AttrsOptions,
+  type FigureOptions,
+  type ImgMarkOptions,
+  type IncludeOptions,
+  type KatexOptions,
+  type MarkdownEnhanceLocaleData,
+  type MathjaxOptions,
+  type PlaygroundOptions,
+  type PresentationOptions,
+  type StylizeOptions,
+  type TSPresetPlaygroundOptions,
+  type TasklistOptions,
+  type VuePresetPlaygroundOptions,
 } from "./typings/index.js";
-import type { CodeDemoOptions, VuePlaygroundOptions } from "../shared/index.js";
+import { type CodeDemoOptions } from "../shared/index.js";
+
+export type LinksCheckStatus = "always" | "dev" | "build" | "never";
+
+export interface LinksCheckOptions {
+  /**
+   * Whether check dead links in markdown
+   *
+   * 是否检查 Markdown 中的死链
+   *
+   * @default "dev"
+   */
+  status?: LinksCheckStatus;
+
+  /**
+   * Dead links to ignore
+   *
+   * 忽略的死链
+   */
+  ignore?: (string | RegExp)[] | ((link: string, isDev: boolean) => boolean);
+}
 
 /**
  * md-enhance plugin configuration
@@ -24,11 +45,9 @@ export interface MarkdownEnhanceOptions {
   /**
    * Whether check dead links in markdown
    *
-   * @description `true` equals to `'always'`, `false` equals to `'never'`
-   *
-   * @default 'dev'
+   * @default { status: "dev"}
    */
-  linkCheck?: "always" | "dev" | "build" | "never" | boolean;
+  checkLinks?: LinksCheckOptions;
 
   /**
    * Whether enable standard GFM support
@@ -175,6 +194,15 @@ export interface MarkdownEnhanceOptions {
   imgSize?: boolean;
 
   /**
+   * Whether to enable obsidian image size mark support
+   *
+   * 是否启用 obsidian 图片大小标记支持。
+   *
+   * @default false
+   */
+  obsidianImgSize?: boolean;
+
+  /**
    * Whether to enable mark format support
    *
    * 是否启用标注支持。
@@ -199,7 +227,7 @@ export interface MarkdownEnhanceOptions {
    *
    * @default false
    */
-  include?: IncludeOptions | boolean;
+  include?: Partial<IncludeOptions> | boolean;
 
   /**
    * Whether to enable katex support
@@ -212,7 +240,16 @@ export interface MarkdownEnhanceOptions {
    *
    * @default false
    */
-  katex?: KatexOptions | boolean;
+  katex?:
+    | (KatexOptions & {
+        /**
+         * whether enable copy plugin
+         *
+         * @default false
+         */
+        copy?: boolean;
+      })
+    | boolean;
 
   /**
    * Whether to enable mathjax support
@@ -226,6 +263,15 @@ export interface MarkdownEnhanceOptions {
    * @default false
    */
   mathjax?: MathjaxOptions | boolean;
+
+  /**
+   * Whether to enable card support
+   *
+   * 是否启用卡片支持
+   *
+   * @default false
+   */
+  card?: boolean;
 
   /**
    * Whether to enable chart support
@@ -249,6 +295,8 @@ export interface MarkdownEnhanceOptions {
    * Whether to enable flowchart support
    *
    * 是否启用 flowchart 流程图支持
+   *
+   * @deprecated The lib is lack of maintenance, use mermaid instead.
    *
    * @default false
    */
@@ -310,7 +358,7 @@ export interface MarkdownEnhanceOptions {
    *
    * @default false
    */
-  vuePlayground?: VuePlaygroundOptions | boolean;
+  vuePlayground?: boolean;
 
   /**
    * The delay of operating dom, in ms

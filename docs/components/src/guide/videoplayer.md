@@ -85,7 +85,7 @@ Video type.
 
 ::: note
 
-If your server cannot return a correct mime type for your video files, you should specific it. (e.g.: `video/mp4`)
+If your server cannot return a correct mime type for your video files, you should specify it. (e.g.: `video/mp4`)
 
 :::
 
@@ -95,6 +95,13 @@ If your server cannot return a correct mime type for your video files, you shoul
 - Required: No
 
 Video poster
+
+### title
+
+- Type: `string`
+- Required: No
+
+Video title
 
 ### tracks
 
@@ -123,7 +130,7 @@ Video poster
     src: string;
     /**
      * Language of the track text data. It must be a valid BCP 47 language tag.
-     * If the kind attribute is set to subtitles, then srclang must be defined.
+     * If the kind attribute is set to subtitles, then srcLang must be defined.
      */
     srcLang: string;
   }

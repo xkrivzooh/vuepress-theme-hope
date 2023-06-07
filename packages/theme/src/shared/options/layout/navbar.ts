@@ -1,4 +1,4 @@
-import type { NavbarOptions } from "../../navbar.js";
+import { type NavbarOptions } from "../../navbar.js";
 
 export interface NavbarLocaleData {
   /**
@@ -35,9 +35,9 @@ export type NavbarComponent =
  * 导航栏布局选项
  */
 export interface NavbarLayoutOptions {
-  left: NavbarComponent[];
-  center: NavbarComponent[];
-  right: NavbarComponent[];
+  start?: (NavbarComponent | string)[];
+  center?: (NavbarComponent | string)[];
+  end?: (NavbarComponent | string)[];
 }
 
 export interface NavbarLocaleOptions {
@@ -46,13 +46,13 @@ export interface NavbarLocaleOptions {
    *
    * @description Set to `false` to disable navbar in current locale
    *
-   * @see https://vuepress-theme-hope.github.io/v2/guide/layout/navbar.html
+   * @see https://theme-hope.vuejs.press/guide/layout/navbar.html
    *
    * 导航栏配置
    *
    * @description 设置 `false` 以在当前语言中禁用导航栏
    *
-   * @see https://vuepress-theme-hope.gitee.io/v2/zh/guide/layout/navbar.html
+   * @see https://theme-hope.vuejs.press/v2/zh/guide/layout/navbar.html
    */
   navbar?: NavbarOptions | false;
 
@@ -77,6 +77,15 @@ export interface NavbarLocaleOptions {
    * @description 应为基于 `.vuepress/public` 文件夹的绝对路径
    */
   logoDark?: string;
+
+  /**
+   * Navbar title
+   *
+   * 导航栏标题
+   *
+   * @default $siteLocale.title
+   */
+  navTitle?: string | false;
 
   /**
    * Repository link
@@ -115,7 +124,7 @@ export interface NavbarLocaleOptions {
    *
    * 是否在向下滚动时自动隐藏导航栏
    *
-   * @default 'mobile'
+   * @default "mobile"
    */
   navbarAutoHide?: "always" | "mobile" | "none";
 
@@ -124,7 +133,7 @@ export interface NavbarLocaleOptions {
    *
    * 导航栏布局设置
    *
-   * @default { left: ["Brand"], center: ["Links"], right: ["Language", "Repo", "Outlook", "Search"] }
+   * @default { start: ["Brand"], center: ["Links"], end: ["Language", "Repo", "Outlook", "Search"] }
    */
   navbarLayout?: NavbarLayoutOptions;
 

@@ -1,9 +1,17 @@
-import { componentsPlugin } from "vuepress-plugin-components";
+import { type Plugin } from "@vuepress/core";
+import {
+  type ComponentOptions,
+  componentsPlugin,
+} from "vuepress-plugin-components";
+import { isString } from "vuepress-shared/node";
 
-import type { ComponentOptions } from "vuepress-plugin-components";
-import type { Plugin } from "@vuepress/core";
-import type { ThemeOptions } from "../../shared/index.js";
+import { type ThemeOptions } from "../../shared/index.js";
 
+/**
+ * @private
+ *
+ * Resolve options for vuepress-plugin-components
+ */
 export const getComponentsPlugin = (
   options: Pick<
     ThemeOptions,
@@ -25,17 +33,14 @@ export const getComponentsPlugin = (
       componentOptions: {
         fontIcon: {
           ...(options.iconAssets ? { assets: options.iconAssets } : {}),
+          ...(isString(options.iconPrefix)
+            ? { prefix: options.iconPrefix }
+            : {}),
         },
-        ...(typeof options.iconPrefix === "string"
-          ? { prefix: options.iconPrefix }
-          : {}),
         ...componentOptions,
       },
       rootComponents: {
-        backToTop:
-          typeof options.backToTop === "number"
-            ? options.backToTop
-            : options.backToTop !== false,
+        backToTop: options.backToTop ?? true,
         ...rootComponents,
       },
     },

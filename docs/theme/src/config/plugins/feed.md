@@ -10,11 +10,9 @@ tag:
   - Theme Config
 ---
 
-## Intro <Badge text="enabled by default" />
+## Intro
 
-`vuepress-theme-hope` provides feed generation support via the `vuepress-plugin-feed2` plugin.
-
-`vuepress-theme-hope` passes `plugins.feed` in theme options as plugin options to `vuepress-plugin-feed2` plugin.
+`vuepress-theme-hope` provides feed generation support via the `vuepress-plugin-feed2` plugin. It passes `plugins.feed` in theme options as plugin options to `vuepress-plugin-feed2` plugin.
 
 The `vuepress-plugin-feed2` plugin can generate feed files in the following three formats for you:
 
@@ -22,7 +20,7 @@ The `vuepress-plugin-feed2` plugin can generate feed files in the following thre
 - JSON 1.1
 - RSS 2.0
 
-Please enable the plugin by setting `atom`, `json` or `rss` to `true` in the plugin options according to the format you want to generate.
+Please enable the plugin by setting `atom`, `json` or `rss` to `true` in `plugins.feed` according to the format you want to generate.
 
 ::: tip
 
@@ -34,7 +32,7 @@ If possible, use RSS as first choice.
 
 ::: info
 
-See the [feed2 plugin documentation][feed-config] for more details.
+See the <ProjectLink name="feed2" path="/config/">feed2 plugin documentation</ProjectLink> for more details.
 
 :::
 
@@ -82,12 +80,18 @@ Set the maximum number of items in the feed. After all pages are sorted, the fir
 
 If your site has a lot of articles, you may consider this option to reduce feed file size.
 
-### customElements
+### preservedElements
 
-- Type: `string[]`
-- Default: `["ExternalLinkIcon"]`
+- Type: `(RegExp | string)[] | (tagName: string) => boolean`
+- Default: `[]`
 
-Custom element or component which should be removed in feed.
+Custom element or component which should be preserved in feed.
+
+::: note
+
+By default, all unknown tags will be removed.
+
+:::
 
 ### filter
 
@@ -124,7 +128,7 @@ You can sort the pages in the site according to your needs.
 
 `channel` option is used to config _Feed Channels_.
 
-For available options, please see [Config → Channel][feed-config-channel]
+For available options, please see <ProjectLink name="feed2" path="/config/channel.html">Config → Channel</ProjectLink>.
 
 ### atomOutputFilename
 
@@ -157,7 +161,7 @@ The plugin is providing a reasonable getter by default, if you want full control
 
 :::
 
-For details, see [Feed Getter][feed-config-getter].
+For details, see <ProjectLink name="feed2" path="/config/getter.html">Feed Getter</ProjectLink>.
 
 ### locales
 
@@ -167,7 +171,3 @@ For details, see [Feed Getter][feed-config-getter].
 You can use it to specific options for each locale.
 
 Any options above are supported except `hostname`.
-
-[feed-config]: https://vuepress-theme-hope.github.io/v2/feed/config/
-[feed-config-channel]: https://vuepress-theme-hope.github.io/v2/feed/config/channel.html
-[feed-config-getter]: https://vuepress-theme-hope.github.io/v2/feed/config/getter.html

@@ -1,5 +1,5 @@
 import { createRequire } from "node:module";
-import { fs, pwa, theme } from "docs-shared";
+import { fs, theme } from "docs-shared";
 
 const { version } = fs.readJsonSync(
   createRequire(import.meta.url).resolve(
@@ -7,6 +7,7 @@ const { version } = fs.readJsonSync(
   )
 );
 
+// the theme wrapper is located in <root>/docs-shared/src/theme-wrapper.ts
 export default theme("sitemap2", {
   locales: {
     "/": {
@@ -17,7 +18,7 @@ export default theme("sitemap2", {
         "/demo",
         {
           text: version,
-          icon: "note",
+          icon: "bookmark",
           children: [
             {
               text: "V1 Docs",
@@ -37,7 +38,7 @@ export default theme("sitemap2", {
         "/zh/demo",
         {
           text: version,
-          icon: "note",
+          icon: "bookmark",
           children: [
             {
               text: "V1 文档",
@@ -54,12 +55,7 @@ export default theme("sitemap2", {
   plugins: {
     mdEnhance: {
       codetabs: true,
+      imgMark: true,
     },
-
-    pwa: pwa({
-      name: "vuepress-plugin-sitemap2",
-      shortName: "VuePress2 Sitemap plugin",
-      guide: "/guide/",
-    }),
   },
 });

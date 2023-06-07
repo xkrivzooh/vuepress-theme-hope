@@ -1,12 +1,11 @@
-import { computed, defineComponent, h } from "vue";
-import { useLocaleConfig } from "vuepress-shared/client";
+import { type PropType, type VNode, defineComponent, h } from "vue";
+import {
+  type ReadingTime,
+  type ReadingTimeLocale,
+} from "vuepress-plugin-reading-time2/client";
 
 import { WordIcon } from "@theme-hope/modules/info/components/icons";
 import { useMetaLocale } from "@theme-hope/modules/info/composables/index";
-import { readingTimeLocales } from "@theme-hope/modules/info/utils/index";
-
-import type { PropType, VNode } from "vue";
-import type { ReadingTime } from "vuepress-plugin-reading-time2";
 
 export default defineComponent({
   name: "ReadTimeInfo",
@@ -25,6 +24,16 @@ export default defineComponent({
     },
 
     /**
+     * Reading time locale
+     *
+     * 阅读时间语言环境
+     */
+    readingTimeLocale: {
+      type: Object as PropType<ReadingTimeLocale | null>,
+      default: () => null,
+    },
+
+    /**
      * Whether in pure mode
      *
      * 是否处于纯净模式
@@ -34,20 +43,13 @@ export default defineComponent({
 
   setup(props) {
     const metaLocale = useMetaLocale();
-    const readingTimeLocale = useLocaleConfig(readingTimeLocales);
-
-    const words = computed(() => props.readingTime?.words.toString());
-
-    const wordText = computed(() =>
-      readingTimeLocale.value.word.replace("$word", words.value || "")
-    );
 
     return (): VNode | null =>
-      words.value
+      props.readingTimeLocale?.words
         ? h(
             "span",
             {
-              class: "words-info",
+              class: "page-word-info",
               "aria-label": `${metaLocale.value.words}${
                 props.pure ? "" : "🔠"
               }`,
@@ -55,10 +57,10 @@ export default defineComponent({
             },
             [
               h(WordIcon),
-              h("span", wordText.value),
+              h("span", props.readingTimeLocale?.words),
               h("meta", {
                 property: "wordCount",
-                content: words.value,
+                content: props.readingTime?.words,
               }),
             ]
           )

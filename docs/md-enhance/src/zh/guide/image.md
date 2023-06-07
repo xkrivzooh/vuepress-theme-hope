@@ -1,6 +1,6 @@
 ---
 title: 图片
-icon: pic
+icon: image
 ---
 
 改进 Markdown 中的图像语法以支持颜色方案和大小。
@@ -74,11 +74,11 @@ GFM 支持通过 ID 标记图片，使得图片只在特定的模式显示。我
 你可以通过 `imgMark` 选项控制它。
 
 ```md
-![GitHub Light](/assets/icon/github-light.png#gh-dark-mode-only)
-![GitHub Dark](/assets/icon/github-dark.png#gh-light-mode-only)
+![GitHub Light](/assets/image/github-light.svg#gh-dark-mode-only)
+![GitHub Dark](/assets/image/github-dark.svg#gh-light-mode-only)
 
-![GitHub Light](/assets/icon/github-light.png#dark)
-![GitHub Dark](/assets/icon/github-dark.png#light)
+![GitHub Light](/assets/image/github-light.svg#dark)
+![GitHub Dark](/assets/image/github-dark.svg#light)
 ```
 
 ::: details 案例
@@ -87,11 +87,11 @@ GFM 支持通过 ID 标记图片，使得图片只在特定的模式显示。我
 
 <AppearanceSwitch /> (尝试切换主题)
 
-![GitHub Light](/assets/icon/github-light.png#gh-dark-mode-only)
-![GitHub Dark](/assets/icon/github-dark.png#gh-light-mode-only)
+![GitHub Light](/assets/image/github-light.svg#gh-dark-mode-only)
+![GitHub Dark](/assets/image/github-dark.svg#gh-light-mode-only)
 
-![GitHub Light](/assets/icon/github-light.png#dark)
-![GitHub Dark](/assets/icon/github-dark.png#light)
+![GitHub Light](/assets/image/github-light.svg#dark)
+![GitHub Dark](/assets/image/github-dark.svg#light)
 
 :::
 
@@ -136,11 +136,11 @@ interface ImageMarkOptions {
 ```md
 ![VuePress Hope 图标](/favicon.ico)
 
-[![VuePress Hope 图标](/favicon.ico)](https://vuepress-theme-hope.github.io/)
+[![VuePress Hope 图标](/favicon.ico)](https://theme-hope.vuejs.press/)
 
 ![VuePress Hope 图标](/favicon.ico "VuePress Hope 图标")
 
-[![VuePress Hope 图标](/favicon.ico "VuePress Hope 图标")](https://vuepress-theme-hope.github.io/)
+[![VuePress Hope 图标](/favicon.ico "VuePress Hope 图标")](https://theme-hope.vuejs.press/)
 
 ![VuePress Hope 图标](/logo.svg "VuePress Hope 图标" =300x300)
 ```
@@ -149,18 +149,14 @@ interface ImageMarkOptions {
 
 ![VuePress Hope 图标](/favicon.ico)
 
-[![VuePress Hope 图标](/favicon.ico)](https://vuepress-theme-hope.github.io/)
+[![VuePress Hope 图标](/favicon.ico)](https://theme-hope.vuejs.press/)
 
 ![VuePress Hope 图标](/favicon.ico "VuePress Hope 图标")
 
-[![VuePress Hope 图标](/favicon.ico "VuePress Hope 图标")](https://vuepress-theme-hope.github.io/)
+[![VuePress Hope 图标](/favicon.ico "VuePress Hope 图标")](https://theme-hope.vuejs.press/)
 
 ![VuePress Hope 图标](/logo.svg "VuePress Hope 图标" =300x300)
 
 <script setup lang="ts">
-import AppearanceSwitch from "@theme-hope/modules/outlook/components/AppearanceSwitch"
+import AppearanceSwitch from "@theme-hope/modules/outlook/components/AppearanceSwitch";
 </script>
-
-```
-
-```

@@ -10,7 +10,7 @@ tag:
 
 如果你是一个程序员，你可能希望你的用户能够一键复制你在正文中展示的代码。
 
-针对这一情况，`vuepress-theme-hope` 内置了 [vuepress-plugin-copy-code2][copy-code2]，提供了一个复制按钮。
+针对这一情况，`vuepress-theme-hope` 内置了 <ProjectLink name="copy-code2" path="/zh/">vuepress-plugin-copy-code2</ProjectLink>，提供了一个复制按钮。
 
 ::: info
 
@@ -22,7 +22,7 @@ tag:
 
 ## 使用
 
-启用后，此插件会自动添加复制按钮到每个代码块的右下角。
+启用后，此插件会自动添加复制按钮到每个代码块的右上角。
 
 默认情况下，按钮仅在桌面模式显示，如果你需要在移动端展示这个按钮，请在主题选项中设置 `plugins.copyCode.showInMobile: true`。
 
@@ -42,5 +42,3 @@ export default {
   }),
 };
 ```
-
-[copy-code2]: https://vuepress-theme-hope.github.io/v2/copy-code/zh/

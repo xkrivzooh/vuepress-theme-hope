@@ -1,16 +1,22 @@
-import { pwa, theme } from "docs-shared";
+import { theme } from "docs-shared";
 
-export default theme("seo2", {
+// the theme wrapper is located in <root>/docs-shared/src/theme-wrapper.ts
+export default theme("shared", {
   locales: {
     "/": {
       navbar: [
         "/",
         "/shared",
-        { text: "Node", prefix: "/node/", children: ["bundler", "content"] },
+        {
+          text: "Node",
+          icon: "fab fa-node-js",
+          prefix: "/node/",
+          children: ["bundler", "locale", "content", "date", "env"],
+        },
         "/client",
       ],
 
-      sidebar: false,
+      sidebar: "structure",
     },
 
     "/zh/": {
@@ -19,24 +25,21 @@ export default theme("seo2", {
         "/zh/shared",
         {
           text: "Node",
+          icon: "fab fa-node-js",
           prefix: "/zh/node/",
-          children: ["bundler", "content"],
+          children: ["bundler", "locale", "content", "date", "env"],
         },
         "/zh/client",
       ],
 
-      sidebar: false,
+      sidebar: "structure",
     },
   },
 
   plugins: {
     mdEnhance: {
       codetabs: true,
+      imgMark: true,
     },
-
-    pwa: pwa({
-      name: "vuepress-shared",
-      shortName: "VuePress2 Shared utils",
-    }),
   },
 });

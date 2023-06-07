@@ -2,7 +2,7 @@ import { defineUserConfig } from "@vuepress/cli";
 import { defaultTheme } from "@vuepress/theme-default";
 import { sitemapPlugin } from "vuepress-plugin-sitemap2";
 
-const base = <"/" | `/${string}/`>process.env.BASE || "/";
+const base = <"/" | `/${string}/`>process.env["BASE"] || "/";
 
 export default defineUserConfig({
   base,
@@ -19,7 +19,7 @@ export default defineUserConfig({
 
   plugins: [
     sitemapPlugin({
-      hostname: "https://vuepress-theme-hope.github.io",
+      hostname: "https://plugin-sitemap2-demo.vuejs.press",
     }),
   ],
 });

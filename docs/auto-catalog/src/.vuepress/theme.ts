@@ -1,6 +1,7 @@
-import { pwa, theme } from "docs-shared";
+import { theme } from "docs-shared";
 
-export default theme("blog2", {
+// the theme wrapper is located in <root>/docs-shared/src/theme-wrapper.ts
+export default theme("auto-catalog", {
   locales: {
     "/": {
       navbar: ["/", "/guide", "/config", "/demo"],
@@ -15,11 +16,7 @@ export default theme("blog2", {
   plugins: {
     mdEnhance: {
       codetabs: true,
+      imgMark: true,
     },
-
-    pwa: pwa({
-      name: "vuepress-plugin-auto-catalog",
-      shortName: "Auto Catalog",
-    }),
   },
 });

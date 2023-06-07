@@ -7,13 +7,13 @@ heroText: vuepress-plugin-blog2
 tagline: Blog plugin for VuePress2
 actions:
   - text: Guide 💡
-    link: /guide.html
+    link: ./guide.html
     type: primary
 
   - text: Config 🛠
-    link: /config.html
+    link: ./config.html
 
-footer: Theme by <a href="https://vuepress-theme-hope.github.io/v2/" target="_blank">VuePress Theme Hope</a> | MIT Licensed, Copyright © 2019-present Mr.Hope
+footer: Theme by <a href="https://theme-hope.vuejs.press" target="_blank">VuePress Theme Hope</a> | MIT Licensed, Copyright © 2019-present Mr.Hope
 
 copyright: false
 ---
@@ -27,19 +27,19 @@ copyright: false
 @tab pnpm
 
 ```bash
-pnpm add -D vuepress-plugin-blog2@next
+pnpm add -D vuepress-plugin-blog2
 ```
 
 @tab yarn
 
 ```bash
-yarn add -D vuepress-plugin-blog2@next
+yarn add -D vuepress-plugin-blog2
 ```
 
 @tab npm
 
 ```bash
-npm i -D vuepress-plugin-blog2@next
+npm i -D vuepress-plugin-blog2
 ```
 
 :::
@@ -82,7 +82,7 @@ export default {
 
 ## Migrating from V1
 
-This plugin wasn’t released in V1.
+This plugin wasn't released in V1.
 
 If you were using `@vuepress/plugin-blog` in VuePress1, you should know that this plugin is targeting a total different level with `@vuepress/plugin-blog`.
 

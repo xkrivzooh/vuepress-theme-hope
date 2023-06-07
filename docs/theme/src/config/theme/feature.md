@@ -1,6 +1,6 @@
 ---
 title: Theme Feature Options
-icon: config
+icon: splotch
 order: 3
 category:
   - Config
@@ -15,7 +15,7 @@ The following options control features provided by theme.
 
 ## Blog Options
 
-The theme adds blog feature using [`vuepress-plugin-blog2`][blog2], and the feature is **disabled** by default.
+The theme adds blog feature using <ProjectLink name="blog2">`vuepress-plugin-blog2`</ProjectLink>, and the feature is **disabled** by default.
 
 To enable blog plugin and use default options, you can set `plugins.blog` to `true` in theme options.
 
@@ -71,7 +71,7 @@ Set social links.
 - If the social media icon is available below, you can set `MediaName: MediaLink` directly.
 - Otherwise, you should pass in a tuple `MediaName: [MediaLink , MediaSvgIconString or MediaSvgIconPath]`,
 
-  The second element in the tuple must be a valid SVG string or a full path of a existing SVG file.
+  The second element in the tuple must be a valid SVG string or a full path of an existing SVG file.
 
 ::: info Available Social Media
 
@@ -82,6 +82,7 @@ The following social medias has built-in icons:
 - `"Bitbucket"`
 - `"Dingding"`
 - `"Discord"`
+- `"Douban"`
 - `"Dribbble"`
 - `"Email"`
 - `"Evernote"`
@@ -102,6 +103,8 @@ The following social medias has built-in icons:
 - `"Reddit"`
 - `"Rss"`
 - `"Steam"`
+- `"Skype"`
+- `"Telegram"`
 - `"Twitter"`
 - `"Wechat"`
 - `"Weibo"`
@@ -188,7 +191,7 @@ Whether to encrypt globally.
 - Type: `string | string []`
 - Required: No
 
-Admin password with highest authority, you can set multiple by using array.
+Admin password with the highest authority, you can set multiple ones by using array.
 
 ### encrypt.config
 
@@ -209,5 +212,3 @@ The encryption configuration is an object with a key name matching the path and 
 ```
 
 :::
-
-[blog2]: https://vuepress-theme-hope.github.io/v2/blog/

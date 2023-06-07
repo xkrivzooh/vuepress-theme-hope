@@ -1,10 +1,9 @@
 import { usePageFrontmatter } from "@vuepress/client";
-import { computed, defineComponent, h, nextTick, ref } from "vue";
+import { type VNode, computed, defineComponent, h, nextTick, ref } from "vue";
 
-import { LockIcon } from "./icons.js";
 import { useThemeLocaleData } from "@theme-hope/composables/index";
 
-import type { VNode } from "vue";
+import { LockIcon } from "./icons.js";
 
 import "../styles/password-modal.scss";
 
@@ -20,10 +19,7 @@ export default defineComponent({
     full: Boolean,
   },
 
-  emits: {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    verify: (_password: string, _remember: boolean) => true,
-  },
+  emits: ["verify"],
 
   setup(props, { emit }) {
     const frontmatter = usePageFrontmatter();
@@ -57,19 +53,19 @@ export default defineComponent({
         "div",
         {
           class: [
-            "password-layer",
+            "vp-decrypt-layer",
             { expand: props.full || frontmatter.value["home"] },
           ],
         },
-        h("div", { class: "password-modal" }, [
+        h("div", { class: "vp-decrypt-modal" }, [
           h(
             "div",
-            { class: ["hint", { tried: hasTried.value }] },
+            { class: ["vp-decrypt-hint", { tried: hasTried.value }] },
             hasTried.value
               ? locale.value.errorHint
               : h(LockIcon, { "aria-label": locale.value.iconLabel })
           ),
-          h("div", { class: "password" }, [
+          h("div", { class: "vp-decrypt-input" }, [
             h("input", {
               type: "password",
               value: password.value,
@@ -82,7 +78,7 @@ export default defineComponent({
               },
             }),
           ]),
-          h("div", { class: "remember-password" }, [
+          h("div", { class: "vp-remember-password" }, [
             h("input", {
               type: "checkbox",
               value: remember.value,
@@ -90,7 +86,15 @@ export default defineComponent({
             }),
             locale.value.remember,
           ]),
-          h("button", { class: "submit", onClick: () => verify() }, "OK"),
+          h(
+            "button",
+            {
+              type: "button",
+              class: "vp-decrypt-submit",
+              onClick: () => verify(),
+            },
+            "OK"
+          ),
         ])
       );
   },

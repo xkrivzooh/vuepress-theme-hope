@@ -2,16 +2,6 @@
   --notice-width: 250px;
 }
 
-@keyframes notice-fade-in {
-  from {
-    opacity: 0.2;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
 .notice-fade-enter-active,
 .notice-fade-leave-active {
   transition: opacity 0.5s;
@@ -22,7 +12,7 @@
   opacity: 0;
 }
 
-.notice-mask {
+.vp-notice-mask {
   position: fixed;
   top: 0;
   left: 0;
@@ -31,8 +21,6 @@
   width: 100vw;
   height: 100vh;
 
-  animation: 0.25s notice-fade-in;
-
   backdrop-filter: blur(10px);
 
   @media print {
@@ -40,9 +28,12 @@
   }
 }
 
-.notice-wrapper {
+.vp-notice-wrapper {
   position: fixed;
   top: 80px;
+
+  // NOTE: Compatible with Android Wechat
+  // inset-inline-end: 20px;
   right: 20px;
   z-index: 1500;
 
@@ -51,31 +42,37 @@
   width: var(--notice-width);
   border-radius: 8px;
 
-  background: var(--c-bg, #fff);
+  background: var(--vp-bg);
   box-shadow: 0 2px 6px 0 var(--card-shadow);
 
   @media print {
     display: none;
   }
 
+  #{hope-config.$rtl-selector} &:not(.fullscreen) {
+    right: unset;
+    left: 20px;
+  }
+
   &.fullscreen {
-    position: fixed;
     top: 50vh;
     right: 50vw;
+    left: unset;
     transform: translate(50%, -50%);
   }
 }
 
-.notice-title {
+.vp-notice-title {
   position: relative;
 
   margin: 0;
   padding: 8px 12px;
 
-  background: var(--c-brand, #3eaf7c);
+  background: var(--vp-tc);
   color: var(--white);
 
   font-weight: 500;
+  text-align: start;
 
   .close-icon {
     vertical-align: middle;
@@ -92,24 +89,28 @@
 
     cursor: pointer;
 
+    #{hope-config.$rtl-selector} & {
+      float: left;
+    }
+
     &:hover {
       background-color: rgb(0 0 0 / 30%);
     }
   }
 }
 
-.notice-content {
+.vp-notice-content {
   margin: 1rem 0.75rem;
   font-size: 14px;
   line-height: 1.5;
 }
 
-.notice-footer {
+.vp-notice-footer {
   padding-bottom: 8px;
   text-align: center;
 }
 
-.notice-footer-action {
+.vp-notice-footer-action {
   display: inline-block;
 
   margin: 4px;
@@ -117,21 +118,21 @@
   border: none;
   border-radius: 8px;
 
-  background-color: var(--c-bg-lighter, #eaecef);
-  color: var(--c-text, #2c3e50);
+  background-color: var(--vp-bglt);
+  color: var(--vp-c);
 
   cursor: pointer;
 
   &:hover {
-    background-color: var(--c-bg-light, #f3f4f5);
+    background-color: var(--vp-bgl);
   }
 
   &.primary {
-    background-color: var(--c-brand, #3eaf7c);
+    background-color: var(--vp-tc);
     color: var(--white);
 
     &:hover {
-      background-color: var(--c-brand-light, #4abf8a);
+      background-color: var(--vp-tcl);
     }
   }
 }

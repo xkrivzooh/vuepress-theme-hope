@@ -1,8 +1,17 @@
 import { useStorage } from "@vueuse/core";
-import { defineComponent, h, onMounted, ref, watch } from "vue";
+import {
+  type PropType,
+  type SlotsType,
+  type VNode,
+  defineComponent,
+  h,
+  onMounted,
+  ref,
+  shallowRef,
+  watch,
+} from "vue";
 
-import type { PropType, VNode } from "vue";
-import type { TabProps } from "./Tabs.js";
+import { type TabProps } from "./Tabs.js";
 
 import "../styles/code-tabs.scss";
 
@@ -56,20 +65,28 @@ export default defineComponent({
     },
   },
 
+  slots: Object as SlotsType<{
+    [slot: `title${number}`]: (props: {
+      value: string;
+      isActive: boolean;
+    }) => VNode[];
+    [slot: `tab${number}`]: (props: {
+      value: string;
+      isActive: boolean;
+    }) => VNode[];
+  }>,
+
   setup(props, { slots }) {
     // index of current active item
     const activeIndex = ref(props.active);
 
     // refs of the tab buttons
-    const tabRefs = ref<HTMLUListElement[]>([]);
+    const tabRefs = shallowRef<HTMLUListElement[]>([]);
 
     // update store
     const updateStore = (): void => {
-      if (props.tabId) {
-        const { title, id: value = title } = props.data[activeIndex.value];
-
-        codeTabStore.value[props.tabId] = value;
-      }
+      if (props.tabId)
+        codeTabStore.value[props.tabId] = props.data[activeIndex.value].id;
     };
 
     // activate next tab
@@ -97,18 +114,14 @@ export default defineComponent({
         activatePrev();
       }
 
-      if (props.tabId) {
-        const { title, id: value = title } = props.data[activeIndex.value];
-
-        codeTabStore.value[props.tabId] = value;
-      }
+      if (props.tabId)
+        codeTabStore.value[props.tabId] = props.data[activeIndex.value].id;
     };
 
     const getInitialIndex = (): number => {
       if (props.tabId) {
         const valueIndex = props.data.findIndex(
-          ({ title, id: value = title }) =>
-            codeTabStore.value[props.tabId] === value
+          ({ id }) => codeTabStore.value[props.tabId] === id
         );
 
         if (valueIndex !== -1) return valueIndex;
@@ -124,9 +137,7 @@ export default defineComponent({
         () => codeTabStore.value[props.tabId],
         (newValue, oldValue) => {
           if (props.tabId && newValue !== oldValue) {
-            const index = props.data.findIndex(
-              ({ title, id: value = title }) => value === newValue
-            );
+            const index = props.data.findIndex(({ id }) => id === newValue);
 
             if (index !== -1) activeIndex.value = index;
           }
@@ -136,21 +147,22 @@ export default defineComponent({
 
     return (): VNode | null =>
       props.data.length
-        ? h("div", { class: "code-tabs" }, [
+        ? h("div", { class: "vp-code-tabs" }, [
             h(
               "div",
-              { class: "code-tabs-nav", role: "tablist" },
-              props.data.map(({ title }, index) => {
+              { class: "vp-code-tabs-nav", role: "tablist" },
+              props.data.map(({ id }, index) => {
                 const isActive = index === activeIndex.value;
 
                 return h(
                   "button",
                   {
+                    type: "button",
                     ref: (element) => {
                       if (element)
                         tabRefs.value[index] = <HTMLUListElement>element;
                     },
-                    class: ["code-tabs-nav-tab", { active: isActive }],
+                    class: ["vp-code-tab-nav", { active: isActive }],
                     role: "tab",
                     "aria-controls": `codetab-${props.id}-${index}`,
                     "aria-selected": isActive,
@@ -161,22 +173,22 @@ export default defineComponent({
                     onKeydown: (event: KeyboardEvent) =>
                       keyboardHandler(event, index),
                   },
-                  title
+                  slots[`title${index}`]({ value: id, isActive })
                 );
               })
             ),
-            props.data.map(({ title, id: value = title }, index) => {
+            props.data.map(({ id }, index) => {
               const isActive = index === activeIndex.value;
 
               return h(
                 "div",
                 {
-                  class: ["code-tab", { active: isActive }],
+                  class: ["vp-code-tab", { active: isActive }],
                   id: `codetab-${props.id}-${index}`,
                   role: "tabpanel",
                   "aria-expanded": isActive,
                 },
-                slots[`tab${index}`]?.({ title, value, isActive })
+                slots[`tab${index}`]({ value: id, isActive })
               );
             }),
           ])

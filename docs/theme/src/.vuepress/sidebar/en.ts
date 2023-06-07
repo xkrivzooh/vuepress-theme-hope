@@ -5,7 +5,7 @@ export const enSidebarConfig = sidebar({
     "",
     {
       text: "Guide",
-      icon: "creative",
+      icon: "lightbulb",
       prefix: "guide/",
       children: [
         "get-started/",
@@ -19,7 +19,7 @@ export const enSidebarConfig = sidebar({
     },
     {
       text: "Config",
-      icon: "config",
+      icon: "gears",
       prefix: "config/",
       children: [
         "intro",
@@ -32,23 +32,23 @@ export const enSidebarConfig = sidebar({
     },
     {
       text: "Cookbook",
-      icon: "guide",
+      icon: "signs-post",
       prefix: "cookbook/",
-      children: ["tutorial/", "markdown/", "vuepress/", "advanced/"],
+      children: ["tutorial/", "markdown/", "vuepress/", "customize/"],
     },
     {
       text: "Migration",
-      icon: "change",
+      icon: "code-compare",
       prefix: "migration/",
       children: ["highlight", "config", "page", "style"],
     },
     {
       text: "FAQ",
-      icon: "question",
+      icon: "circle-question",
       prefix: "faq/",
       children: ["", "troubleshooting", "common-error", "vite", "safari"],
     },
-    "demo",
+    "demo/",
     "changelog",
     "contribution",
   ],
@@ -57,52 +57,7 @@ export const enSidebarConfig = sidebar({
 
   "/config/": "structure",
 
-  "/cookbook/": [
-    {
-      text: "Tutorial",
-      icon: "guide",
-      prefix: "tutorial/",
-      children: [
-        "env",
-        "create",
-        "command",
-        "content",
-        "config",
-        "structure",
-        "deploy",
-      ],
-    },
-    {
-      text: "Markdown",
-      icon: "markdown",
-      prefix: "markdown/",
-      collapsible: true,
-      children: [
-        "",
-        "demo",
-        {
-          text: "Emoji",
-          icon: "emoji",
-          link: "emoji/",
-          prefix: "emoji/",
-          collapsible: true,
-          children: "structure",
-        },
-      ],
-    },
-    {
-      text: "VuePress",
-      icon: "vue",
-      prefix: "vuepress/",
-      collapsible: true,
-      children: ["", "page", "markdown", "file", "config", "plugin", "theme"],
-    },
-    {
-      text: "Advanced",
-      icon: "advance",
-      prefix: "advanced/",
-      collapsible: true,
-      children: ["component", "style", "replace", "extend"],
-    },
-  ],
+  "/cookbook/": "structure",
+
+  "/demo/": "structure",
 });

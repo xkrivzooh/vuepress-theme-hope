@@ -1,12 +1,20 @@
-import { usePageData } from "@vuepress/client";
-import { defineComponent, h, onMounted, watch, ref } from "vue";
+import { type PageHeader, usePageData } from "@vuepress/client";
+import {
+  type PropType,
+  type SlotsType,
+  type VNode,
+  defineComponent,
+  h,
+  onMounted,
+  ref,
+  shallowRef,
+  watch,
+} from "vue";
 import { RouterLink, useRoute } from "vue-router";
 import { isActiveLink } from "vuepress-shared/client";
 
+import PrintButton from "@theme-hope/modules/info/components/PrintButton";
 import { useMetaLocale } from "@theme-hope/modules/info/composables/index";
-
-import type { PageHeader } from "@vuepress/shared";
-import type { PropType, VNode } from "vue";
 
 import "../styles/toc.scss";
 
@@ -30,19 +38,23 @@ const renderChildren = (
     ? h(
         "ul",
         { class: "toc-list" },
-        headers.map((header) => [
-          h(
-            "li",
-            {
-              class: [
-                "toc-item",
-                { active: isActiveLink(route, `#${header.slug}`) },
-              ],
-            },
-            renderHeader(header)
-          ),
-          renderChildren(header.children, headerDepth - 1),
-        ])
+        headers.map((header) => {
+          const children = renderChildren(header.children, headerDepth - 1);
+
+          return [
+            h(
+              "li",
+              {
+                class: [
+                  "toc-item",
+                  { active: isActiveLink(route, `#${header.slug}`) },
+                ],
+              },
+              renderHeader(header)
+            ),
+            children ? h("li", children) : null,
+          ];
+        })
       )
     : null;
 };
@@ -72,14 +84,40 @@ export default defineComponent({
     },
   },
 
-  setup(props) {
+  slots: Object as SlotsType<{
+    before?: () => VNode | VNode[];
+    after?: () => VNode | VNode[];
+  }>,
+
+  setup(props, { slots }) {
     const route = useRoute();
     const page = usePageData();
     const metaLocale = useMetaLocale();
-    const toc = ref<HTMLElement>();
+
+    const toc = shallowRef<HTMLElement>();
+    const tocMarkerTop = ref("-1.7rem");
 
     const scrollTo = (top: number): void => {
       toc.value?.scrollTo({ top, behavior: "smooth" });
+    };
+
+    const updateTocMarker = (): void => {
+      if (toc.value) {
+        const activeTocItem = document.querySelector(".toc-item.active");
+
+        if (activeTocItem)
+          tocMarkerTop.value = `${
+            // active toc item top
+            activeTocItem.getBoundingClientRect().top -
+            // toc top
+            toc.value.getBoundingClientRect().top +
+            // toc scroll top
+            toc.value.scrollTop
+          }px`;
+        else tocMarkerTop.value = "-1.7rem";
+      } else {
+        tocMarkerTop.value = "-1.7rem";
+      }
     };
 
     onMounted(() => {
@@ -122,6 +160,12 @@ export default defineComponent({
           }
         }
       );
+
+      watch(
+        () => route.fullPath,
+        () => updateTocMarker(),
+        { flush: "post", immediate: true }
+      );
     });
 
     return (): VNode | null => {
@@ -134,8 +178,21 @@ export default defineComponent({
       return tocHeaders
         ? h("div", { class: "toc-place-holder" }, [
             h("aside", { id: "toc" }, [
-              h("div", { class: "toc-header" }, metaLocale.value.toc),
-              h("div", { class: "toc-wrapper", ref: toc }, [tocHeaders]),
+              slots.before?.(),
+              h("div", { class: "toc-header" }, [
+                metaLocale.value.toc,
+                h(PrintButton),
+              ]),
+              h("div", { class: "toc-wrapper", ref: toc }, [
+                tocHeaders,
+                h("div", {
+                  class: "toc-marker",
+                  style: {
+                    top: tocMarkerTop.value,
+                  },
+                }),
+              ]),
+              slots.after?.(),
             ]),
           ])
         : null;

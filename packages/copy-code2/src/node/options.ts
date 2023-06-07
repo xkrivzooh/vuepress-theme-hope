@@ -1,5 +1,6 @@
-import type { LocaleConfig } from "@vuepress/core";
-import type { CopyCodeLocaleData } from "../shared/index.js";
+import { type LocaleConfig } from "@vuepress/core";
+
+import { type CopyCodeLocaleData } from "../shared/index.js";
 
 export interface CopyCodeOptions {
   /**
@@ -47,11 +48,17 @@ export interface CopyCodeOptions {
   delay?: number;
 
   /**
-   * Whether use non-fancy styles
+   * Whether use fancy styles
    *
-   * 是否启用非华丽样式
+   * @description If users are expected to copy snippets from your site, you can set this option to `true`
+   *
+   * 是否启用华丽样式
+   *
+   * @description 如果你用户被期望从你的站点复制代码片段，你可以将此选项设置为 `true`
+   *
+   * @default false
    */
-  pure?: boolean;
+  fancy?: boolean;
 
   /**
    * Locale config

@@ -1,21 +1,35 @@
-import { useEventListener } from "@vueuse/core";
+import { useSiteLocaleData } from "@vuepress/client";
+import { onClickOutside, useEventListener, useScrollLock } from "@vueuse/core";
 import {
-  defineComponent,
+  type VNode,
   defineAsyncComponent,
+  defineComponent,
   h,
   inject,
+  nextTick,
   onMounted,
+  onUnmounted,
   ref,
+  shallowRef,
   watch,
 } from "vue";
-import { checkIsMobile, useLocaleConfig } from "vuepress-shared/client";
+import { useIsMobile, useLocaleConfig } from "vuepress-shared/client";
 
 import { SearchLoading } from "./SearchLoading.js";
 import { SearchIcon } from "./icons.js";
-import { searchModalSymbol } from "../composables/setup.js";
-import { searchProLocales } from "../define.js";
-
-import type { VNode } from "vue";
+import {
+  searchModalSymbol,
+  useArrayCycle,
+  useSearchSuggestions,
+} from "../composables/index.js";
+import { enableAutoSuggestions, searchProLocales } from "../define.js";
+import {
+  CLOSE_ICON,
+  DOWN_KEY_ICON,
+  ENTER_KEY_ICON,
+  ESC_KEY_ICON,
+  UP_KEY_ICON,
+} from "../utils/index.js";
 
 import "../styles/search-modal.scss";
 
@@ -24,7 +38,11 @@ const SearchResult = defineAsyncComponent({
     import(
       /* webpackChunkName: "search-pro-result" */ "vuepress-plugin-search-pro/result"
     ),
-  loadingComponent: SearchLoading,
+  loadingComponent: () => {
+    const localeConfig = useLocaleConfig(searchProLocales);
+
+    return h(SearchLoading, { hint: localeConfig.value.loading });
+  },
 });
 
 export default defineComponent({
@@ -32,19 +50,56 @@ export default defineComponent({
 
   setup() {
     const isActive = inject(searchModalSymbol)!;
+    const siteLocale = useSiteLocaleData();
+    const isMobile = useIsMobile();
     const locale = useLocaleConfig(searchProLocales);
+
     const input = ref("");
-    const isMobile = ref(false);
-    const inputElement = ref<HTMLInputElement>();
+    const { suggestions } = useSearchSuggestions(input);
+    const displaySuggestion = ref(false);
+
+    const {
+      index: activeSuggestionIndex,
+      prev: activePreviousSuggestion,
+      next: activeNextSuggestion,
+    } = useArrayCycle(suggestions);
+
+    const inputElement = shallowRef<HTMLInputElement>();
+    const suggestionElement = shallowRef<HTMLDivElement>();
+
+    const applySuggestion = (index = activeSuggestionIndex.value): void => {
+      input.value = suggestions.value[index];
+      displaySuggestion.value = false;
+    };
 
     useEventListener("keydown", (event: KeyboardEvent) => {
-      if (isActive.value && event.key === "Escape") isActive.value = false;
+      if (displaySuggestion.value) {
+        if (event.key === "ArrowUp") activePreviousSuggestion();
+        else if (event.key === "ArrowDown") activeNextSuggestion();
+        else if (event.key === "Enter") applySuggestion();
+        else if (event.key === "Escape") displaySuggestion.value = false;
+      } else if (event.key === "Escape") {
+        isActive.value = false;
+      }
     });
 
     onMounted(() => {
-      isMobile.value = checkIsMobile(navigator.userAgent);
+      const isLocked = useScrollLock(document.body);
+
       watch(isActive, (value) => {
-        if (value) inputElement.value?.focus();
+        isLocked.value = value;
+        if (value)
+          void nextTick().then(() => {
+            inputElement.value?.focus();
+          });
+      });
+
+      onClickOutside(suggestionElement, () => {
+        displaySuggestion.value = false;
+      });
+
+      onUnmounted(() => {
+        isLocked.value = false;
       });
     });
 
@@ -52,7 +107,7 @@ export default defineComponent({
       isActive.value
         ? h("div", { class: "search-pro-modal-wrapper" }, [
             h("div", {
-              class: "background",
+              class: "search-pro-mask",
               onClick: () => {
                 isActive.value = false;
                 input.value = "";
@@ -60,21 +115,118 @@ export default defineComponent({
             }),
             h("div", { class: "search-pro-modal" }, [
               h("div", { class: "search-pro-box" }, [
-                h(SearchIcon),
-                h("input", {
-                  ref: inputElement,
-                  type: "text",
-                  class: "search-pro-input",
-                  placeholder: locale.value.placeholder,
-                  spellcheck: "false",
-                  value: input.value,
-                  onInput: ({ target }: InputEvent) => {
-                    input.value = (<HTMLInputElement>target).value;
-                  },
-                }),
+                h("form", [
+                  h(
+                    "label",
+                    { for: "search-pro", "aria-label": locale.value.search },
+                    h(SearchIcon)
+                  ),
+                  h("input", {
+                    ref: inputElement,
+                    type: "search",
+                    class: "search-pro-input",
+                    id: "search-pro",
+                    placeholder: locale.value.placeholder,
+                    spellcheck: "false",
+                    autocapitalize: "off",
+                    autocomplete: "off",
+                    autocorrect: "off",
+                    name: `${siteLocale.value.title}-search`,
+                    value: input.value,
+                    "aria-controls": "search-pro-results",
+                    onKeydown: (event: KeyboardEvent): void => {
+                      const { key } = event;
+
+                      if (suggestions.value.length)
+                        if (key === "Tab") {
+                          applySuggestion();
+                          event.preventDefault();
+                        } else if (
+                          key === "ArrowDown" ||
+                          key === "ArrowUp" ||
+                          key === "Escape"
+                        ) {
+                          event.preventDefault();
+                        }
+                    },
+                    onInput: ({ target }: InputEvent) => {
+                      input.value = (<HTMLInputElement>target).value;
+                      displaySuggestion.value = true;
+                      activeSuggestionIndex.value = 0;
+                    },
+                  }),
+                  input.value
+                    ? h("button", {
+                        type: "reset",
+                        class: "clear-button",
+                        innerHTML: CLOSE_ICON,
+                        onClick: () => {
+                          input.value = "";
+                        },
+                      })
+                    : null,
+                  enableAutoSuggestions &&
+                  displaySuggestion.value &&
+                  suggestions.value.length
+                    ? h(
+                        "div",
+                        {
+                          class: "search-pro-suggestions-wrapper",
+                          ref: suggestionElement,
+                        },
+                        [
+                          h("ul", { class: "search-pro-suggestions" }, [
+                            suggestions.value.map((suggestion, index) =>
+                              h(
+                                "li",
+                                {
+                                  class: [
+                                    "search-pro-suggestion",
+                                    {
+                                      active:
+                                        index === activeSuggestionIndex.value,
+                                    },
+                                  ],
+                                  onClick: () => {
+                                    applySuggestion(index);
+                                  },
+                                },
+                                [
+                                  h(
+                                    "kbd",
+                                    {
+                                      class: "search-pro-auto-complete",
+                                      title: `Tab ${locale.value.autocomplete}`,
+                                    },
+                                    "Tab"
+                                  ),
+                                  suggestion,
+                                ]
+                              )
+                            ),
+                          ]),
+                          h(
+                            "button",
+                            {
+                              type: "button",
+                              class: "search-pro-close-suggestion",
+                              onClick: () => {
+                                displaySuggestion.value = false;
+                              },
+                            },
+                            [
+                              h("kbd", { innerHTML: ESC_KEY_ICON }),
+                              locale.value.exit,
+                            ]
+                          ),
+                        ]
+                      )
+                    : null,
+                ]),
                 h(
                   "button",
                   {
+                    type: "button",
                     class: "close-button",
                     onClick: () => {
                       isActive.value = false;
@@ -87,6 +239,7 @@ export default defineComponent({
 
               h(SearchResult, {
                 query: input.value,
+                isFocusing: !displaySuggestion.value,
                 onClose: () => {
                   isActive.value = false;
                 },
@@ -100,28 +253,16 @@ export default defineComponent({
                 ? null
                 : h("div", { class: "search-pro-hints" }, [
                     h("span", { class: "search-pro-hint" }, [
-                      h("kbd", {
-                        innerHTML:
-                          '<svg width="15" height="15" aria-label="Enter key" role="img"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"><path d="M12 3.53088v3c0 1-1 2-2 2H4M7 11.53088l-3-3 3-3"></path></g></svg>',
-                      }),
+                      h("kbd", { innerHTML: ENTER_KEY_ICON }),
                       locale.value.select,
                     ]),
                     h("span", { class: "search-pro-hint" }, [
-                      h("kbd", {
-                        innerHTML:
-                          '<svg width="15" height="15" aria-label="Arrow down" role="img"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"><path d="M7.5 3.5v8M10.5 8.5l-3 3-3-3"></path></g></svg>',
-                      }),
-                      h("kbd", {
-                        innerHTML:
-                          '<svg width="15" height="15" aria-label="Arrow up" role="img"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"><path d="M7.5 11.5v-8M10.5 6.5l-3-3-3 3"></path></g></svg>',
-                      }),
+                      h("kbd", { innerHTML: UP_KEY_ICON }),
+                      h("kbd", { innerHTML: DOWN_KEY_ICON }),
                       locale.value.navigate,
                     ]),
                     h("span", { class: "search-pro-hint" }, [
-                      h("kbd", {
-                        innerHTML:
-                          '<svg width="15" height="15" aria-label="Escape key" role="img"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"><path d="M13.6167 8.936c-.1065.3583-.6883.962-1.4875.962-.7993 0-1.653-.9165-1.653-2.1258v-.5678c0-1.2548.7896-2.1016 1.653-2.1016.8634 0 1.3601.4778 1.4875 1.0724M9 6c-.1352-.4735-.7506-.9219-1.46-.8972-.7092.0246-1.344.57-1.344 1.2166s.4198.8812 1.3445.9805C8.465 7.3992 8.968 7.9337 9 8.5c.032.5663-.454 1.398-1.4595 1.398C6.6593 9.898 6 9 5.963 8.4851m-1.4748.5368c-.2635.5941-.8099.876-1.5443.876s-1.7073-.6248-1.7073-2.204v-.4603c0-1.0416.721-2.131 1.7073-2.131.9864 0 1.6425 1.031 1.5443 2.2492h-2.956"></path></g></svg>',
-                      }),
+                      h("kbd", { innerHTML: ESC_KEY_ICON }),
                       locale.value.exit,
                     ]),
                   ]),

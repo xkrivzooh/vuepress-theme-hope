@@ -1,12 +1,10 @@
 /* eslint-disable vue/no-unused-properties */
-import { defineComponent, h, onMounted } from "vue";
+import { type VNode, defineComponent, h, onMounted } from "vue";
 import { useLocaleConfig } from "vuepress-shared/client";
 
+import { type PDFLocaleConfig } from "../../shared/locales.js";
 import { useSize } from "../composables/index.js";
 import { getLink, viewPDF } from "../utils/index.js";
-
-import type { VNode } from "vue";
-import type { PDFLocaleConfig } from "../../shared/locales.js";
 
 import "../styles/pdf.scss";
 
@@ -116,7 +114,7 @@ export default defineComponent({
 
     return (): VNode => {
       return h("div", {
-        class: "pdf-preview",
+        class: "pdf-viewer-wrapper",
         ref: el,
         style: {
           width: width.value,

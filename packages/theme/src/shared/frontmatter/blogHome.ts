@@ -1,4 +1,4 @@
-import type { ThemePageFrontmatter } from "./base.js";
+import { type ThemeHopePageFrontmatter } from "./home.js";
 
 export interface ThemeBlogHomeProjectOptions {
   /**
@@ -34,23 +34,12 @@ export interface ThemeBlogHomeProjectOptions {
   icon?: string;
 }
 
-export interface ThemeBlogHomePageFrontmatter extends ThemePageFrontmatter {
-  home: true;
+export interface ThemeBlogHomePageFrontmatter extends ThemeHopePageFrontmatter {
   layout: "BlogHome";
   /**
    * @default true
    */
   hero?: boolean;
-  /**
-   * @default false
-   */
-  heroFullScreen?: boolean;
-  heroImage?: string;
-  heroImageStyle?: Record<string, string>;
-  heroAlt?: string;
-  heroText?: string | false;
-  bgImage?: string | false;
-  bgImageStyle?: Record<string, string>;
-  tagline?: string;
+
   projects: ThemeBlogHomeProjectOptions[];
 }

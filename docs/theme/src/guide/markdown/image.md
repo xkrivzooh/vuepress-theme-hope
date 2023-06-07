@@ -1,6 +1,6 @@
 ---
 title: Image
-icon: pic
+icon: image
 category:
   - Markdown
 tag:
@@ -79,16 +79,16 @@ We are enabling lazyload using native HTML5 features, so your browser must suppo
 
 ## Image Mark
 
-GFM supports marking pictures by ID suffix so that pictures are only displayed in a specific mode. We support both GitHub’s markup and the easy markup `#light` and `#dark`.
+GFM supports marking pictures by ID suffix so that pictures are only displayed in a specific mode. We support both GitHub's markup and the easy markup `#light` and `#dark`.
 
 You can enable it by setting `plugins.mdEnhance.imgMark: true` in theme options.
 
 ```md
-![GitHub Light](/assets/icon/github-light.png#gh-dark-mode-only)
-![GitHub Dark](/assets/icon/github-dark.png#gh-light-mode-only)
+![GitHub Light](/assets/image/github-light.svg#gh-dark-mode-only)
+![GitHub Dark](/assets/image/github-dark.svg#gh-light-mode-only)
 
-![GitHub Light](/assets/icon/github-light.png#dark)
-![GitHub Dark](/assets/icon/github-dark.png#light)
+![GitHub Light](/assets/image/github-light.svg#dark)
+![GitHub Dark](/assets/image/github-dark.svg#light)
 ```
 
 ::: details Case
@@ -97,11 +97,11 @@ The above demo will render the following result
 
 <AppearanceSwitch /> (Try to toggle theme mode)
 
-![GitHub Light](/assets/icon/github-light.png#gh-dark-mode-only)
-![GitHub Dark](/assets/icon/github-dark.png#gh-light-mode-only)
+![GitHub Light](/assets/image/github-light.svg#gh-dark-mode-only)
+![GitHub Dark](/assets/image/github-dark.svg#gh-light-mode-only)
 
-![GitHub Light](/assets/icon/github-light.png#dark)
-![GitHub Dark](/assets/icon/github-dark.png#light)
+![GitHub Light](/assets/image/github-light.svg#dark)
+![GitHub Dark](/assets/image/github-dark.svg#light)
 
 :::
 
@@ -146,11 +146,11 @@ If the image is standalone in a line, wrapped or not wrapped by link, it will be
 ```md
 ![VuePress Hope Logo](/favicon.ico)
 
-[![VuePress Hope Logo](/favicon.ico)](https://vuepress-theme-hope.github.io/)
+[![VuePress Hope Logo](/favicon.ico)](https://theme-hope.vuejs.press/)
 
 ![VuePress Hope Logo](/favicon.ico "VuePress Hope Logo")
 
-[![VuePress Hope Logo](/favicon.ico "VuePress Hope Logo")](https://vuepress-theme-hope.github.io/)
+[![VuePress Hope Logo](/favicon.ico "VuePress Hope Logo")](https://theme-hope.vuejs.press/)
 
 ![VuePress Hope Logo](/logo.svg "VuePress Hope Logo" =300x300)
 ```
@@ -159,14 +159,14 @@ Will be rendered as:
 
 ![VuePress Hope Logo](/favicon.ico)
 
-[![VuePress Hope Logo](/favicon.ico)](https://vuepress-theme-hope.github.io/)
+[![VuePress Hope Logo](/favicon.ico)](https://theme-hope.vuejs.press/)
 
 ![VuePress Hope Logo](/favicon.ico "VuePress Hope Logo")
 
-[![VuePress Hope Logo](/favicon.ico "VuePress Hope Logo")](https://vuepress-theme-hope.github.io/)
+[![VuePress Hope Logo](/favicon.ico "VuePress Hope Logo")](https://theme-hope.vuejs.press/)
 
 ![VuePress Hope Logo](/logo.svg "VuePress Hope Logo" =300x300)
 
 <script setup lang="ts">
-import AppearanceSwitch from "@theme-hope/modules/outlook/components/AppearanceSwitch"
+import AppearanceSwitch from "@theme-hope/modules/outlook/components/AppearanceSwitch";
 </script>

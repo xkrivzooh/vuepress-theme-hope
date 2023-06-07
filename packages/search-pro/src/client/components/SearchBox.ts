@@ -1,15 +1,28 @@
 import { useEventListener } from "@vueuse/core";
-import { defineComponent, h, inject } from "vue";
-import { useLocaleConfig } from "vuepress-shared/client";
+import {
+  type VNode,
+  computed,
+  defineComponent,
+  h,
+  inject,
+  onMounted,
+  ref,
+} from "vue";
+import {
+  checkIsIOS,
+  checkIsMacOS,
+  checkIsiPad,
+  useLocaleConfig,
+} from "vuepress-shared/client";
 
 import { SearchIcon } from "./icons.js";
-import { searchModalSymbol } from "../composables/setup.js";
-import { searchProLocales } from "../define.js";
+import { searchModalSymbol } from "../composables/index.js";
+import { searchProHotKeys, searchProLocales } from "../define.js";
 import { isFocusingTextControl, isKeyMatched } from "../utils/index.js";
 
-import type { VNode } from "vue";
-
 import "../styles/search-box.scss";
+
+const primaryKey = searchProHotKeys[0];
 
 export default defineComponent({
   name: "SearchBox",
@@ -17,8 +30,24 @@ export default defineComponent({
   setup() {
     const locale = useLocaleConfig(searchProLocales);
     const isActive = inject(searchModalSymbol)!;
+    const isMacOS = ref(false);
 
-    const onKeydown = (event: KeyboardEvent): void => {
+    const controlKeys = computed(() =>
+      primaryKey
+        ? [
+            (isMacOS.value
+              ? ["⌃", "⇧", "⌥", "⌘"]
+              : ["Ctrl", "Shift", "Alt", "Win"]
+            ).filter(
+              (_, index) =>
+                primaryKey[(["ctrl", "shift", "alt", "meta"] as const)[index]]
+            ),
+            primaryKey.key.toUpperCase(),
+          ]
+        : null
+    );
+
+    useEventListener("keydown", (event: KeyboardEvent): void => {
       if (
         // not active
         !isActive.value &&
@@ -31,14 +60,22 @@ export default defineComponent({
         event.preventDefault();
         isActive.value = true;
       }
-    };
+    });
 
-    useEventListener("keydown", onKeydown);
+    onMounted(() => {
+      const { userAgent } = navigator;
+
+      isMacOS.value =
+        checkIsMacOS(userAgent) ||
+        checkIsIOS(userAgent) ||
+        checkIsiPad(userAgent);
+    });
 
     return (): (VNode | null)[] => [
       h(
-        "div",
+        "button",
         {
+          type: "button",
           class: "search-pro-button",
           role: "search",
           "aria-label": locale.value.search,
@@ -46,7 +83,19 @@ export default defineComponent({
             isActive.value = true;
           },
         },
-        h(SearchIcon)
+        [
+          h(SearchIcon),
+          h("div", { class: "search-pro-placeholder" }, locale.value.search),
+          controlKeys.value
+            ? h(
+                "div",
+                { class: "search-pro-key-hints" },
+                controlKeys.value.map((key) =>
+                  h("kbd", { class: "search-pro-key" }, key)
+                )
+              )
+            : null,
+        ]
       ),
     ];
   },

@@ -1,16 +1,11 @@
 ---
 title: Options
-icon: config
+icon: gears
 ---
 
-## component
+## Plugin Options
 
-- Type: `string`
-- Default: `"AutoCatalog"`
-
-Catalog component name.
-
-## level
+### level
 
 - Type: `1 | 2 | 3`
 - Default: `3`
@@ -23,34 +18,88 @@ Only available when you use the built-in catalog component.
 
 :::
 
-## exclude
+### index
+
+- Type: `boolean`
+- Default: `false`
+
+Whether show index for catalog
+
+### exclude
 
 - Type: `(RegExp | string)[]`
 - Default: `[]`
 
 Page paths excluding from auto generation.
 
-## frontmatter
+### frontmatter
 
 - Type: `(path: string) => Record<string, any>`
 - Required: No
 
 Page Frontmatter generator.
 
+### titleGetter
+
+- Type: `(page: Page) => string`
+- Default: `(page: Page) => page.title`
+
+Page title getter
+
+### iconGetter
+
+- Type: `(page: Page) => string`
+- Required: No
+
+Page icon getter
+
+### orderGetter
+
+- Type: `(page: Page) => string`
+- Required: No
+
+Page order getter
+
+### shouldIndex
+
+- Type: `(page: Page) => boolean`
+- Default: `() => true`
+
+Whether page should be indexed getter
+
+### component
+
+- Type: `string`
+- Required: No
+
+Catalog component name.
+
+### iconComponent
+
+- Type: `string`
+- Required: No
+
+Icon component name, icon info will be passed to icon props.
+
 ### locales
 
-- Type: `CatalogLocaleConfig`
+- Type: `AutoCatalogLocaleConfig`
 
   ```ts
-  interface CatalogLocaleData {
+  interface AutoCatalogLocaleData {
     /**
      * Catalog title
      */
     title: string;
+
+    /**
+     * Empty hint
+     */
+    empty: string;
   }
 
-  interface CatalogLocaleConfig {
-    [localePath: string]: CatalogLocaleData;
+  interface AutoCatalogLocaleConfig {
+    [localePath: string]: AutoCatalogLocaleData;
   }
   ```
 
@@ -63,7 +112,8 @@ Locales config for catalog component.
 - **Simplified Chinese** (zh-CN)
 - **Traditional Chinese** (zh-TW)
 - **English (United States)** (en-US)
-- **German** (de-AT)
+- **German** (de-DE)
+- **German (Australia)** (de-AT)
 - **Russian** (ru-RU)
 - **Ukrainian** (uk-UA)
 - **Vietnamese** (vi-VN)
@@ -75,5 +125,46 @@ Locales config for catalog component.
 - **Japanese** (ja-JP)
 - **Turkish** (tr-TR)
 - **Korean** (ko-KR)
+- **Finnish** (fi-FI)
+- **Indonesian** (id-ID)
+- **Dutch** (nl-NL)
 
 :::
+
+## Client options
+
+### defineAutoCatalogIconComponent
+
+```ts
+export type AutoCatalogIconComponent = Component<{
+  icon: string;
+}>;
+export declare const defineAutoCatalogIconComponent: (
+  options: AutoCatalogIconComponent
+) => void;
+```
+
+Customize icon component for auto catalog.
+
+## AutoCatalog Component Props
+
+### base
+
+- Type: `string`
+- Default: `Current route path base`
+
+Catalog Base
+
+### level
+
+- Type: `1 | 2 | 3`
+- Default: `3`
+
+Max level of catalog.
+
+### index
+
+- Type: `boolean`
+- Default: `false`
+
+Whether display index number for catalog.

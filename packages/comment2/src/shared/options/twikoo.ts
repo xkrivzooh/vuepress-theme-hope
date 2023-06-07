@@ -1,4 +1,4 @@
-import type { BaseCommentOptions } from "./base.js";
+import { type BaseCommentOptions } from "./base.js";
 
 export interface TwikooInitOptions {
   /**
@@ -13,11 +13,9 @@ export interface TwikooInitOptions {
    *
    * 腾讯云区域
    *
-   * @default 'ap-shanghai'
+   * @default "ap-shanghai"
    */
   region?: string;
 }
 
-export interface TwikooOptions extends BaseCommentOptions, TwikooInitOptions {
-  provider: "Twikoo";
-}
+export type TwikooOptions = BaseCommentOptions & TwikooInitOptions;

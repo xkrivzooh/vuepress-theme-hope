@@ -1,9 +1,11 @@
 ---
-title: Plugin Options
-icon: config
+title: Config
+icon: gears
 ---
 
-## indexContent
+## Plugin Options
+
+### indexContent
 
 - Type: `boolean`
 - Default: `false`
@@ -12,11 +14,18 @@ Whether to enable content indexing.
 
 ::: tip
 
-By default only headings and excerpt of the page will be indexed along with your cutom fields, and the content of the page will not be indexed. If you need to index the content of the page, you can set this option to `true`
+By default, only headings and excerpt of the page will be indexed along with your custom fields, and the content of the page will not be indexed. If you need to index the content of the page, you can set this option to `true`
 
 :::
 
-## customFields
+### autoSuggestions
+
+- Type: `boolean`
+- Default: `true`
+
+Whether to show suggestions while searching.
+
+### customFields
 
 - Type: `SearchProCustomFieldOptions[]`
 
@@ -86,7 +95,7 @@ export default defineUserConfig({
 
 :::
 
-## hotKeys
+### hotKeys
 
 - Type: `SearchProHotKeyOptions[]`
 
@@ -117,26 +126,40 @@ export default defineUserConfig({
      * @default false
      */
     shift?: boolean;
+
+    /**
+     * Whether to press `event.metaKey` at the same time
+     *
+     * @default false
+     */
+    meta?: boolean;
   }
   ```
 
-- Default: `[{key: 'k', ctrl: true}]`
+- Default: `[{ key: "k", ctrl: true }, { key: "/", ctrl: true }]`
 
 Specify the [event.key](http://keycode.info/) of the hotkeys.
 
 When hotkeys are pressed, the search box input will be focused. Set to an empty array to disable hotkeys.
 
-## historyCount
+### queryHistoryCount
 
 - Type: `number`
 - Default: `5`
 
-Max stored history item count.
+Max stored query history count, set `0` to disable it.
 
-## delay
+### resultHistoryCount
 
 - Type: `number`
-- Default: `300`
+- Default: `5`
+
+Max stored matched result history count, set `0` to disable it.
+
+### delay
+
+- Type: `number`
+- Default: `150`
 
 Delay to start searching after input.
 
@@ -146,7 +169,14 @@ Performing client search with huge contents could be slow, so under this case yo
 
 :::
 
-## hotReload
+### worker
+
+- Type: `string`
+- Default: `search-pro.worker.js`
+
+Output Worker filename
+
+### hotReload
 
 - Type: `boolean`
 - Default: Whether using `--debug` flag
@@ -161,7 +191,53 @@ Usually in development, users do not need to update the index database in real t
 
 :::
 
-## locales
+### indexOptions
+
+- Type: `SearchProIndexOptions`
+
+  ```ts
+  export interface SearchProIndexOptions {
+    /**
+     * Function to tokenize the index field item.
+     */
+    tokenize?: (text: string, fieldName?: string) => string[];
+    /**
+     * Function to process or normalize terms in the index field.
+     */
+    processTerm?: (
+      term: string
+    ) => string | string[] | null | undefined | false;
+  }
+  ```
+
+- Required: No
+
+Options used to create index.
+
+### indexLocaleOptions
+
+- Type: `Record<string, SearchProIndexOptions>`
+
+  ```ts
+  export interface SearchProIndexOptions {
+    /**
+     * Function to tokenize the index field item.
+     */
+    tokenize?: (text: string, fieldName?: string) => string[];
+    /**
+     * Function to process or normalize terms in the index field.
+     */
+    processTerm?: (
+      term: string
+    ) => string | string[] | null | undefined | false;
+  }
+  ```
+
+- Required: No
+
+Options used to create index per locale.
+
+### locales
 
 - Type: `SearchProLocaleConfig`
 
@@ -171,7 +247,7 @@ Usually in development, users do not need to update the index database in real t
    */
   interface SearchProLocaleData {
     /**
-     * Search box placeholder text
+     * Search box placeholder
      */
     placeholder: string;
 
@@ -181,9 +257,19 @@ Usually in development, users do not need to update the index database in real t
     search: string;
 
     /**
-     * Close text
+     * Searching text
      */
-    close: string;
+    searching: string;
+
+    /**
+     * Cancel text
+     */
+    cancel: string;
+
+    /**
+     * Default title
+     */
+    defaultTitle: string;
 
     /**
      * Select hint
@@ -196,6 +282,11 @@ Usually in development, users do not need to update the index database in real t
     navigate: string;
 
     /**
+     * Autocomplete hint
+     */
+    autocomplete: string;
+
+    /**
      * Close hint
      */
     exit: string;
@@ -206,9 +297,19 @@ Usually in development, users do not need to update the index database in real t
     loading: string;
 
     /**
+     * Search history text
+     */
+    history: string;
+
+    /**
+     * Search history empty hint
+     */
+    emptyHistory: string;
+
+    /**
      * Empty hint
      */
-    empty: string;
+    emptyResult: string;
   }
 
   interface SearchProLocaleConfig {
@@ -225,7 +326,8 @@ Multilingual configuration of the search plugin.
 - **Simplified Chinese** (zh-CN)
 - **Traditional Chinese** (zh-TW)
 - **English (United States)** (en-US)
-- **German** (de-AT)
+- **German** (de-DE)
+- **German (Australia)** (de-AT)
 - **Russian** (ru-RU)
 - **Ukrainian** (uk-UA)
 - **Vietnamese** (vi-VN)
@@ -237,5 +339,83 @@ Multilingual configuration of the search plugin.
 - **Japanese** (ja-JP)
 - **Turkish** (tr-TR)
 - **Korean** (ko-KR)
+- **Finnish** (fi-FI)
+- **Indonesian** (id-ID)
+- **Dutch** (nl-NL)
 
 :::
+
+## Client Config
+
+### defineSearchConfig
+
+Customize [search options](https://mister-hope.github.io/slimsearch/types/SearchOptions.html).
+
+```ts
+// .vuepress/client.ts
+import { defineSearchConfig } from "vuepress-plugin-search-pro/client";
+
+defineSearchConfig({
+  // search options here
+});
+
+export default {};
+```
+
+### createSearchWorker
+
+Create a search worker so that you can search through API.
+
+```ts
+export type Word = [tag: string, content: string] | string;
+
+export interface TitleMatchedItem {
+  type: "title";
+  id: string;
+  display: Word[];
+}
+
+export interface HeadingMatchedItem {
+  type: "heading";
+  id: string;
+  display: Word[];
+}
+
+export interface CustomMatchedItem {
+  type: "custom";
+  id: string;
+  index: string;
+  display: Word[];
+}
+
+export interface ContentMatchedItem {
+  type: "content";
+  id: string;
+  header: string;
+  display: Word[];
+}
+
+export type MatchedItem =
+  | TitleMatchedItem
+  | HeadingMatchedItem
+  | ContentMatchedItem
+  | CustomMatchedItem;
+
+export interface SearchResult {
+  title: string;
+  contents: MatchedItem[];
+}
+
+export interface SearchWorker {
+  search: (
+    query: string,
+    locale: string,
+    searchOptions?: SearchOptions
+  ) => Promise<SearchResult[]>;
+  terminate: () => void;
+}
+
+declare const createSearchWorker: (
+  options: SearchWorkerOptions
+) => SearchWorker;
+```

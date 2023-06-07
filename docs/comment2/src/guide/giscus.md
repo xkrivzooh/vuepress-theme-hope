@@ -1,6 +1,6 @@
 ---
 title: Giscus
-icon: github
+icon: fab fa-fw fa-github
 ---
 
 Giscus is a commenting system based on GitHub Discussion that is easy to start.
@@ -31,4 +31,4 @@ To let Giscus apply the correct theme, you need to pass a boolean value to `<Com
 
 :::
 
-If you want to customize theme in lightmode and darkmode, you can set `lightTheme` and `darkTheme` option with a built-in theme keyword or a custom css link starting with `https://`.
+If you want to customize theme in lightmode and darkmode, you can set `lightTheme` and `darkTheme` option with a built-in theme keyword or a custom CSS link starting with `https://`.

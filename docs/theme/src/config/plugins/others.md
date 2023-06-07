@@ -1,6 +1,6 @@
 ---
 title: Other Plugin Config
-icon: more
+icon: ellipsis
 order: 8
 category:
   - Config
@@ -30,7 +30,7 @@ Also, you can set `plugin.components.rootComponents` to enable some root compone
 
 ::: info
 
-For plugin options, please refer to [components plugin options][components-config].
+For plugin options, please refer to <ProjectLink name="components" path="/config.html">components plugin options</ProjectLink>.
 
 :::
 
@@ -38,11 +38,11 @@ For plugin options, please refer to [components plugin options][components-confi
 
 Controls `vuepress-plugin-copy-code2`, providing a code copy button.
 
-By default, no config is required. If you don’t need this feature, please set to `false`.
+By default, no config is required. If you don't need this feature, please set to `false`.
 
 ::: info
 
-For plugin options, please refer to [copy-code2 plugin options][copy-code-config].
+For plugin options, please refer to <ProjectLink name="copy-code2" path="/config.html">copy-code2 plugin options</ProjectLink>.
 
 :::
 
@@ -70,21 +70,31 @@ Controls `@vuepress/plugin-prismjs` to provide code block highlighting via Prism
 
 By default, the theme will enable this plugin, you can set `false` to disable it and highlight code blocks yourself.
 
-::: info
+### prismjs.light
 
-See [prismjs plugin options][prismjs-config] for plugin options.
+- Type: `PrismjsTheme`
+- Default: `"one-light"`
+- Details: [Interface → Code Themes](../../guide/interface/code-theme.md)
 
-:::
+Prism.js theme used in lightmode.
+
+### prismjs.dark
+
+- Type: `PrismjsTheme`
+- Default: `"one-dark"`
+- Details: [Interface → Code Themes](../../guide/interface/code-theme.md)
+
+Prism.js theme used in darkmode.
 
 ## photoSwipe <Badge text="enabled by default" />
 
 Controls `vuepress-plugin-photo-swipe`, providing picture browsing function.
 
-By default, no config is required. If you don’t need this feature, please set to `false`.
+By default, no config is required. If you don't need this feature, please set to `false`.
 
 ::: info
 
-For plugin options, please refer to [photo-swipe plugin options][photo-swipe-config].
+For plugin options, please refer to <ProjectLink name="photo-swipe" path="/config.html">photo-swipe plugin options</ProjectLink>.
 
 :::
 
@@ -101,7 +111,7 @@ Words read per minute.
 
 ::: info
 
-For more plugin options, see [reading-time2 plugin docs][reading-time].
+For more plugin options, see <ProjectLink name="reading-time2" path="/config.html">reading-time2 plugin options</ProjectLink>.
 
 :::
 
@@ -109,11 +119,11 @@ For more plugin options, see [reading-time2 plugin docs][reading-time].
 
 Controls `vuepress-plugin-seo2`, providing search engine enhancements.
 
-By default, no config is required. If you don’t need this feature, please set to `false`.
+By default, no config is required. If you don't need this feature, please set to `false`.
 
 ::: info
 
-For plugin config, see [seo2 plugin options][seo-config].
+For plugin config, see <ProjectLink name="seo2" path="/config.html">seo2 plugin options</ProjectLink>.
 
 :::
 
@@ -121,19 +131,12 @@ For plugin config, see [seo2 plugin options][seo-config].
 
 Controls `vuepress-plugin-seo2`, providing automatically Sitemap generation.
 
-By default, no config is required. If you don’t need this feature, please set to `false`.
+By default, no config is required. If you don't need this feature, please set to `false`.
 
 ::: info
 
-For plugin config, please refer to [sitemap2 plugin options][sitemap-config].
+For plugin config, please refer to <ProjectLink name="sitemap2" path="/config.html">sitemap2 plugin options</ProjectLink>.
 
 :::
 
-[components-config]: https://vuepress-theme-hope.github.io/v2/components/config.html
-[copy-code-config]: https://vuepress-theme-hope.github.io/v2/copy-code/config.html
-[git-config]: https://v2.vuepress.vuejs.org/reference/plugin/git.html
-[prismjs-config]: https://v2.vuepress.vuejs.org/reference/plugin/prismjs.html
-[photo-swipe-config]: https://vuepress-theme-hope.github.io/v2/photo-swipe/config.html
-[reading-time]: https://vuepress-theme-hope.github.io/v2/reading-time/
-[seo-config]: https://vuepress-theme-hope.github.io/v2/seo/config.html
-[sitemap-config]: https://vuepress-theme-hope.github.io/v2/sitemap/config.html
+[git-config]: https://vuejs.press/reference/plugin/git.html

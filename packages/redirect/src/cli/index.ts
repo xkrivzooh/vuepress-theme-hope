@@ -1,24 +1,26 @@
 #!/usr/bin/env node
 import { createRequire } from "node:module";
-import { createBuildApp } from "@vuepress/core";
+
 import {
   loadUserConfig,
-  transformUserConfigToPlugin,
   resolveAppConfig,
   resolveCliAppConfig,
   resolveUserConfigConventionalPath,
+  transformUserConfigToPlugin,
 } from "@vuepress/cli";
-import { removeEndingSlash, removeLeadingSlash } from "@vuepress/shared";
+import { createBuildApp } from "@vuepress/core";
 import { fs, logger, path } from "@vuepress/utils";
 import { cac } from "cac";
+import { removeEndingSlash, removeLeadingSlash } from "vuepress-shared/node";
 
-import { getRedirectHTML } from "../node/typings/index.js";
+import { getRedirectHTML } from "../node/utils.js";
 
 const require = createRequire(import.meta.url);
 
 const cli = cac("vp-redirect");
-// eslint-disable-next-line
-const version = <string>require("../../package.json").version;
+const version = <
+  string // eslint-disable-next-line
+>require("vuepress-plugin-redirect/package.json").version;
 
 cli
   .command(
@@ -56,9 +58,8 @@ cli
     ) => {
       if (!sourceDir) return cli.outputHelp();
 
-      if (process.env["NODE_ENV"] === undefined) {
+      if (process.env["NODE_ENV"] === undefined)
         process.env["NODE_ENV"] = "production";
-      }
 
       // resolve app config from cli options
       const cliAppConfig = resolveCliAppConfig(sourceDir, {});

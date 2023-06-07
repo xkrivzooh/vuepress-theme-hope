@@ -1,8 +1,17 @@
-import { computed, defineComponent, h, ref } from "vue";
+import {
+  type FunctionalComponent,
+  type VNode,
+  computed,
+  defineComponent,
+  h,
+  ref,
+} from "vue";
 import { RouterLink } from "vue-router";
+import { keys } from "vuepress-shared/client";
 
-import CategoryList from "@theme-hope/modules/blog/components/CategoryList";
 import DropTransition from "@theme-hope/components/transitions/DropTransition";
+import { useNavigate, useThemeLocaleData } from "@theme-hope/composables/index";
+import CategoryList from "@theme-hope/modules/blog/components/CategoryList";
 import TagList from "@theme-hope/modules/blog/components/TagList";
 import TimelineList from "@theme-hope/modules/blog/components/TimelineList";
 import {
@@ -11,8 +20,6 @@ import {
   TagIcon,
   TimelineIcon,
 } from "@theme-hope/modules/blog/components/icons/index";
-
-import { useNavigate, useThemeLocaleData } from "@theme-hope/composables/index";
 import {
   useArticles,
   useCategoryMap,
@@ -20,7 +27,7 @@ import {
   useTagMap,
 } from "@theme-hope/modules/blog/composables/index";
 
-import type { FunctionalComponent, VNode } from "vue";
+import { ArticleInfoType } from "../../../../shared/index.js";
 
 import "../styles/info-list.scss";
 
@@ -31,15 +38,13 @@ export default defineComponent({
     const themeLocale = useThemeLocaleData();
     const articles = useArticles();
     const categoryMap = useCategoryMap();
-    const categoryNumber = computed(
-      () => Object.keys(categoryMap.value.map).length
-    );
+    const categoryNumber = computed(() => keys(categoryMap.value.map).length);
     const stars = useStars();
     const tagMap = useTagMap();
-    const tagNumber = computed(() => Object.keys(tagMap.value.map).length);
+    const tagNumber = computed(() => keys(tagMap.value.map).length);
     const navigate = useNavigate();
 
-    const active = ref("article");
+    const active = ref<"article" | "category" | "tag" | "timeline">("article");
 
     const locale = computed(() => themeLocale.value.blogLocales);
 
@@ -54,15 +59,16 @@ export default defineComponent({
     ];
 
     return (): VNode =>
-      h("div", { class: "blog-info-list" }, [
+      h("div", { class: "vp-blog-infos" }, [
         h(
           "div",
-          { class: "blog-type-wrapper" },
+          { class: "vp-blog-type-switcher" },
           buttons.map(([key, icon]) =>
             h(
               "button",
               {
-                class: "blog-type-button",
+                type: "button",
+                class: "vp-blog-type-button",
                 onClick: () => {
                   active.value = key;
                 },
@@ -80,10 +86,10 @@ export default defineComponent({
           )
         ),
 
-        // article
-        active.value === "article"
-          ? h(DropTransition, () => [
-              h("div", { class: "sticky-article-wrapper" }, [
+        h(DropTransition, () =>
+          // article
+          active.value === "article"
+            ? h("div", { class: "vp-sticky-article-wrapper" }, [
                 h(
                   "div",
                   {
@@ -99,7 +105,7 @@ export default defineComponent({
                 h("hr"),
                 h(
                   "ul",
-                  { class: "sticky-article-list" },
+                  { class: "vp-sticky-articles" },
                   stars.value.items.map(({ info, path }, index) =>
                     h(
                       DropTransition,
@@ -107,20 +113,19 @@ export default defineComponent({
                       () =>
                         h(
                           "li",
-                          { class: "sticky-article" },
-                          h(RouterLink, { to: path }, () => info.title)
+                          { class: "vp-sticky-article" },
+                          h(
+                            RouterLink,
+                            { to: path },
+                            () => info[ArticleInfoType.title]
+                          )
                         )
                     )
                   )
                 ),
-              ]),
-            ])
-          : null,
-
-        // category
-        active.value === "category"
-          ? h(DropTransition, () => [
-              h("div", { class: "category-wrapper" }, [
+              ])
+            : active.value === "category"
+            ? h("div", { class: "vp-category-wrapper" }, [
                 categoryNumber.value
                   ? h(
                       "div",
@@ -137,14 +142,9 @@ export default defineComponent({
                   : null,
                 h("hr"),
                 h(DropTransition, { delay: 0.04 }, () => h(CategoryList)),
-              ]),
-            ])
-          : null,
-
-        // tag
-        active.value === "tag"
-          ? h(DropTransition, () => [
-              h("div", { class: "tag-wrapper" }, [
+              ])
+            : active.value === "tag"
+            ? h("div", { class: "vp-tag-wrapper" }, [
                 tagNumber.value
                   ? h(
                       "div",
@@ -161,14 +161,9 @@ export default defineComponent({
                   : null,
                 h("hr"),
                 h(DropTransition, { delay: 0.04 }, () => h(TagList)),
-              ]),
-            ])
-          : null,
-
-        // timeline
-        active.value === "timeline"
-          ? h(DropTransition, () => h(TimelineList))
-          : null,
+              ])
+            : h(DropTransition, () => h(TimelineList))
+        ),
       ]);
   },
 });

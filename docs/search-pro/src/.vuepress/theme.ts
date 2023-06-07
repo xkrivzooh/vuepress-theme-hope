@@ -1,5 +1,6 @@
-import { pwa, theme } from "docs-shared";
+import { theme } from "docs-shared";
 
+// the theme wrapper is located in <root>/docs-shared/src/theme-wrapper.ts
 export default theme("search-pro", {
   locales: {
     "/": {
@@ -17,11 +18,7 @@ export default theme("search-pro", {
   plugins: {
     mdEnhance: {
       codetabs: true,
+      imgMark: true,
     },
-
-    pwa: pwa({
-      name: "vuepress-plugin-search-pro",
-      shortName: "VuePress2 Search plugin",
-    }),
   },
 });

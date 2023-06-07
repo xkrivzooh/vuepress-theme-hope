@@ -1,6 +1,6 @@
 ---
 title: Plugin Options
-icon: config
+icon: gears
 ---
 
 ## components
@@ -9,14 +9,19 @@ icon: config
 
   ```ts
   type AvailableComponent =
+    | "ArtPlayer"
     | "AudioPlayer"
     | "Badge"
     | "BiliBili"
     | "CodePen"
     | "FontIcon"
     | "PDF"
+    | "Replit"
+    | "Share"
     | "StackBlitz"
+    | "SiteInfo"
     | "VideoPlayer"
+    | "XiGua"
     | "YouTube";
   ```
 
@@ -26,23 +31,67 @@ Components to be registered.
 
 Available component names:
 
+- `"ArtPlayer"`
 - `"AudioPlayer"`
 - `"Badge"`
 - `"BiliBili"`
 - `"CodePen"`
 - `"FontIcon"`
 - `"PDF"`
+- `"Replit"`
+- `"Share"`
 - `"StackBlitz"`
+- `"SiteInfo"`
 - `"VideoPlayer"`
+- `"XiGua"`
 - `"YouTube"`
 
 ## componentsOptions
 
 Global config for components.
 
+### componentsOptions.artPlayer
+
+- Type: `ComponentsArtPlayerOptions`
+- Required: No
+- Details:
+  - [Guide → ArtPlayer](./guide/artplayer.md#global-config)
+
+### componentsOptions.share.services
+
+- Type: `(string | ShareService)[]`
+- Details:
+  - [Guide → Share → Setting component](./guide/share.md#setting-component)
+
+Share services
+
+### componentsOptions.share.twitterUserName
+
+- Type: `string`
+- Required: No
+
+Twitter username.
+
 ### componentsOptions.fontIcon.assets
 
-- Type: `` "iconfont" | "fontawesome" | `//${string}` | `http://${string}` | `https://${string}`  ``
+- Type: `FontIconAssets`
+
+  ```ts
+  type Link =
+    | `/${string}`
+    | `//${string}`
+    | `http://${string}`
+    | `https://${string}`;
+
+  type BuiltInFontIcon =
+    | "iconify"
+    | "iconfont"
+    | "fontawesome"
+    | "fontawesome-with-brands";
+
+  type FontIconAssets = BuiltInFontIcon | Link | (BuiltInFontIcon | Link)[];
+  ```
+
 - Required: No
 - Details:
   - [Guide → FontIcon](./guide/fonticon.md)
@@ -82,7 +131,26 @@ Public ID of addThis.
 
 ### rootComponents.backToTop
 
-- Type: `boolean | number`
+- Type: `BackToTopOptions | boolean`
+
+  ```ts
+  interface BackToTopOptions {
+    /**
+     * Scroll threshold distance to display back to top button (in pixels)
+     *
+     * @default 100
+     */
+    threshold?: number;
+
+    /**
+     * Whether display scroll progress
+     *
+     * @default true
+     */
+    progress?: boolean;
+  }
+  ```
+
 - Default: `false`
 - Details:
   - [Guide → BackToTop](./guide/backtotop.md)
@@ -94,7 +162,24 @@ Whether enabling backToTop button. When setting a number, it will be used as Bac
 - Type: `NoticeOptions`
 
   ```ts
-  interface NoticeLocaleOptions {
+  interface NoticeActionOption {
+    /**
+     * Action text
+     */
+    text: string;
+    /**
+     * Action link
+     */
+    link?: string;
+    /**
+     * Action type
+     *
+     * @default 'default
+     */
+    type?: "primary" | "default";
+  }
+
+  interface NoticeItemOptions {
     /**
      * Notice title
      */
@@ -104,33 +189,6 @@ Whether enabling backToTop button. When setting a number, it will be used as Bac
      * Notice content
      */
     content: string;
-
-    /**
-     * Notice footer
-     */
-    actions: {
-      /**
-       * Action text
-       */
-      text: string;
-      /**
-       * Action link
-       */
-      link?: string;
-      /**
-       * Action type
-       *
-       * @default 'default
-       */
-      type?: "primary" | "default";
-    }[];
-  }
-
-  interface NoticeOptions {
-    /**
-     * Notice locales Options
-     */
-    locales: Record<string, NoticeLocaleOptions>;
 
     /**
      * Notice key
@@ -146,12 +204,12 @@ Whether enabling backToTop button. When setting a number, it will be used as Bac
      *
      * @default false
      */
-    showOnce?: string;
+    showOnce?: boolean;
 
     /**
      * Whether the notice shall be confirmed
      *
-     * @default true
+     * @default false
      */
     confirm?: boolean;
 
@@ -161,7 +219,15 @@ Whether enabling backToTop button. When setting a number, it will be used as Bac
      * @default false
      */
     fullscreen?: boolean;
+
+    /**
+     * Notice actions
+     */
+    actions?: NoticeActionOption[];
   }
+
+  type NoticeOptions = NoticeItemOptions &
+    ({ path: string } | { match: RegExp });
   ```
 
 - Required: No
@@ -195,27 +261,6 @@ Component locales.
 
 Locales config for BackToTop button.
 
-### locales.catalog
-
-- Type: `CatalogLocaleConfig`
-
-  ```ts
-  interface CatalogLocaleData {
-    /**
-     * Catalog title
-     */
-    title: string;
-  }
-
-  interface CatalogLocaleConfig {
-    [localePath: string]: CatalogLocaleData;
-  }
-  ```
-
-- Required: No
-
-Locales config for catalog component.
-
 ### locales.pdf
 
 - Type: `PDFLocaleConfig`
@@ -245,7 +290,8 @@ Locales config for pdf component.
 - **Simplified Chinese** (zh-CN)
 - **Traditional Chinese** (zh-TW)
 - **English (United States)** (en-US)
-- **German** (de-AT)
+- **German** (de-DE)
+- **German (Australia)** (de-AT)
 - **Russian** (ru-RU)
 - **Ukrainian** (uk-UA)
 - **Vietnamese** (vi-VN)
@@ -257,5 +303,8 @@ Locales config for pdf component.
 - **Japanese** (ja-JP)
 - **Turkish** (tr-TR)
 - **Korean** (ko-KR)
+- **Finnish** (fi-FI)
+- **Indonesian** (id-ID)
+- **Dutch** (nl-NL)
 
 :::

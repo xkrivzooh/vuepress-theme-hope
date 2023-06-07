@@ -1,20 +1,20 @@
-import { disableBodyScroll, clearAllBodyScrollLocks } from "body-scroll-lock";
+import { usePageData } from "@vuepress/client";
+import { useScrollLock } from "@vueuse/core";
 import {
+  type SlotsType,
   Transition,
+  type VNode,
   defineComponent,
   h,
-  ref,
-  onBeforeUnmount,
-  watch,
   onMounted,
+  onUnmounted,
+  shallowRef,
+  watch,
 } from "vue";
-import { useRoute } from "vue-router";
 
-import { useMobile } from "@theme-hope/composables/index";
+import { useWindowSize } from "@theme-hope/composables/index";
 import NavScreenLinks from "@theme-hope/modules/navbar/components/NavScreenLinks";
 import OutlookSettings from "@theme-hope/modules/outlook/components/OutlookSettings";
-
-import type { VNode } from "vue";
 
 import "../styles/nav-screen.scss";
 
@@ -30,34 +30,40 @@ export default defineComponent({
     show: Boolean,
   },
 
-  emits: {
-    close: () => true,
-  },
+  emits: ["close"],
+
+  slots: Object as SlotsType<{
+    before?: () => VNode | VNode[];
+    after?: () => VNode | VNode[];
+  }>,
 
   setup(props, { emit, slots }) {
-    const route = useRoute();
-    const isMobile = useMobile();
-    const screen = ref<HTMLElement>();
+    const page = usePageData();
+    const { isMobile } = useWindowSize();
+
+    const body = shallowRef<HTMLElement>();
+    const isLocked = useScrollLock(body);
 
     onMounted(() => {
+      body.value = document.body;
+
       watch(isMobile, (value) => {
         if (!value && props.show) {
-          clearAllBodyScrollLocks();
+          isLocked.value = false;
           emit("close");
         }
       });
-
       watch(
-        () => route.path,
+        () => page.value.path,
         () => {
-          clearAllBodyScrollLocks();
+          isLocked.value = false;
           emit("close");
         }
       );
     });
 
-    onBeforeUnmount(() => {
-      clearAllBodyScrollLocks();
+    onUnmounted(() => {
+      isLocked.value = false;
     });
 
     return (): VNode =>
@@ -65,20 +71,23 @@ export default defineComponent({
         Transition,
         {
           name: "fade",
-          onEnter: () =>
-            disableBodyScroll(screen.value!, { reserveScrollBarGap: true }),
-          onAfterLeave: () => clearAllBodyScrollLocks(),
+          onEnter: () => {
+            isLocked.value = true;
+          },
+          onAfterLeave: () => {
+            isLocked.value = false;
+          },
         },
         () =>
           props.show
             ? h(
                 "div",
-                { id: "nav-screen", ref: screen },
-                h("div", { class: "container" }, [
-                  slots["before"]?.(),
+                { id: "nav-screen" },
+                h("div", { class: "vp-nav-screen-container" }, [
+                  slots.before?.(),
                   h(NavScreenLinks),
-                  h("div", { class: "outlook-wrapper" }, h(OutlookSettings)),
-                  slots["after"]?.(),
+                  h("div", { class: "vp-outlook-wrapper" }, h(OutlookSettings)),
+                  slots.after?.(),
                 ])
               )
             : null

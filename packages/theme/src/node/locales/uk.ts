@@ -1,4 +1,4 @@
-import type { ThemeLocaleData } from "../../shared/index.js";
+import { type ThemeLocaleData } from "../../shared/index.js";
 
 export const ukLocale: ThemeLocaleData = {
   lang: "uk-UA",
@@ -23,6 +23,7 @@ export const ukLocale: ThemeLocaleData = {
     lastUpdated: "Останнє оновлення",
     contributors: "Автори",
     editLink: "Редагувати цю сторінку",
+    print: "Друк",
   },
 
   blogLocales: {
@@ -60,6 +61,7 @@ export const ukLocale: ThemeLocaleData = {
 
   routeLocales: {
     skipToContent: "Перейти до основного вмісту",
+    notFoundTitle: "Сторінка не знайдена",
     notFoundMsg: [
       "Тут немає нічого.",
       "Як ми сюди потрапили?",

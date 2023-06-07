@@ -1,6 +1,6 @@
 ---
 title: Plugin Options
-icon: config
+icon: gears
 ---
 
 ## selector
@@ -55,9 +55,14 @@ If the theme you are using has a switching animation, it is recommended to confi
   ```ts
   interface CopyCodeLocaleData {
     /**
-     * Copy button label text
+     * Copy text
      */
     copy: string;
+
+    /**
+     * Copied text
+     */
+    copied: string;
 
     /**
      * Success message text after content is copied
@@ -79,7 +84,8 @@ Locales config for copy code plugin.
 - **Simplified Chinese** (zh-CN)
 - **Traditional Chinese** (zh-TW)
 - **English (United States)** (en-US)
-- **German** (de-AT)
+- **German** (de-DE)
+- **German (Australia)** (de-AT)
 - **Russian** (ru-RU)
 - **Ukrainian** (uk-UA)
 - **Vietnamese** (vi-VN)
@@ -91,5 +97,8 @@ Locales config for copy code plugin.
 - **Japanese** (ja-JP)
 - **Turkish** (tr-TR)
 - **Korean** (ko-KR)
+- **Finnish** (fi-FI)
+- **Indonesian** (id-ID)
+- **Dutch** (nl-NL)
 
 :::

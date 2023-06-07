@@ -1,6 +1,6 @@
 ---
 title: Theme Layout Options
-icon: config
+icon: object-group
 order: 4
 category:
   - Config
@@ -33,9 +33,12 @@ Whether display icons in navbar.
 
 ### navbarLayout
 
-- Type: `HopeNavbarLayoutOptions`
+- Type: `NavbarLayoutOptions`
 
   ```ts
+  /**
+   * Navbar component
+   */
   type NavbarComponent =
     | "Brand"
     | "Links"
@@ -44,14 +47,17 @@ Whether display icons in navbar.
     | "Outlook"
     | "Repo";
 
-  interface HopeNavbarLayoutOptions {
-    left: NavbarComponent[];
-    center: NavbarComponent[];
-    right: NavbarComponent[];
+  /**
+   * Navbar layout options
+   */
+  interface NavbarLayoutOptions {
+    start?: (NavbarComponent | string)[];
+    center?: (NavbarComponent | string)[];
+    end?: (NavbarComponent | string)[];
   }
   ```
 
-- Default: `{ left: ["Brand"], center: ["Links"], right: ["Language", "Repo", "Outlook", "Search"] }`
+- Default: `{ start: ["Brand"], center: ["Links"], end: ["Language", "Repo", "Outlook", "Search"] }`
 
 Customize navbar layout.
 
@@ -65,9 +71,16 @@ Navbar logo, should be absolute path relative to `.vuepress/public` folder.
 ### logoDark
 
 - Type: `string`
-- Required: No
+- Default: `logo`
 
 Navbar logo in darkmode, should be absolute path relative to `.vuepress/public` folder.
+
+### navTitle
+
+- Type: `string | false`
+- Default: `$siteLocale.title`
+
+Navbar title
 
 ### repo
 
@@ -128,7 +141,7 @@ Sidebar Config.
 
 Whether show icons in the sidebar
 
-### sidebarSorter <Badge text="Root Only" />
+### sidebarSorter <Badge text="Root only" type="warning" />
 
 - Type: `SidebarSorter`
 
@@ -139,6 +152,7 @@ Whether show icons in the sidebar
 
     title: string;
     order: number | null;
+    path?: string | null;
 
     frontmatter: ThemeNormalPageFrontmatter;
     pageData: ThemePageData;
@@ -197,9 +211,9 @@ You can:
 Available keywords are:
 
 - `readme`: `README.md` or `readme.md` first
-- `order`: positive order first with its value ascendingly, negative order last with its value descendingly
-- `date`: sort by date ascendingly
-- `date-desc`: sort by date descendingly
+- `order`: positive order first with its value ascending, negative order last with its value descending
+- `date`: sort by date ascending
+- `date-desc`: sort by date descending
 - `title`: alphabetically sort by title
 - `filename`: alphabetically sort by filename
 
@@ -298,7 +312,7 @@ Pattern of edit link. While `:repo` `:branch` `:path` will be automatically repl
 
 ::: note
 
-The theme provide built-in support for GitHub, Gitlab, Gitee and Bitbucket.
+The theme provides built-in support for GitHub, Gitlab, Gitee and Bitbucket.
 
 :::
 
@@ -334,7 +348,7 @@ The default content for the footer, can accept HTMLString.
 
 ### copyright
 
-- Type: `string | boolean`
+- Type: `string | false`
 - Default: `"Copyright © <author>"`
 
 The default copyright info, set it to `false` to disable it by default.
@@ -354,6 +368,13 @@ Whether to display footer by default.
 - Default: Key of current locale
 
 Home path of current locale, used as the link of back-to-home and navbar logo.
+
+### rtl
+
+- Type: `boolean`
+- Default: `false`
+
+Whether to use RTL layout.
 
 ### toc {#toc-heading}
 

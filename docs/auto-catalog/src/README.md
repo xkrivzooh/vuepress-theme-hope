@@ -7,13 +7,22 @@ heroText: vuepress-plugin-auto-catalog
 tagline: Generate Catalog pages for VuePress2
 actions:
   - text: Guide 💡
-    link: /guide.html
+    link: ./guide.html
     type: primary
 
   - text: Config 🛠
-    link: /config.html
+    link: ./config.html
 
-footer: Theme by <a href="https://vuepress-theme-hope.github.io/v2/" target="_blank">VuePress Theme Hope</a> | MIT Licensed, Copyright © 2019-present Mr.Hope
+features:
+  - title: Adding Catalog with one line
+    icon: circle-check
+    details: Simply add catalog with out-of-box AutoCatalog component
+
+  - title: Generate catalog page automatically
+    icon: file
+    details: Generate catalog page for every dir
+
+footer: Theme by <a href="https://theme-hope.vuejs.press" target="_blank">VuePress Theme Hope</a> | MIT Licensed, Copyright © 2019-present Mr.Hope
 
 copyright: false
 ---
@@ -27,19 +36,19 @@ copyright: false
 @tab pnpm
 
 ```bash
-pnpm add -D vuepress-plugin-auto-catalog@next
+pnpm add -D vuepress-plugin-auto-catalog
 ```
 
 @tab yarn
 
 ```bash
-yarn add -D vuepress-plugin-auto-catalog@next
+yarn add -D vuepress-plugin-auto-catalog
 ```
 
 @tab npm
 
 ```bash
-npm i -D vuepress-plugin-auto-catalog@next
+npm i -D vuepress-plugin-auto-catalog
 ```
 
 :::

@@ -1,6 +1,6 @@
 ---
 title: 主题外观选项
-icon: config
+icon: palette
 order: 4
 category:
   - 配置
@@ -21,7 +21,24 @@ tag:
 
 ## iconAssets <Badge text="仅限 Root" type="warning" />
 
-- 类型: `` "iconfont" | "fontawesome" | `//${string}` | `http://${string}` | `https://${string}`  ``
+- 类型: `FontIconAssets`
+
+  ```ts
+  type Link =
+    | `/${string}`
+    | `//${string}`
+    | `http://${string}`
+    | `https://${string}`;
+
+  type BuiltInFontIcon =
+    | "iconify"
+    | "iconfont"
+    | "fontawesome"
+    | "fontawesome-with-brands";
+
+  type FontIconAssets = BuiltInFontIcon | Link | (BuiltInFontIcon | Link)[];
+  ```
+
 - 必填: 否
 - 详情: [界面 → 图标](../../guide/interface/icon.md)
 
@@ -47,14 +64,6 @@ tag:
 
 :::
 
-## themeColor <Badge text="仅限 Root" type="warning" />
-
-- 类型: `Record<string, string> | false`
-- 默认值: `false`
-- 详情: [界面 → 主题色](../../guide/interface/theme-color.md)
-
-主题色选择器配置。
-
 ## fullscreen
 
 - 类型: `boolean`
@@ -65,25 +74,29 @@ tag:
 
 ## backToTop <Badge text="仅限 Root" type="warning" />
 
-- 类型: `boolean | number`
+- 类型: `BackToTopOptions | boolean`
+
+  ```ts
+  interface BackToTopOptions {
+    /**
+     * 滚动距离阈值，用于显示返回顶部按钮 (单位: 像素)
+     *
+     * @default 100
+     */
+    threshold?: number;
+
+    /**
+     * 是否显示滚动进度
+     *
+     * @default true
+     */
+    progress?: boolean;
+  }
+  ```
+
 - 默认值: `true`
 
-是否显示返回顶部按钮。
-
-如果设置为数字，则该数字为触发临界值 (默认临界值为 300px)。
-
-## mobileBreakPoint <Badge text="仅限 Root" type="warning" />
-
-- 类型: `number`
-- 默认值: `719`
-
-切换桌面布局和移动布局的窗口宽度，单位像素。
-
-::: warning
-
-你需要将此选项和 `.vuepress/config.scss` 中的 `$tablet` 保持一致。
-
-:::
+自定义返回顶部按钮，将其设置为 `false` 会禁用该按钮。
 
 ## pure <Badge text="仅限 Root" type="warning" />
 
@@ -100,6 +113,13 @@ tag:
 当你想提供“纯文档站点”时很有用。
 
 :::
+
+## print <Badge text="仅限 Root" type="warning" />
+
+- 类型: `boolean`
+- 默认值: `true`
+
+是否在桌面模式下显示打印按钮。
 
 ## iconPrefix <Badge text="仅限 Root" type="warning" />
 

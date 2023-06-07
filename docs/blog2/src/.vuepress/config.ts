@@ -2,10 +2,7 @@ import { config } from "docs-shared";
 import theme from "./theme.js";
 
 export default config(
-  {
-    base: "blog",
-    indexName: "vuepress-theme-hope-blog2",
-  },
+  { name: "blog2" },
   {
     locales: {
       "/": {

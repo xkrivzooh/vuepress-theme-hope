@@ -1,8 +1,6 @@
-import { defineComponent, h } from "vue";
+import { type VNode, defineComponent, h } from "vue";
 
 import { PLAY_SVG } from "./icons.js";
-
-import type { VNode } from "vue";
 
 import "../styles/playground.scss";
 
@@ -28,14 +26,18 @@ export default defineComponent({
 
   setup(props) {
     return (): (VNode | null)[] => [
-      h("div", { class: "playground-wrapper" }, [
-        h("div", { class: "title-wrapper" }, [
+      h("div", { class: "vp-playground" }, [
+        h("div", { class: "vp-playground-header" }, [
           props.title
-            ? h("div", { class: "title" }, decodeURIComponent(props.title))
+            ? h(
+                "div",
+                { class: "vp-playground-title" },
+                decodeURIComponent(props.title)
+              )
             : null,
-          h("div", { class: "actions" }, [
+          h("div", { class: "vp-playground-actions" }, [
             h("a", {
-              class: "action",
+              class: "vp-playground-action",
               href: decodeURIComponent(props.link),
               target: "_blank",
               innerHTML: PLAY_SVG,
@@ -44,9 +46,8 @@ export default defineComponent({
         ]),
         h(
           "div",
-          { class: "preview-container" },
+          { class: "vp-playground-container" },
           h("iframe", {
-            class: "iframe-preview",
             src: decodeURIComponent(props.link),
           })
         ),

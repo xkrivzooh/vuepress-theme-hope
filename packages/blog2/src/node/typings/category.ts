@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Page } from "@vuepress/core";
+import { type Page } from "@vuepress/core";
 
 export interface BlogCategoryOptions<
   ExtraPageData extends Record<any, any> = Record<never, never>,
@@ -50,7 +50,7 @@ export interface BlogCategoryOptions<
    *
    * 页面布局组件名称
    *
-   * @default 'Layout'
+   * @default "Layout"
    */
   layout?: string;
 
@@ -79,7 +79,7 @@ export interface BlogCategoryOptions<
    *
    * 项目页面布局组件名称
    *
-   * @default 'Layout'
+   * @default "Layout"
    */
   itemLayout?: string;
 

@@ -1,6 +1,6 @@
 ---
 title: 信息 Frontmatter 配置
-icon: config
+icon: circle-info
 order: 1
 category:
   - 配置
@@ -20,8 +20,8 @@ tag:
 
 ## shortTitle
 
-- Type: `string`
-- Required: No
+- 类型: `string`
+- 必填: 否
 
 当前页面的短标题，会在导航栏、侧边栏和路径导航中作为首选。
 

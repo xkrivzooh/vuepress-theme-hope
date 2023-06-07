@@ -1,34 +1,49 @@
+import { type ThemeFunction } from "@vuepress/core";
 import { watch } from "chokidar";
+import { isPlainObject } from "vuepress-shared/node";
 
-import { resolveAlias } from "./alias.js";
+import { getAlias } from "./alias.js";
 import { extendsBundlerOptions } from "./bundler.js";
-import { checkStyle, convertThemeOptions } from "./compact/index.js";
+import {
+  checkHeader,
+  checkUserPlugin,
+  checkVuePressVersion,
+} from "./check/index.js";
+import { checkLegacyStyle, convertThemeOptions } from "./compact/index.js";
 import {
   checkSocialMediaIcons,
   getStatus,
   getThemeData,
 } from "./config/index.js";
+import { addFavicon } from "./init/index.js";
 import { getPluginConfig, usePlugin } from "./plugins/index.js";
 import {
-  prepareConfigFile,
+  prepareBundleConfigFile,
+  prepareHighLighterScss,
+  prepareSeparatedConfigFile,
   prepareSidebarData,
   prepareSocialMediaIcons,
-  prepareThemeColorScss,
 } from "./prepare/index.js";
+import { type HopeThemeBehaviorOptions } from "./typings/index.js";
 import { TEMPLATE_FOLDER } from "./utils.js";
-
-import type { ThemeFunction } from "@vuepress/core";
-import type { ThemeOptions } from "../shared/index.js";
+import { type ThemeOptions } from "../shared/index.js";
 
 export const hopeTheme =
   (
     options: ThemeOptions,
-    // TODO: Remove this in v2 stable
-    legacy = false
+    // TODO: Change default value in v2 stable
+    behavior: HopeThemeBehaviorOptions | boolean = true
   ): ThemeFunction =>
   (app) => {
-    const { isDebug } = app.env;
+    const behaviorOptions = isPlainObject(behavior)
+      ? behavior
+      : behavior
+      ? { compact: true, check: true }
+      : {};
+    const isDebug = behaviorOptions.debug ? (app.env.isDebug = true) : false;
+
     const {
+      favicon,
       hotReload = isDebug,
       plugins = {},
       hostname,
@@ -37,24 +52,26 @@ export const hopeTheme =
       backToTop,
       sidebarSorter,
       ...themeOptions
-    } = legacy
+    } = behaviorOptions.compact
       ? convertThemeOptions(options as ThemeOptions & Record<string, unknown>)
       : options;
 
-    if (legacy) checkStyle(app);
+    if (behaviorOptions.compact) checkLegacyStyle(app);
+
+    checkVuePressVersion(app);
 
     const status = getStatus(app, options);
-    const themeConfig = getThemeData(app, themeOptions, status);
-    const icons = status.enableBlog ? checkSocialMediaIcons(themeConfig) : {};
+    const themeData = getThemeData(app, themeOptions, status);
+    const icons = status.enableBlog ? checkSocialMediaIcons(themeData) : {};
 
-    usePlugin(app, plugins, legacy, hotReload);
+    usePlugin(app, themeData, plugins, hotReload, behaviorOptions);
 
     if (isDebug) console.log("Theme plugin options:", plugins);
 
     return {
       name: "vuepress-theme-hope",
 
-      alias: resolveAlias(isDebug),
+      alias: behaviorOptions.custom ? getAlias(isDebug) : {},
 
       define: () => ({
         BLOG_TYPE_INFO: status.blogType,
@@ -66,10 +83,19 @@ export const hopeTheme =
 
       extendsBundlerOptions,
 
-      onPrepared: (): Promise<void> =>
+      extendsMarkdownOptions: (markdownOptions): void => {
+        if (behaviorOptions.check) checkHeader(markdownOptions, themeData);
+      },
+
+      onInitialized: (app): void => {
+        if (favicon) addFavicon(app, favicon);
+        if (behaviorOptions.check) checkUserPlugin(app);
+      },
+
+      onPrepared: (app): Promise<void> =>
         Promise.all([
-          prepareSidebarData(app, themeConfig, sidebarSorter),
-          prepareThemeColorScss(app, themeConfig),
+          prepareSidebarData(app, themeData, sidebarSorter),
+          prepareHighLighterScss(app, plugins),
           prepareSocialMediaIcons(app, icons),
         ]).then(() => void 0),
 
@@ -82,13 +108,13 @@ export const hopeTheme =
           });
 
           structureSidebarWatcher.on("add", () => {
-            void prepareSidebarData(app, themeConfig, sidebarSorter);
+            void prepareSidebarData(app, themeData, sidebarSorter);
           });
           structureSidebarWatcher.on("change", () => {
-            void prepareSidebarData(app, themeConfig, sidebarSorter);
+            void prepareSidebarData(app, themeData, sidebarSorter);
           });
           structureSidebarWatcher.on("unlink", () => {
-            void prepareSidebarData(app, themeConfig, sidebarSorter);
+            void prepareSidebarData(app, themeData, sidebarSorter);
           });
 
           watchers.push(structureSidebarWatcher);
@@ -98,7 +124,7 @@ export const hopeTheme =
       plugins: getPluginConfig(
         app,
         plugins,
-        themeConfig,
+        themeData,
 
         // @ts-ignore
         {
@@ -107,12 +133,16 @@ export const hopeTheme =
           hotReload,
           iconAssets,
           iconPrefix,
+          favicon,
         },
-        legacy
+        behaviorOptions.compact
       ),
 
       templateBuild: `${TEMPLATE_FOLDER}index.build.html`,
 
-      clientConfigFile: (app) => prepareConfigFile(app, status),
+      clientConfigFile: (app) =>
+        behaviorOptions.custom
+          ? prepareSeparatedConfigFile(app, status)
+          : prepareBundleConfigFile(app, status),
     };
   };

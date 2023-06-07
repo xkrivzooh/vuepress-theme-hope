@@ -1,15 +1,16 @@
+import { type Options as PlyrOptions } from "plyr";
 import {
+  type PropType,
+  type VNode,
   computed,
   defineComponent,
   h,
   onBeforeMount,
   onMounted,
-  ref,
+  shallowRef,
 } from "vue";
-import { getLink } from "../utils/getLink.js";
 
-import type { Options as PlyrOptions } from "plyr";
-import type { PropType, VNode } from "vue";
+import { getLink } from "../utils/index.js";
 
 import "plyr/dist/plyr.css";
 import "../styles/audio-player.scss";
@@ -65,6 +66,16 @@ export default defineComponent({
     },
 
     /**
+     * Component width
+     *
+     * 组件宽度
+     */
+    width: {
+      type: [String, Number],
+      default: "100%",
+    },
+
+    /**
      * Whether to loop the video
      *
      * 是否循环播放
@@ -74,67 +85,71 @@ export default defineComponent({
 
   setup(props) {
     let player: Plyr | null = null;
-    const audio = ref<HTMLAudioElement>();
+    const audio = shallowRef<HTMLAudioElement>();
 
     const plyrOptions = computed(() => ({
       hideYouTubeDOMError: true,
       ...props.options,
     }));
 
-    onMounted(() => {
-      void import("plyr").then(({ default: Plyr }) => {
-        if (audio.value) player = new Plyr(audio.value, plyrOptions.value);
-      });
+    onMounted(async () => {
+      const { default: Plyr } = await import(
+        /* webpackChunkName: "plyr" */ "plyr"
+      );
+
+      player = new Plyr(audio.value!, plyrOptions.value);
     });
 
     onBeforeMount(() => {
       try {
         player?.destroy();
       } catch (err: unknown) {
-        if (
-          !(
-            plyrOptions.value.hideYouTubeDOMError &&
-            (<Error>err).message ===
-              "The YouTube player is not attached to the DOM."
-          )
-        )
-          console.error(err);
+        // do nothing
       }
     });
 
-    return (): VNode[] | null =>
-      props.src
-        ? [
-            h("div", { class: "audio-wrapper" }, [
-              h(
-                "a",
-                { class: "audio-print", href: getLink(props.src) },
-                props.title || "An audio"
-              ),
-              props.poster
-                ? h("img", {
-                    class: "audio-poster",
-                    src: getLink(props.poster),
-                  })
-                : null,
-              h("div", { class: "audio-info" }, [
-                props.title
-                  ? h("div", { class: "audio-title" }, props.title)
-                  : null,
-                h(
-                  "audio",
-                  {
-                    ref: audio,
-                    crossorigin: "anonymous",
-                    preload: "metadata",
-                    controls: "",
-                    ...(props.loop ? { loop: "" } : {}),
-                  },
-                  h("source", { src: getLink(props.src), type: props.type })
-                ),
-              ]),
-            ]),
-          ]
-        : null;
+    return (): VNode =>
+      h(
+        "div",
+        {
+          class: "vp-audio-player",
+          style: {
+            width: props.width,
+          },
+        },
+        [
+          h("a", {
+            class: "sr-only",
+            href: getLink(props.src),
+            innerHTML: props.title || "An audio",
+          }),
+          props.poster
+            ? h("img", {
+                class: "vp-audio-player-poster",
+                src: getLink(props.poster),
+                "no-view": "",
+              })
+            : null,
+          h("div", { class: "vp-audio-player-info" }, [
+            props.title
+              ? h("div", {
+                  class: "vp-audio-player-title",
+                  innerHTML: props.title,
+                })
+              : null,
+            h(
+              "audio",
+              {
+                ref: audio,
+                crossorigin: "anonymous",
+                preload: "metadata",
+                controls: "",
+                ...(props.loop ? { loop: "" } : {}),
+              },
+              h("source", { src: getLink(props.src), type: props.type })
+            ),
+          ]),
+        ]
+      );
   },
 });

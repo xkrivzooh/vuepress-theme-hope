@@ -1,5 +1,6 @@
-import { pwa, theme } from "docs-shared";
+import { theme } from "docs-shared";
 
+// the theme wrapper is located in <root>/docs-shared/src/theme-wrapper.ts
 export default theme("remove-pwa", {
   locales: {
     "/": {
@@ -17,12 +18,7 @@ export default theme("remove-pwa", {
   plugins: {
     mdEnhance: {
       codetabs: true,
-      container: true,
+      imgMark: true,
     },
-
-    pwa: pwa({
-      name: "vuepress-plugin-remove-pwa",
-      shortName: "VuePress2 Remove PWA plugin",
-    }),
   },
 });

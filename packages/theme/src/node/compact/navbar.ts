@@ -1,29 +1,37 @@
+import { colors } from "@vuepress/utils";
+import { isArray, isPlainObject, isString } from "vuepress-shared/node";
+
 import { deprecatedLogger } from "./utils.js";
+import {
+  type AutoLinkOptions,
+  type NavbarGroup,
+  type NavbarItem,
+  type NavbarOptions,
+} from "../../shared/index.js";
 import { logger } from "../utils.js";
 
-import type {
-  NavbarOptions,
-  NavbarItem,
-  NavbarGroup,
-} from "../../shared/index.js";
+type LegacyNavbarOptions = (
+  | string
+  | AutoLinkOptions
+  | (NavbarGroup & { items?: (AutoLinkOptions | string)[] })
+)[];
 
-const handleNavbarOptions = (config: unknown[]): NavbarOptions =>
+const handleNavbarOptions = (config: LegacyNavbarOptions): NavbarOptions =>
   config
     .map((item) => {
-      if (typeof item === "string") return item;
+      if (isString(item)) return item;
 
-      if (typeof item === "object" && item) {
+      if (isPlainObject(item) && item) {
         deprecatedLogger({
-          options: item as Record<string, unknown>,
+          // @ts-ignore
+          options: item,
           deprecatedOption: "items",
           newOption: "children",
           scope: "navbar",
         });
 
-        // @ts-ignore
-        if (Array.isArray(item.children))
-          // @ts-ignore
-          handleNavbarOptions(item.children as unknown[]);
+        if ("children" in item && isArray(item.children))
+          handleNavbarOptions(item.children);
 
         return item as NavbarItem | NavbarGroup;
       }
@@ -36,12 +44,12 @@ const handleNavbarOptions = (config: unknown[]): NavbarOptions =>
  * @deprecated You should use V2 standard navbar config and avoid using it
  */
 export const convertNavbarOptions = (
-  config: unknown
+  config: NavbarOptions | unknown
 ): NavbarOptions | false => {
   if (config === false) return false;
-  if (Array.isArray(config)) return handleNavbarOptions(config);
+  if (isArray(config)) return handleNavbarOptions(config as NavbarOptions);
 
-  logger.error('"navbar" config should be an array');
+  logger.error(`${colors.magenta("navbar")} config should be an array`);
 
   return false;
 };

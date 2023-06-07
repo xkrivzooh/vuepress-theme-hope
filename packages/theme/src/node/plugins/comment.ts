@@ -1,23 +1,29 @@
-import { commentPlugin } from "vuepress-plugin-comment2";
+import { type PluginObject } from "@vuepress/core";
+import {
+  type CommentPluginOptions,
+  commentPlugin,
+} from "vuepress-plugin-comment2";
 
-import type { PluginObject } from "@vuepress/core";
-import type { CommentOptions } from "vuepress-plugin-comment2";
+import { VERSION } from "../utils.js";
 
+/**
+ * @private
+ *
+ * Resolve options for vuepress-plugin-comment2
+ */
 export const getCommentPlugin = (
-  options?: Partial<CommentOptions> | false,
+  options?: Partial<CommentPluginOptions> | false,
   legacy = false
 ): PluginObject | null => {
   if (options === false || !options?.provider) return null;
 
   return commentPlugin(
-    <CommentOptions>{
+    <CommentPluginOptions>{
       provider: "None",
       ...(options?.provider === "Giscus"
         ? {
-            lightTheme:
-              "https://unpkg.com/vuepress-theme-hope@next/templates/giscus/light.css",
-            darkTheme:
-              "https://unpkg.com/vuepress-theme-hope@next/templates/giscus/dark.css",
+            lightTheme: `https://unpkg.com/vuepress-theme-hope@${VERSION}/templates/giscus/light.css`,
+            darkTheme: `https://unpkg.com/vuepress-theme-hope@${VERSION}/templates/giscus/dark.css`,
           }
         : {}),
       ...(options?.provider === "Waline"

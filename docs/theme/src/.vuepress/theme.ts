@@ -1,51 +1,26 @@
-import { hopeTheme } from "vuepress-theme-hope";
-import {
-  enNavbarConfig,
-  zhNavbarConfig,
-  ruNavbarConfig,
-} from "./navbar/index.js";
-import {
-  enSidebarConfig,
-  zhSidebarConfig,
-  ruSidebarConfig,
-} from "./sidebar/index.js";
+import { getDirname, theme, path } from "docs-shared";
+import { enNavbarConfig, zhNavbarConfig } from "./navbar/index.js";
+import { enSidebarConfig, zhSidebarConfig } from "./sidebar/index.js";
 
-const hostname =
-  process.env.HOSTNAME || "https://vuepress-theme-hope-v2.netlify.app";
+const __dirname = getDirname(import.meta.url);
 
-export default hopeTheme({
-  hostname,
+const IS_NETLIFY = "NETLIFY" in process.env;
 
-  author: {
-    name: "Mr.Hope",
-    url: "https://mrhope.site",
-  },
-
-  iconAssets: "iconfont",
-
+// the theme wrapper is located in <root>/docs-shared/src/theme-wrapper.ts
+export default theme("theme", {
   repo: "vuepress-theme-hope/vuepress-theme-hope",
-
-  docsDir: "docs/theme/src",
-
-  logo: "/logo.svg",
-
-  footer: "MIT Licensed | Copyright © 2019-present Mr.Hope",
-  copyright: false,
-  displayFooter: true,
-
-  pageInfo: ["Category", "Tag", "ReadingTime"],
 
   blog: {
     name: "VuePress Theme Hope",
   },
 
-  themeColor: {
-    blue: "#2196f3",
-    red: "#f26d6d",
-    green: "#3eaf7c",
-    orange: "#fb9b5f",
-  },
   fullscreen: true,
+
+  navTitle: false,
+
+  extraLocales: {
+    Русский: "https://theme-hope-ru.vuejs.press/:route",
+  },
 
   locales: {
     "/": {
@@ -56,23 +31,30 @@ export default hopeTheme({
       navbar: zhNavbarConfig,
       sidebar: zhSidebarConfig,
     },
-    "/ru/": {
-      navbar: ruNavbarConfig,
-      sidebar: ruSidebarConfig,
+  },
+
+  encrypt: {
+    config: {
+      "/demo/encrypt.html": "1234",
+      "/zh/demo/encrypt.html": "1234",
     },
   },
 
   plugins: {
-    blog: true,
+    blog: {
+      excerptLength: 0,
+    },
 
     components: {
       components: [
+        "ArtPlayer",
         "AudioPlayer",
         "Badge",
         "BiliBili",
-        "Catalog",
         "CodePen",
         "PDF",
+        "Replit",
+        "SiteInfo",
         "StackBlitz",
         "VideoPlayer",
         "YouTube",
@@ -83,24 +65,56 @@ export default hopeTheme({
           pdfjs: "/assets/lib/pdfjs/",
         },
       },
+
+      rootComponents: IS_NETLIFY
+        ? {}
+        : {
+            notice: [
+              {
+                path: "/",
+                title: "New docs location",
+                content:
+                  "Our docs has moved to a new domain vuejs.press<br>Current docs is built from the latest commit on the main branch, and may contain <strong>unreleased changes</strong>!",
+                actions: [
+                  {
+                    text: "Visit Now",
+                    link: "https://theme-hope.vuejs.press",
+                  },
+                ],
+              },
+              {
+                path: "/zh/",
+                title: "新的文档地址",
+                content:
+                  "我们的文档已经迁移至新域名 vuejs.press 下。<br>当前文档是基于主分支最新提交构建的，可能包含<strong>未发布的更改</strong>。",
+
+                actions: [
+                  {
+                    text: "立即访问",
+                    link: "https://theme-hope.vuejs.press/zh/",
+                  },
+                ],
+              },
+            ],
+          },
     },
 
-    comment: {
-      provider: "Giscus",
-      repo: "vuepress-theme-hope/giscus-discussions",
-      repoId: "R_kgDOG_Pt2A",
-      category: "Announcements",
-      categoryId: "DIC_kwDOG_Pt2M4COD69",
+    copyright: {
+      license: "MIT",
     },
 
-    copyright: true,
+    feed: {
+      atom: true,
+      json: true,
+      rss: true,
+    },
 
     mdEnhance: {
       align: true,
       attrs: true,
+      card: true,
       chart: true,
       codetabs: true,
-      container: true,
       demo: true,
       echarts: true,
       figure: true,
@@ -109,7 +123,17 @@ export default hopeTheme({
       imgLazyload: true,
       imgMark: true,
       imgSize: true,
-      include: true,
+      include: {
+        resolvePath: (file, cwd) => {
+          if (file.startsWith("@echarts"))
+            return file.replace(
+              "@echarts",
+              path.resolve(__dirname, "../echarts")
+            );
+
+          return file;
+        },
+      },
       mathjax: true,
       mark: true,
       mermaid: true,
@@ -138,110 +162,5 @@ export default hopeTheme({
       vPre: true,
       vuePlayground: true,
     },
-
-    pwa: {
-      update: "hint",
-      favicon: "/favicon.ico",
-      themeColor: "#46bd87",
-      appendBase: true,
-      apple: {
-        icon: "/assets/icon/apple-icon-152.png",
-        statusBarColor: "black",
-      },
-      msTile: {
-        image: "/assets/icon/ms-icon-144.png",
-        color: "#ffffff",
-      },
-      manifest: {
-        icons: [
-          {
-            src: "/assets/icon/chrome-mask-512.png",
-            sizes: "512x512",
-            purpose: "maskable",
-            type: "image/png",
-          },
-          {
-            src: "/assets/icon/chrome-mask-192.png",
-            sizes: "192x192",
-            purpose: "maskable",
-            type: "image/png",
-          },
-          {
-            src: "/assets/icon/chrome-512.png",
-            sizes: "512x512",
-            type: "image/png",
-          },
-          {
-            src: "/assets/icon/chrome-192.png",
-            sizes: "192x192",
-            type: "image/png",
-          },
-        ],
-        shortcuts: [
-          {
-            name: "Guide",
-            short_name: "Guide",
-            url: "/guide/",
-            icons: [
-              {
-                src: "/assets/icon/guide-maskable.png",
-                sizes: "192x192",
-                purpose: "maskable",
-                type: "image/png",
-              },
-              {
-                src: "/assets/icon/guide-monochrome.png",
-                sizes: "192x192",
-                purpose: "monochrome",
-                type: "image/png",
-              },
-            ],
-          },
-          {
-            name: "Config",
-            short_name: "Config",
-            url: "/config/",
-            icons: [
-              {
-                src: "/assets/icon/config-maskable.png",
-                sizes: "192x192",
-                purpose: "maskable",
-                type: "image/png",
-              },
-              {
-                src: "/assets/icon/config-monochrome.png",
-                sizes: "192x192",
-                purpose: "monochrome",
-                type: "image/png",
-              },
-            ],
-          },
-          {
-            name: "Cookbook",
-            short_name: "Cookbook",
-            url: "/cookbook/",
-            icons: [
-              {
-                src: "/assets/icon/basic-maskable.png",
-                sizes: "192x192",
-                purpose: "maskable",
-                type: "image/png",
-              },
-              {
-                src: "/assets/icon/basic-monochrome.png",
-                sizes: "192x192",
-                purpose: "monochrome",
-                type: "image/png",
-              },
-            ],
-          },
-        ],
-      },
-    },
-
-    seo:
-      hostname === "https://vuepress-theme-hope.github.io"
-        ? {}
-        : { canonical: "https://vuepress-theme-hope.github.io/v2/" },
   },
 });

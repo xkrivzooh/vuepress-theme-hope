@@ -1,6 +1,6 @@
 ---
 title: NavBar
-icon: navbar
+icon: window-maximize
 order: 1
 category:
   - Layout
@@ -9,7 +9,7 @@ tag:
   - Navbar
 ---
 
-The Navbar may contain your site title, [Search Box](#search-box), [Navbar Links](#navbar-links), [I18n](https://v2.vuepress.vuejs.org/guide/i18n.html), [Repository Link](#git-repository-and-edit-links) and [Outlook Popup](#outlook-popup). They all depend on your configuration.
+The Navbar may contain your site title, [Search Box](#search-box), [Navbar Links](#navbar-links), [I18n](https://vuejs.press/guide/i18n.html), [Repository Link](#git-repository-and-edit-links) and [Outlook Popup](#outlook-popup). They all depend on your configuration.
 
 <!-- more -->
 
@@ -60,7 +60,7 @@ You can omit the `.md` extension, and paths ending with `/` are inferred as `/RE
 
 ### Object Format
 
-If you are not satisfied with the page’s icon or feel that the page title is too long, you can configure an object instead. Available configuration items are:
+If you are not satisfied with the page's icon or feel that the page title is too long, you can configure an object instead. Available configuration items are:
 
 - `text:`: item text
 - `link`: item link
@@ -82,7 +82,7 @@ export default defineUserConfig({
       {
         text: "Guide",
         link: "/guide/README.md",
-        icon: "creative",
+        icon: "lightbulb",
         // only active in `/guide/`
         activeMatch: "^/guide/$",
       },
@@ -90,7 +90,7 @@ export default defineUserConfig({
       {
         text: "FAQ",
         link: "/faq.md",
-        icon: "question",
+        icon: "circle-question",
         // active in path starting with `/faq`
         // so it will active in path like `/faq/xxx.html`
         activeMatch: "^/zh/faq/",
@@ -112,7 +112,7 @@ export default {
       {
         text: "Guide",
         link: "/guide/README.md",
-        icon: "creative",
+        icon: "lightbulb",
         // only active in `/guide/`
         activeMatch: "^/guide/$",
       },
@@ -120,7 +120,7 @@ export default {
       {
         text: "FAQ",
         link: "/faq.md",
-        icon: "question",
+        icon: "circle-question",
         // active in path starting with `/faq`
         // so it will active in path like `/faq/xxx.html`
         activeMatch: "^/zh/faq/",
@@ -148,7 +148,7 @@ But you may have multiple folders with files under `/path/`. To avoid multiple d
 
 To display more links, you can group similar links into a dropdown list.
 
-You need use object format and provide the additional `children` option to nest links:
+You need to use object format and provide the additional `children` option to nest links:
 
 ::: code-tabs#language
 
@@ -164,7 +164,7 @@ export default defineUserConfig({
     navbar: [
       {
         text: "Basic",
-        icon: "info",
+        icon: "circle-info",
         children: ["/basic/markdown.md", "/basic/vuepress.md"],
       },
     ],
@@ -183,7 +183,7 @@ export default {
     navbar: [
       {
         text: "Basic",
-        icon: "info",
+        icon: "circle-info",
         children: ["/basic/markdown.md", "/basic/vuepress.md"],
       },
     ],
@@ -211,7 +211,7 @@ export default defineUserConfig({
     navbar: [
       {
         text: "Basic",
-        icon: "info",
+        icon: "circle-info",
         prefix: "/basic/",
         children: ["markdown.md", "vuepress.md"],
       },
@@ -231,7 +231,7 @@ export default {
     navbar: [
       {
         text: "Basic",
-        icon: "info",
+        icon: "circle-info",
         prefix: "/basic/",
         children: ["markdown.md", "vuepress.md"],
       },
@@ -242,7 +242,7 @@ export default {
 
 :::
 
-You can also have sub groups inside a dropdown by having nested `children`:
+You can also have subgroups inside a dropdown by having nested `children`:
 
 ::: code-tabs#language
 
@@ -258,18 +258,18 @@ export default defineUserConfig({
     navbar: [
       {
         text: "Project",
-        icon: "info",
+        icon: "circle-info",
         children: [
           {
             text: "Built in Plugins",
-            icon: "plugin",
+            icon: "puzzle-piece",
             children: [
               /* Some items */
             ],
           },
           {
             text: "Third party Plugins",
-            icon: "plugin",
+            icon: "puzzle-piece",
             children: [
               /* Some items */
             ],
@@ -292,18 +292,18 @@ export default {
     navbar: [
       {
         text: "Project",
-        icon: "info",
+        icon: "circle-info",
         children: [
           {
             text: "Built in Plugins",
-            icon: "plugin",
+            icon: "puzzle-piece",
             children: [
               /* Some items */
             ],
           },
           {
             text: "Third party Plugins",
-            icon: "plugin",
+            icon: "puzzle-piece",
             children: [
               /* Some items */
             ],
@@ -360,6 +360,41 @@ navbar: false
 ---
 ```
 
+## Disable Navbar Icon
+
+To disable the navbar icon, set `navbarIcon: false` in theme options:
+
+::: code-tabs#language
+
+@tab TS
+
+```ts
+// .vuepress/config.ts
+import { defineUserConfig } from "vuepress";
+import { hopeTheme } from "vuepress-theme-hope";
+
+export default defineUserConfig({
+  theme: hopeTheme({
+    navbarIcon: false,
+  }),
+});
+```
+
+@tab JS
+
+```js
+// .vuepress/config.js
+import { hopeTheme } from "vuepress-theme-hope";
+
+export default {
+  theme: hopeTheme({
+    navbarIcon: false,
+  }),
+};
+```
+
+:::
+
 ## Site Logo
 
 You can use `logo` options to set site logo displayed in navbar.
@@ -411,7 +446,7 @@ You can set `logoDark` to display another logo in dark mode.
 
 ## I18n Support
 
-The theme’s navbar supports [I18n](https://v2.vuepress.vuejs.org/guide/i18n.html), so you can set navbar options mentioned above individually in each language:
+The theme's navbar supports [I18n](https://vuejs.press/guide/i18n.html), so you can set navbar options mentioned above individually in each language:
 
 ::: code-tabs#language
 
@@ -535,7 +570,7 @@ The following three functions are provided:
 
 ## Layout config
 
-`vuepress-theme-hope` allows you to customize navbar layout. You can add components in `left`, `center` and `right` keys under `navbarLayout` options.
+`vuepress-theme-hope` allows you to customize navbar layout. You can add components in `start`, `center` and `end` keys under `navbarLayout` options.
 
 Available components:
 
@@ -560,9 +595,9 @@ import { hopeTheme } from "vuepress-theme-hope";
 export default defineUserConfig({
   theme: hopeTheme({
     navbarLayout: {
-      left: ["Brand"],
+      start: ["Brand"],
       center: ["Links"],
-      right: ["Language", "Repo", "Outlook", "Search"],
+      end: ["Language", "Repo", "Outlook", "Search"],
     },
   }),
 });
@@ -577,9 +612,9 @@ import { hopeTheme } from "vuepress-theme-hope";
 export default {
   theme: hopeTheme({
     navbarLayout: {
-      left: ["Brand"],
+      start: ["Brand"],
       center: ["Links"],
-      right: ["Language", "Repo", "Outlook", "Search"],
+      end: ["Language", "Repo", "Outlook", "Search"],
     },
   }),
 };
@@ -647,7 +682,7 @@ export default navbar([
 ```ts
 import { navbar } from "vuepress-theme-hope";
 
-@include(../../.vuepress/navbar/en.ts{3-})
+<!-- @include: ../../.vuepress/navbar/en.ts{3-} -->
 ```
 
 @tab JS
@@ -655,7 +690,7 @@ import { navbar } from "vuepress-theme-hope";
 ```js
 import { navbar } from "vuepress-theme-hope";
 
-@include(../../.vuepress/navbar/en.ts{3-})
+<!-- @include: ../../.vuepress/navbar/en.ts{3-} -->
 ```
 
 :::

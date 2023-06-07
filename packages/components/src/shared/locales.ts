@@ -1,4 +1,4 @@
-import type { RequiredLocaleConfig } from "vuepress-shared";
+import { type RequiredLocaleConfig } from "vuepress-shared";
 
 export interface BackToTopLocaleData {
   /**
@@ -10,17 +10,6 @@ export interface BackToTopLocaleData {
 }
 
 export type BackToTopLocaleConfig = RequiredLocaleConfig<BackToTopLocaleData>;
-
-export interface CatalogLocaleData {
-  /**
-   * Catalog title text
-   *
-   * 目录标题文字
-   */
-  title: string;
-}
-
-export type CatalogLocaleConfig = RequiredLocaleConfig<CatalogLocaleData>;
 
 export interface PDFLocaleData {
   /**
@@ -38,3 +27,14 @@ export interface PDFLocaleData {
 }
 
 export type PDFLocaleConfig = RequiredLocaleConfig<PDFLocaleData>;
+
+export interface SiteInfoLocaleData {
+  /**
+   * Source text
+   *
+   * 源代码文字
+   */
+  source: string;
+}
+
+export type SiteInfoLocaleConfig = RequiredLocaleConfig<SiteInfoLocaleData>;

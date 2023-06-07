@@ -1,5 +1,6 @@
-import { pwa, theme } from "docs-shared";
+import { theme } from "docs-shared";
 
+// the theme wrapper is located in <root>/docs-shared/src/theme-wrapper.ts
 export default theme("copyright2", {
   locales: {
     "/": {
@@ -18,11 +19,7 @@ export default theme("copyright2", {
   plugins: {
     mdEnhance: {
       codetabs: true,
+      imgMark: true,
     },
-
-    pwa: pwa({
-      name: "vuepress-plugin-copyright2",
-      shortName: "VuePress2 copyright plugin",
-    }),
   },
 });

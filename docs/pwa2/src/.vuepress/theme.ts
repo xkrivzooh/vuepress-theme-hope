@@ -5,6 +5,7 @@ const { version } = fs.readJsonSync(
   createRequire(import.meta.url).resolve("vuepress-plugin-pwa2/package.json")
 );
 
+// the theme wrapper is located in <root>/docs-shared/src/theme-wrapper.ts
 export default theme("pwa2", {
   locales: {
     "/": {
@@ -16,7 +17,7 @@ export default theme("pwa2", {
         "/demo",
         {
           text: version,
-          icon: "note",
+          icon: "bookmark",
           children: [
             {
               text: "V1 Docs",
@@ -37,7 +38,7 @@ export default theme("pwa2", {
         "/zh/demo",
         {
           text: version,
-          icon: "note",
+          icon: "bookmark",
           children: [
             {
               text: "V1 文档",
@@ -54,7 +55,7 @@ export default theme("pwa2", {
   plugins: {
     mdEnhance: {
       codetabs: true,
-      container: true,
+      imgMark: true,
       footnote: true,
     },
 

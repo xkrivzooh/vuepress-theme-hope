@@ -1,6 +1,6 @@
 ---
 title: Guide
-icon: creative
+icon: lightbulb
 ---
 
 This plugin will make the pictures in the body of the page enter the preview mode when clicked.
@@ -29,9 +29,23 @@ In preview mode, you can:
 
 By default, the plugin will select images according to the default theme's selector. If you are using a third-party theme, you can set one or more CSS selectors to the `selector` option.
 
-## Customize PhotoSwipe options
+## Customize PhotoSwipe Options
 
-You can pass options to [`photo-swipe`](http://photoswipe.com/) via `options`.
+You can pass options to [`photo-swipe`](http://photoswipe.com/) by importing and calling `definePhotoSwipeOptions` in client config file:
+
+```ts
+// .vuepress/client.ts
+import { defineClientConfig } from "@vuepress/client";
+import { definePhotoSwipeOptions } from "vuepress-plugin-photo-swipe/client";
+
+definePhotoSwipeOptions({
+  // photoswipe options here
+});
+
+export default defineClientConfig({
+  // ...
+});
+```
 
 ## Operation Delay
 

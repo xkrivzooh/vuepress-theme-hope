@@ -1,6 +1,7 @@
 ---
 title: Chart
-icon: rank
+icon: chart-simple
+category:
   - Markdown
 tag:
   - 图表
@@ -281,7 +282,7 @@ export default {
     "labels": ["红色", "绿色", "黄色", "灰色", "蓝色"],
     "datasets": [
       {
-        "label": "My First Dataset",
+        "label": "我的第一个数据集",
         "data": [11, 16, 7, 3, 14],
         "backgroundColor": [
           "rgb(255, 99, 132)",
@@ -310,7 +311,7 @@ export default {
     "labels": ["红色", "绿色", "黄色", "灰色", "蓝色"],
     "datasets": [
       {
-        "label": "My First Dataset",
+        "label": "我的第一个数据集",
         "data": [11, 16, 7, 3, 14],
         "backgroundColor": [
           "rgb(255, 99, 132)",

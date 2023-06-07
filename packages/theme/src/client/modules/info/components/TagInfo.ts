@@ -1,14 +1,13 @@
-import { defineComponent, h } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { usePageData } from "@vuepress/client";
+import { type PropType, type VNode, defineComponent, h } from "vue";
+import { useRouter } from "vue-router";
 import { generateIndexFromHash } from "vuepress-shared/client";
 
 import { TagIcon } from "@theme-hope/modules/info/components/icons";
 import { useMetaLocale } from "@theme-hope/modules/info/composables/index";
+import { type PageTag } from "@theme-hope/modules/info/utils/index";
 
-import type { PropType, VNode } from "vue";
-import type { PageTag } from "@theme-hope/modules/info/utils/index";
-
-import "../styles/tag.scss";
+import "../styles/tag-info.scss";
 
 export default defineComponent({
   name: "TagInfo",
@@ -36,11 +35,11 @@ export default defineComponent({
 
   setup(props) {
     const router = useRouter();
-    const route = useRoute();
+    const page = usePageData();
     const metaLocale = useMetaLocale();
 
     const navigate = (event: Event, path = ""): void => {
-      if (path && route.path !== path) {
+      if (path && page.value.path !== path) {
         event.preventDefault();
         void router.push(path);
       }
@@ -51,23 +50,22 @@ export default defineComponent({
         ? h(
             "span",
             {
-              class: "tag-info",
+              class: "page-tag-info",
               "aria-label": `${metaLocale.value.tag}${props.pure ? "" : "🏷"}`,
               ...(props.pure ? {} : { "data-balloon-pos": "down" }),
             },
             [
               h(TagIcon),
 
-              ...props.tag.map(({ name, path }) =>
+              props.tag.map(({ name, path }) =>
                 h(
                   "span",
                   {
                     class: [
-                      "tag-item",
+                      "page-tag-item",
                       {
                         // TODO: magic number 9 is tricky here
-                        [`tag-item${generateIndexFromHash(name, 9)}`]:
-                          !props.pure,
+                        [`tag${generateIndexFromHash(name, 9)}`]: !props.pure,
                         clickable: path,
                       },
                     ],

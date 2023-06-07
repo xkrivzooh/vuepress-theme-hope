@@ -1,13 +1,13 @@
 ---
 title: V2 Migration
-icon: change
+icon: code-compare
 ---
 
 Renamed from `@mr-hope/vuepress-plugin-comment` to `vuepress-plugin-comment2`. ⚠
 
 ## New Features
 
-- Adds support for `twikoo` and `giscus` ![New](https://img.shields.io/badge/-New-brightgreen)
+- Adds support for `artalk`, `twikoo` and `giscus` ![New](https://img.shields.io/badge/-New-brightgreen)
 
 ## Removed
 

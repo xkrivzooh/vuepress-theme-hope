@@ -1,6 +1,6 @@
 {
   "name": "vuepress-plugin-search-pro",
-  "version": "2.0.0-beta.149",
+  "version": "2.0.0-beta.221",
   "description": "A advanced search plugin in client",
   "keywords": [
     "vuepress",
@@ -8,7 +8,7 @@
     "vuepress-plugin",
     "search"
   ],
-  "homepage": "https://vuepress-theme-hope.github.io/v2/search-pro/",
+  "homepage": "https://plugin-search-pro.vuejs.press/",
   "bugs": {
     "url": "https://github.com/vuepress-theme-hope/vuepress-theme-hope/issues"
   },
@@ -26,7 +26,8 @@
   "type": "module",
   "exports": {
     ".": "./lib/node/index.js",
-    "./lib/client/*": "./lib/client/*",
+    "./client": "./lib/client/index.js",
+    "./client/*": "./lib/client/*",
     "./package.json": "./package.json"
   },
   "main": "lib/node/index.js",
@@ -43,49 +44,37 @@
     "dev:ts": "tsc -b tsconfig.build.json --watch"
   },
   "engines": {
-    "node": "^14.18.0 || >=16.0.0",
+    "node": ">=16.0.0",
     "npm": ">=8",
     "pnpm": ">=7"
   },
   "dependencies": {
-    "@vuepress/client": "2.0.0-beta.60",
-    "@vuepress/utils": "2.0.0-beta.60",
-    "@vueuse/core": "^9.9.0",
-    "body-scroll-lock": "^3.1.5",
+    "@vuepress/client": "2.0.0-beta.62",
+    "@vuepress/shared": "2.0.0-beta.62",
+    "@vuepress/utils": "2.0.0-beta.62",
+    "@vueuse/core": "^10.1.2",
     "cheerio": "1.0.0-rc.12",
     "chokidar": "^3.5.3",
-    "vue": "^3.2.45",
-    "vue-router": "^4.1.6",
+    "slimsearch": "0.0.3",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.2",
     "vuepress-plugin-sass-palette": "workspace:*",
     "vuepress-shared": "workspace:*"
   },
   "devDependencies": {
-    "@types/body-scroll-lock": "^3.1.0",
-    "@vuepress/core": "2.0.0-beta.60"
+    "@vuepress/core": "2.0.0-beta.62"
   },
   "peerDependencies": {
-    "@vuepress/client": "2.0.0-beta.60",
-    "sass-loader": "^13.2.0",
-    "vuepress": "2.0.0-beta.60",
-    "vuepress-plugin-sass-palette": "workspace:*",
-    "vuepress-shared": "workspace:*",
-    "vuepress-vite": "2.0.0-beta.60",
-    "vuepress-webpack": "2.0.0-beta.60"
+    "sass-loader": "^13.3.1",
+    "vuepress": "2.0.0-beta.62",
+    "vuepress-vite": "2.0.0-beta.62",
+    "vuepress-webpack": "2.0.0-beta.62"
   },
   "peerDependenciesMeta": {
-    "@vuepress/client": {
-      "optional": true
-    },
     "sass-loader": {
       "optional": true
     },
     "vuepress": {
-      "optional": true
-    },
-    "vuepress-plugin-sass-palette": {
-      "optional": true
-    },
-    "vuepress-shared": {
       "optional": true
     },
     "vuepress-vite": {

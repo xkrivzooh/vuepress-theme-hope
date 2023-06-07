@@ -1,11 +1,13 @@
 ---
 title: 配置
-icon: config
+icon: gears
 ---
+
+## 插件配置
 
 你可以设置以下插件选项来启用或禁用一些功能。
 
-## gfm
+### gfm
 
 - 类型: `boolean`
 - 默认值: `false`
@@ -22,7 +24,7 @@ icon: config
 
 :::
 
-## container
+### container
 
 - 类型: `boolean`
 - 默认值: `false`
@@ -44,21 +46,33 @@ icon: config
 
 :::
 
-## linkCheck
+### checkLinks
 
-- 类型: `"always" | "dev" | "build" | "never" | boolean`
-- 默认值: `"dev"`
+- 类型: `LinksCheckOptions`
+
+  ```ts
+  type LinksCheckStatus = "always" | "dev" | "build" | "never";
+
+  interface LinksCheckOptions {
+    /**
+     * 是否检查 Markdown 中的死链
+     *
+     * @default "dev"
+     */
+    status?: LinksCheckStatus;
+
+    /**
+     * 忽略的死链
+     */
+    ignore?: (string | RegExp)[] | ((link: string, isDev: boolean) => boolean);
+  }
+  ```
+
+- 默认值: `{ status: "dev" }`
 
 是否启用链接检查。
 
-::: note
-
-- `true` 等同于 `'always'`
-- `false` 等同于 `'never'`
-
-:::
-
-## vPre
+### vPre
 
 - 类型: `boolean`
 - 默认值: `false`
@@ -67,7 +81,7 @@ icon: config
 
 是否启用 v-pre 容器。
 
-## tabs
+### tabs
 
 - 类型: `boolean`
 - 默认值: `false`
@@ -76,7 +90,7 @@ icon: config
 
 是否启用选项卡。
 
-## codetabs
+### codetabs
 
 - 类型: `boolean`
 - 默认值: `false`
@@ -85,7 +99,7 @@ icon: config
 
 是否启用代码组。
 
-## align
+### align
 
 - 类型: `boolean`
 - 默认值: `false`
@@ -94,7 +108,7 @@ icon: config
 
 是否启用自定义对齐格式支持。
 
-## attrs
+### attrs
 
 - 类型: `AttrsOptions | boolean`
 
@@ -131,49 +145,49 @@ icon: config
 
 是否启用自定义属性支持。
 
-## sup
+### sup
 
 - 类型: `boolean`
 - 默认值: `false`
 
 是否启用上角标格式支持。
 
-## sub
+### sub
 
 - 类型: `boolean`
 - 默认值: `false`
 
 是否启用下角标格式支持。
 
-## footnote
+### footnote
 
 - 类型: `boolean`
 - 默认值: `false`
 
 是否启用脚注格式支持。
 
-## mark
+### mark
 
 - 类型: `boolean`
 - 默认值: `false`
 
 是否启用标记格式支持。
 
-## figure
+### figure
 
 - 类型: `boolean`
 - 默认值: `false`
 
 是否启用图片 Figure 支持。
 
-## imgLazyload
+### imgLazyload
 
 - 类型: `boolean`
 - 默认值: `false`
 
 是否使用原生方式懒加载页面图片。
 
-## imgMark
+### imgMark
 
 - 类型: `ImageMarkOptions | boolean`
 - 默认值: `false`
@@ -189,14 +203,21 @@ interface ImageMarkOptions {
 }
 ```
 
-## imgSize
+### imgSize
 
 - 类型: `boolean`
 - 默认值: `false`
 
 是否启用图片尺寸支持。
 
-## tasklist
+### obsidianImgSize
+
+- 类型: `boolean`
+- 默认值: `false`
+
+是否启用 obsidian 图片尺寸支持。
+
+### tasklist
 
 - 类型: `TaskListOptions | boolean`
 - 默认值: `false`
@@ -221,7 +242,7 @@ interface TaskListOptions {
 }
 ```
 
-## include
+### include
 
 - 类型: `IncludeOptions | boolean`
 
@@ -232,7 +253,7 @@ interface TaskListOptions {
      *
      * @default (path) => path
      */
-    getPath?: (path: string) => string;
+    resolvePath?: (path: string, cwd: string) => string;
 
     /**
      * 是否深度导入包含的 Markdown 文件
@@ -247,18 +268,18 @@ interface TaskListOptions {
 
 是否启用 Markdown 导入支持。你可以传入一个函数进行路径解析。
 
-## katex
+### katex
 
-- 类型: `KatexOptions | boolean`
+- 类型: `KatexOptions & { copy?: boolean; mhchem?: boolean } | boolean`
 - 默认值: `false`
 
 是否通过 KaTeX 启用 $\TeX$ 语法支持。你可以传入一个对象作为 KaTeX 的配置选项。
 
-特别低，你可以通过 `katex.mhchem: true` 来启用 mhchem 扩展。
+特别地，你可以通过 `katex.copy: true` 和 `katex.mhchem: true` 来启用 copy 和 mhchem 扩展。
 
 可用的选项，详见 [Katex 文档](https://katex.org/docs/options.html)。
 
-## mathjax
+### mathjax
 
 - 类型: `MathJaxOptions | boolean`
 - 默认值: `false`
@@ -267,35 +288,42 @@ interface TaskListOptions {
 
 可用的选项，详见 [源代码](https://github.com/vuepress-theme-hope/vuepress-theme-hope/tree/main/packages/md-enhance/src/shared/mathjax.ts)。
 
-## chart
+### card
+
+- 类型: `boolean`
+- 默认值: `false`
+
+是否启用卡片支持。
+
+### chart
 
 - 类型: `boolean`
 - 默认值: `false`
 
 是否启用图表支持。
 
-## echarts
+### echarts
 
 - 类型: `boolean`
 - 默认值: `false`
 
 是否启用 ECharts 图表支持。
 
-## flowchart
+### flowchart
 
 - 类型: `boolean`
 - 默认值: `false`
 
 是否启用流程图支持。
 
-## mermaid
+### mermaid
 
 - 类型: `MermaidConfig | boolean`
 - 默认值: `false`
 
-是否启用 [Mermaid](https://mermaid-js.github.io/mermaid/#/) 支持。
+是否启用 [Mermaid](https://mermaid.js.org/) 支持，你可以传入一个对象作为 Mermaid 的配置选项。
 
-## stylize
+### stylize
 
 - 类型: `StylizeOptions | false`
 
@@ -341,7 +369,7 @@ interface TaskListOptions {
 
 对行内语法进行样式化以创建代码片段
 
-## playground
+### playground
 
 - 类型: `PlaygroundGlobalOptions`
 
@@ -430,7 +458,7 @@ interface TaskListOptions {
     service?: string;
   }
 
-  export interface VuePresetPlaygroundOptions {
+  interface VuePresetPlaygroundOptions {
     /**
      * 交互演示外部地址
      *
@@ -468,19 +496,12 @@ interface TaskListOptions {
 
 交互演示选项。
 
-## vuePlayground
+### vuePlayground
 
 - 类型: `VuePlaygroundOptions | boolean`
 
   ```ts
   interface VuePlaygroundOptions {
-    /**
-     * 是否在交互演示中显示代码
-     *
-     * @default false
-     */
-    showCode?: boolean;
-
     /**
      * 指定 vue 版本
      */
@@ -531,9 +552,9 @@ interface TaskListOptions {
     /**
      * 布局
      *
-     * @default 'vertical'
+     * @default 'horizontal'
      */
-    layout?: "vertical" | "horizontal";
+    layout?: "horizontal" | "vertical";
 
     /**
      * `vue/compiler-sfc` 配置项
@@ -553,21 +574,21 @@ interface TaskListOptions {
 
 是否启用 Vue 交互演示支持。
 
-## demo
+### demo
 
 - 类型: `CodeDemoGlobalOptions | boolean`
 - 默认值: `false`
 
 是否启用代码案例支持。
 
-### demo.jsLib
+#### demo.jsLib
 
 - 类型: `string[]`
 - 必填: 否
 
 CodePen, JsFiddle 需要引入的外部 JS 库。
 
-### demo.cssLib
+#### demo.cssLib
 
 - 类型: `string[]`
 - 必填: 否
@@ -580,62 +601,62 @@ CodePen, JsFiddle 需要引入的外部 CSS 库。
 
 :::
 
-### demo.jsfiddle
+#### demo.jsfiddle
 
 - 类型: `boolean`
 - 默认值: `true`
 
 是否显示 JSFiddle 按钮
 
-### demo.codepen
+#### demo.codepen
 
 - 类型: `boolean`
 - 默认值: `true`
 
 是否显示 CodePen 按钮
 
-### demo.codepenLayout
+#### demo.codepenLayout
 
 - 类型: `"top" | "left" | "right"`
 - 默认值: `"left"`
 
 CodePen 编辑器布局
 
-### demo.codepenEditors
+#### demo.codepenEditors
 
 - 类型: `string`
 - 默认值: `"101"`
 
 CodePen 编辑器状态
 
-### demo.editors
+#### demo.editors
 
 - 类型: `string`
 - 默认值: `"101"`
 
 CodePen 编辑器显示情况，第一位代表 HTML ，第二位代表 JS，第三位代表演示页面。
 
-### 其他
+#### 其他
 
 以下是第三方代码演示使用的库地址，除非你的环境无法访问 unpkg 或访问缓慢，否则无需覆盖默认设置。
 
-#### demo.babel
+##### demo.babel
 
 默认值: `"https://unpkg.com/@babel/standalone/babel.min.js"`
 
-#### demo.vue
+##### demo.vue
 
 默认值: `"https://unpkg.com/vue/dist/vue.global.prod.js"`
 
-#### demo.react
+##### demo.react
 
 默认值: `"https://unpkg.com/react/umd/react.production.min.js"`
 
-#### demo.reactDOM
+##### demo.reactDOM
 
 默认值: `"https://unpkg.com/react-dom/umd/react-dom.production.min.js"`
 
-## presentation
+### presentation
 
 - 类型: `PresentationOptions | boolean`
 - 默认值: `false`
@@ -644,7 +665,7 @@ CodePen 编辑器显示情况，第一位代表 HTML ，第二位代表 JS，第
 
 你可以传入一个对象，这个对象将用于 reveal.js 配置。
 
-### presentation.plugins
+#### presentation.plugins
 
 - 类型: `RevealPlugin[]`
 
@@ -668,14 +689,14 @@ CodePen 编辑器显示情况，第一位代表 HTML ，第二位代表 JS，第
 - `"audio"`
 - `"chalkboard"` -->
 
-### presentation.revealConfig
+#### presentation.revealConfig
 
 - 类型: `Partial<RevealOptions>`
 - 必填: 否
 
 你想要传递给 Reveal.js 的配置选项
 
-## delay
+### delay
 
 - 类型: `number`
 - 默认值: `800`
@@ -688,7 +709,7 @@ CodePen 编辑器显示情况，第一位代表 HTML ，第二位代表 JS，第
 
 :::
 
-## locales
+### locales
 
 - 类型: `MarkdownEnhanceLocaleConfig`
 
@@ -739,7 +760,8 @@ Markdown 增强插件的国际化配置。
 - **简体中文** (zh-CN)
 - **繁体中文** (zh-TW)
 - **英文(美国)** (en-US)
-- **德语** (de-AT)
+- **德语** (de-DE)
+- **德语(澳大利亚)** (de-AT)
 - **俄语** (ru-RU)
 - **乌克兰语** (uk-UA)
 - **越南语** (vi-VN)
@@ -751,5 +773,102 @@ Markdown 增强插件的国际化配置。
 - **日语** (ja-JP)
 - **土耳其语** (tr-TR)
 - **韩语** (ko-KR)
+- **芬兰语** (fi-FI)
+- **印尼语** (id-ID)
+- **荷兰语** (nl-NL)
 
 :::
+
+## 客户端配置
+
+### defineMermaidConfig
+
+```ts
+export const defineMermaidConfig: (options: MermaidConfig) => void;
+```
+
+定义需要传递给 Mermaid 的配置选项。
+
+### defineRevealConfig
+
+```ts
+export const defineRevealConfig: (options: RevealOptions) => void;
+```
+
+定义需要传递给 Reveal.js 的配置选项。
+
+### defineVuePlaygroundConfig
+
+```ts
+interface VuePlaygroundOptions {
+  /**
+   * specify the version of vue
+   */
+  vueVersion?: string;
+
+  /**
+   * specify default URL to import Vue runtime from in the sandbox
+   *
+   * @default "https://unpkg.com/@vue/runtime-dom@${version}/dist/runtime-dom.esm-browser.js"
+   */
+  defaultVueRuntimeURL?: string;
+
+  /**
+   * Specify default URL to import Vue Server Renderer from in the sandbox
+   *
+   * @default "https://unpkg.com/@vue/server-renderer@${version}/dist/server-renderer.esm-browser.js"
+   */
+  defaultVueServerRendererURL?: string;
+
+  /**
+   * Whether to enable repl's editor resizable
+   *
+   * @default true
+   */
+  autoResize?: boolean;
+
+  /**
+   * Whether to show JS, CSS, SSR panel
+   *
+   * @default false
+   */
+  showCompileOutput?: boolean;
+
+  /**
+   * Whether to show import map
+   *
+   * @default true
+   */
+  showImportMap?: boolean;
+
+  /**
+   * Whether to clear console
+   *
+   * @default false
+   */
+  clearConsole?: boolean;
+
+  /**
+   * Layout
+   *
+   * @default 'horizontal'
+   */
+  layout?: "horizontal" | "vertical";
+
+  /**
+   * Options to configure the `vue/compiler-sfc`
+   */
+  sfcOptions?: SFCOptions;
+
+  /**
+   * Whether to enable SSR
+   *
+   * @default true
+   */
+  ssr?: boolean;
+}
+
+export const defineVuePlaygroundConfig: (options: VuePlaygroundOptions) => void;
+```
+
+定义需要传递给 `@vue/repl` 的选项。

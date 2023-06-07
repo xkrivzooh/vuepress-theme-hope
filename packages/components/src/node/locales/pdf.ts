@@ -1,4 +1,4 @@
-import type { PDFLocaleConfig } from "../../shared/index.js";
+import { type PDFLocaleConfig } from "../../shared/index.js";
 
 export const pdfLocaleConfig: PDFLocaleConfig = {
   "/en/": {
@@ -11,6 +11,10 @@ export const pdfLocaleConfig: PDFLocaleConfig = {
 
   "/zh-tw/": {
     hint: "<p>此瀏覽器不支援嵌入式 PDF。請下載 PDF 查看：<a href='[url]' target='_blank'>下載 PDF</a></p>",
+  },
+
+  "/de/": {
+    hint: "<p>Dieser Browser unterstützt das Einbetten von PDFs nicht. Laden Sie die PDF herunter, um sie anzuzeigen: <a href='[url]' target='_blank'>PDF herunterladen</a></p>",
   },
 
   "/de-at/": {
@@ -59,5 +63,21 @@ export const pdfLocaleConfig: PDFLocaleConfig = {
 
   "/ko/": {
     hint: "<p>이 브라우저는 PDF를 포함할 수 없습니다. PDF를 보려면 다운로드하십시오: <a href='[url]' target='_blank'>PDF 다운로드</a></p>",
+  },
+
+  "/fi/": {
+    hint: "<p>Tämä selain ei tue PDF-tiedostojen upottamista. Lataa PDF-tiedosto nähdäksesi sen: <a href='[url]' target='_blank'>Lataa PDF</a></p>",
+  },
+
+  "/hu/": {
+    hint: "<p>Ez a böngésző nem támogatja a PDF beágyazását. Kérlek töltsd le a PDF-et megtekintéshez: <a href='[url]' target='_blank'>PDF letöltése</a></p>",
+  },
+
+  "/id/": {
+    hint: "<p>Browser ini tidak mendukung penyematan PDF. Silakan unduh PDF untuk melihatnya: <a href='[url]' target='_blank'>Unduh PDF</a></p>",
+  },
+
+  "/nl/": {
+    hint: "<p>Deze browser ondersteunt geen embedded PDFs. Gelieve de PDF te downloaden om ze te bekjken: <a href='[url]' target='_blank'>Download PDF</a></p>",
   },
 };

@@ -16,8 +16,8 @@ tag:
 
 <!-- more -->
 
-![首页截图](./assets/blog-light.png#light)
-![首页截图](./assets/blog-dark.png#dark)
+![首页截图](./assets/blog-light.jpg#light)
+![首页截图](./assets/blog-dark.jpg#dark)
 
 ## 主页信息
 
@@ -25,7 +25,7 @@ tag:
 
 如果你有一个 Logo，你可以将其放置在 `public` 文件夹中，并通过 `heroImage` 设置它，如果你在夜间模式希望展示另一个 Logo， 可以使用 `heroImageDark`。为了更好的 A11y，我们建议你设置 Logo 的描述到 `heroAlt`。
 
-你可以通过 `bgImage` 设置背景图片，但需要注意必须填入完整 URL 或绝对路径。如果你希望信息全屏展示，你可以设置 `heroFullScreen: true`。
+你可以通过 `bgImage` 和 `bgImageDark` 设置背景图片，但需要注意必须填入完整 URL 或绝对路径。如果你希望信息全屏展示，你可以设置 `heroFullScreen: true`。
 
 如果你需要定制一些样式，你可以通过 `heroImageStyle` 和 `bgImageStyle` 设置 Logo 与背景图片的样式。
 
@@ -45,3 +45,10 @@ tag:
 ::: info
 
 关于完整的配置项目，请参见 [博客主页 Frontmatter 配置](../../config/frontmatter/blog-home.md)。
+
+:::
+
+## 即时案例
+
+- [当前文档的博客主页](../../demo/blog-home.md)
+- [当前文档的自定义博客主页](../../demo/custom-blog-home.md)

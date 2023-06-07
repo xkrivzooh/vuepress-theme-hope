@@ -1,6 +1,6 @@
 ---
 title: 基础教程
-icon: guide
+icon: signs-post
 article: false
 ---
 
@@ -30,12 +30,14 @@ article: false
 
 - [VuePress 介绍](vuepress/README.md)
 
-## 高级教程
+## 自定义
 
-- [使用组件](advanced/component.md)
+- [使用组件](customize/component.md)
 
-- [自定义主题样式](advanced/style.md)
+- [修改布局](customize/layout.md)
 
-- [替换主题组件](advanced/replace.md)
+- [修改颜色](customize/color.md)
 
-- [主题继承](advanced/extend.md)
+- [自定义字体](customize/font.md)
+
+- [修改特效](customize/effect.md)

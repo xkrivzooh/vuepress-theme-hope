@@ -1,10 +1,8 @@
 import { useRouteLocale, useSiteLocaleData, withBase } from "@vuepress/client";
-import { computed, defineComponent, h } from "vue";
+import { type VNode, computed, defineComponent, h } from "vue";
 import { RouterLink } from "vue-router";
 
 import { useThemeLocaleData } from "@theme-hope/composables/index";
-
-import type { VNode } from "vue";
 
 import "../styles/navbar-brand.scss";
 
@@ -20,7 +18,10 @@ export default defineComponent({
       () => themeLocale.value.home || routeLocale.value
     );
 
-    const siteBrandTitle = computed(() => siteLocale.value.title);
+    const siteTitle = computed(() => siteLocale.value.title);
+    const siteBrandTitle = computed(
+      () => themeLocale.value.navTitle ?? siteTitle.value
+    );
 
     const siteBrandLogo = computed(() =>
       themeLocale.value.logo ? withBase(themeLocale.value.logo) : null
@@ -31,25 +32,37 @@ export default defineComponent({
     );
 
     return (): VNode =>
-      h(RouterLink, { to: siteBrandLink.value, class: "brand" }, () => [
+      h(RouterLink, { to: siteBrandLink.value, class: "vp-brand" }, () => [
         siteBrandLogo.value
           ? h("img", {
-              class: ["logo", { light: Boolean(siteBrandLogoDark.value) }],
+              class: [
+                "vp-nav-logo",
+                { light: Boolean(siteBrandLogoDark.value) },
+              ],
               src: siteBrandLogo.value,
-              alt: siteBrandTitle.value,
+              alt: siteTitle.value,
             })
           : null,
         siteBrandLogoDark.value
           ? h("img", {
-              class: ["logo dark"],
+              class: ["vp-nav-logo dark"],
               src: siteBrandLogoDark.value,
-              alt: siteBrandTitle.value,
+              alt: siteTitle.value,
             })
           : null,
         siteBrandTitle.value
           ? h(
               "span",
-              { class: ["site-name", { "hide-in-pad": siteBrandLogo.value }] },
+              {
+                class: [
+                  "vp-site-name",
+                  {
+                    "hide-in-pad":
+                      siteBrandLogo.value &&
+                      themeLocale.value.hideSiteNameOnMobile !== false,
+                  },
+                ],
+              },
               siteBrandTitle.value
             )
           : null,

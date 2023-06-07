@@ -2,7 +2,7 @@ import { defineUserConfig } from "@vuepress/cli";
 import { defaultTheme } from "@vuepress/theme-default";
 import { mdEnhancePlugin } from "vuepress-plugin-md-enhance";
 
-const base = <"/" | `/${string}/`>process.env.BASE || "/";
+const base = <"/" | `/${string}/`>process.env["BASE"] || "/";
 
 export default defineUserConfig({
   base,
@@ -25,6 +25,7 @@ export default defineUserConfig({
       "/demo/": [
         "/demo/align",
         "/demo/attrs",
+        "/demo/card",
         "/demo/chart",
         "/demo/echarts",
         "/demo/code-demo",
@@ -40,6 +41,7 @@ export default defineUserConfig({
         "/demo/mermaid",
         "/demo/playground",
         "/demo/presentation",
+        "/demo/slide-page",
         "/demo/stylized",
         "/demo/sup-sub",
         "/demo/tabs",
@@ -63,6 +65,7 @@ export default defineUserConfig({
     mdEnhancePlugin({
       align: true,
       attrs: true,
+      card: true,
       chart: true,
       codetabs: true,
       container: true,

@@ -1,6 +1,6 @@
 ---
 title: Catalog Page
-icon: tree
+icon: network-wired
 order: 6
 category:
   - Layout
@@ -9,7 +9,7 @@ tag:
   - Layout
 ---
 
-VuePress Theme Hope automatically generate `README.md` with catalog for each folder by default using [`vuepress-plugin-catalog`][auto-catalog].
+VuePress Theme Hope automatically generate `README.md` with catalog for each folder by default using <ProjectLink name="auto-catalog">`vuepress-plugin-catalog`</ProjectLink>.
 
 <!-- more -->
 
@@ -19,6 +19,20 @@ You can use `plugin.autoCatalog` in theme options to control this feature. If yo
 
 You can use `plugin.autoCatalog.exclude` to exclude some folders from catalog generation, and you can use `plugin.autoCatalog.frontmatter` to control frontmatter generation.
 
-For more details, see [Auto Catalog Plugin Docs][auto-catalog].
+For more details, see <ProjectLink name="auto-catalog">Auto Catalog Plugin Docs</ProjectLink>.
 
-[auto-catalog]: https://vuepress-theme-hope.github.io/v2/auto-catalog/
+## Demo
+
+Home page catalog:
+
+<!-- markdownlint-disable MD033 -->
+
+<div class="catalog-display-container">
+  <AutoCatalog base='/' />
+</div>
+
+<!-- markdownlint-enable MD033 -->
+
+```md
+<AutoCatalog base='/' />
+```

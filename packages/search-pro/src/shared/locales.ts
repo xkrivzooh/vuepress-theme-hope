@@ -1,4 +1,4 @@
-import type { RequiredLocaleConfig } from "vuepress-shared";
+import { type RequiredLocaleConfig } from "vuepress-shared";
 
 /**
  * Multi language config for `vuepress-plugin-search-pro` plugin
@@ -21,11 +21,25 @@ export interface SearchProLocaleData {
   search: string;
 
   /**
+   * Searching text
+   *
+   * 搜素中文字
+   */
+  searching: string;
+
+  /**
    * Cancel text
    *
    * 取消文字
    */
   cancel: string;
+
+  /**
+   * Default title
+   *
+   * 默认标题
+   */
+  defaultTitle: string;
 
   /**
    * Select hint
@@ -40,6 +54,13 @@ export interface SearchProLocaleData {
    * 选择提示
    */
   navigate: string;
+
+  /**
+   * Autocomplete hint
+   *
+   * 自动补全提示
+   */
+  autocomplete: string;
 
   /**
    * Close hint

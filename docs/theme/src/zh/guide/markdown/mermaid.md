@@ -1,6 +1,6 @@
 ---
 title: Mermaid
-icon: diagram
+icon: chart-pie
 category:
   - Markdown
 tag:
@@ -8,7 +8,7 @@ tag:
   - 图表
 ---
 
-让你的 VuePress 站点中的 Markdown 文件支持 [mermaid](https://mermaid-js.github.io/mermaid/#/)。
+让你的 VuePress 站点中的 Markdown 文件支持 [mermaid](https://mermaid.js.org/)。
 
 <!-- more -->
 
@@ -63,15 +63,45 @@ export default {
 ```
 ````
 
+除了使用 mermaid 代码块，你也可以直接使用以下代码块：
+
+- class: `classDiagram`
+- c4c: `C4Context`
+- er: `erDiagram`
+- gantt: `gantt`
+- "git-graph": `gitGraph`
+- journey: `journey`
+- mindmap: `mindmap`
+- pie: `pie`
+- sequence: `sequenceDiagram`
+- state: `stateDiagram-v2`
+- timeline: `timeline`
+
+你不需要再声明图表类型，也不需要缩进图表代码。
+
+当图表支持设置标题时，你可以直接在代码块信息后添加标题:
+
+```sequence 代码标题
+顺序图代码内容
+...
+```
+
 ## 使用
 
-详见 [mermaid 官方文档](https://mermaid-js.github.io/mermaid/#/)。
+详见 [mermaid 官方文档](https://mermaid.js.org/)。
+
+## 高级
+
+除了设置 `true` 以开启 Mermaid 之外，你可以传入一个对象来自定义 Mermaid 选项。
 
 ## 例子
 
 ### 流程图
 
 ```mermaid
+---
+title: Flowchart
+---
 flowchart TB
     c1-->a2
     subgraph one
@@ -92,6 +122,9 @@ flowchart TB
 
 ````md
 ```mermaid
+---
+title: Flowchart
+---
 flowchart TB
     c1-->a2
     subgraph one
@@ -113,7 +146,7 @@ flowchart TB
 
 ### 循序图
 
-```sequence
+```sequence Greetings
 Alice ->> Bob: Hello Bob, how are you?
 Bob-->>John: How about you John?
 Bob--x Alice: I am good thanks!
@@ -127,7 +160,7 @@ Alice->John: Yes... John, how are you?
 ::: details Code
 
 ````md
-```sequence
+```sequence Greetings
 Alice ->> Bob: Hello Bob, how are you?
 Bob-->>John: How about you John?
 Bob--x Alice: I am good thanks!
@@ -143,33 +176,57 @@ Alice->John: Yes... John, how are you?
 
 ### 类图
 
-```class
-class Square~Shape~{
-    int id
-    List~int~ position
-    setPoints(List~int~ points)
-    getPoints() List~int~
+```class Animal Example
+note "From Duck till Zebra"
+Animal <|-- Duck
+note for Duck "can fly\ncan swim\ncan dive\ncan help in debugging"
+Animal <|-- Fish
+Animal <|-- Zebra
+Animal : +int age
+Animal : +String gender
+Animal: +isMammal()
+Animal: +mate()
+class Duck{
+  +String beakColor
+  +swim()
+  +quack()
 }
-
-Square : -List~string~ messages
-Square : +setMessages(List~string~ messages)
-Square : +getMessages() List~string~
+class Fish{
+  -int sizeInFeet
+  -canEat()
+}
+class Zebra{
+  +bool is_wild
+  +run()
+}
 ```
 
 ::: details Code
 
 ````md
-```class
-class Square~Shape~{
-    int id
-    List~int~ position
-    setPoints(List~int~ points)
-    getPoints() List~int~
+```class Animal Example
+note "From Duck till Zebra"
+Animal <|-- Duck
+note for Duck "can fly\ncan swim\ncan dive\ncan help in debugging"
+Animal <|-- Fish
+Animal <|-- Zebra
+Animal : +int age
+Animal : +String gender
+Animal: +isMammal()
+Animal: +mate()
+class Duck{
+  +String beakColor
+  +swim()
+  +quack()
 }
-
-Square : -List~string~ messages
-Square : +setMessages(List~string~ messages)
-Square : +getMessages() List~string~
+class Fish{
+  -int sizeInFeet
+  -canEat()
+}
+class Zebra{
+  +bool is_wild
+  +run()
+}
 ```
 ````
 
@@ -177,43 +234,25 @@ Square : +getMessages() List~string~
 
 ### 状态图
 
-```state
-[*] --> Active
+```state Check if n is negative
 
-state Active {
-    [*] --> NumLockOff
-    NumLockOff --> NumLockOn : EvNumLockPressed
-    NumLockOn --> NumLockOff : EvNumLockPressed
-    --
-    [*] --> CapsLockOff
-    CapsLockOff --> CapsLockOn : EvCapsLockPressed
-    CapsLockOn --> CapsLockOff : EvCapsLockPressed
-    --
-    [*] --> ScrollLockOff
-    ScrollLockOff --> ScrollLockOn : EvScrollLockPressed
-    ScrollLockOn --> ScrollLockOff : EvScrollLockPressed
-}
+state if_state <<choice>>
+[*] --> IsPositive
+IsPositive --> if_state
+if_state --> False: if n < 0
+if_state --> True : if n >= 0
 ```
 
 ::: details Code
 
 ````md
-```state
-[*] --> Active
+```state Check if n is negative
 
-state Active {
-    [*] --> NumLockOff
-    NumLockOff --> NumLockOn : EvNumLockPressed
-    NumLockOn --> NumLockOff : EvNumLockPressed
-    --
-    [*] --> CapsLockOff
-    CapsLockOff --> CapsLockOn : EvCapsLockPressed
-    CapsLockOn --> CapsLockOff : EvCapsLockPressed
-    --
-    [*] --> ScrollLockOff
-    ScrollLockOff --> ScrollLockOn : EvScrollLockPressed
-    ScrollLockOn --> ScrollLockOff : EvScrollLockPressed
-}
+state if_state <<choice>>
+[*] --> IsPositive
+IsPositive --> if_state
+if_state --> False: if n < 0
+if_state --> True : if n >= 0
 ```
 ````
 
@@ -221,7 +260,7 @@ state Active {
 
 ### 关系图
 
-```er
+```er Er Example
 CAR ||--o{ NAMED-DRIVER : allows
 CAR {
     string registrationNumber
@@ -239,7 +278,7 @@ PERSON {
 ::: details Code
 
 ````md
-```er
+```er Er Example
 CAR ||--o{ NAMED-DRIVER : allows
 CAR {
     string registrationNumber
@@ -360,7 +399,7 @@ Add another diagram to demo page    :48h
 ### 饼图
 
 ```pie
-title What Voldemort doesn’t have?
+title What Voldemort doesn't have?
   "FRIENDS" : 2
   "FAMILY" : 3
   "NOSE" : 45
@@ -370,7 +409,7 @@ title What Voldemort doesn’t have?
 
 ````md
 ```pie
-title What Voldemort doesn’t have?
+title What Voldemort doesn't have?
   "FRIENDS" : 2
   "FAMILY" : 3
   "NOSE" : 45
@@ -604,6 +643,36 @@ root((VuePress))
       (feed2)
       (sitemap2)
       (seo2)
+```
+````
+
+:::
+
+### 时间线
+
+```timeline
+title Timeline of Industrial Revolution
+section 17th-20th century
+    Industry 1.0 : Machinery, Water power, Steam <br>power
+    Industry 2.0 : Electricity, Internal combustion engine, Mass production
+    Industry 3.0 : Electronics, Computers, Automation
+section 21st century
+    Industry 4.0 : Internet, Robotics, Internet of Things
+    Industry 5.0 : Artificial intelligence, Big data,3D printing
+```
+
+::: details 代码
+
+````md
+```timeline
+title Timeline of Industrial Revolution
+section 17th-20th century
+    Industry 1.0 : Machinery, Water power, Steam <br>power
+    Industry 2.0 : Electricity, Internal combustion engine, Mass production
+    Industry 3.0 : Electronics, Computers, Automation
+section 21st century
+    Industry 4.0 : Internet, Robotics, Internet of Things
+    Industry 5.0 : Artificial intelligence, Big data,3D printing
 ```
 ````
 

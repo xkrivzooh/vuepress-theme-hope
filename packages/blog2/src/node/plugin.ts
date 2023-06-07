@@ -1,23 +1,29 @@
 import {
+  type PluginFunction,
   preparePageComponent,
   preparePageData,
   preparePagesComponents,
   preparePagesData,
   preparePagesRoutes,
 } from "@vuepress/core";
-import { getPageExcerpt } from "vuepress-shared/node";
 import { watch } from "chokidar";
+import { checkVersion, getPageExcerpt } from "vuepress-shared/node";
 
 import { prepareCategory } from "./category.js";
+import { convertOptions } from "./compact.js";
+import { type BlogOptions, type PageWithExcerpt } from "./options.js";
 import { prepareType } from "./type.js";
-import { getPageMap, logger } from "./utils.js";
-
-import type { PluginFunction } from "@vuepress/core";
-import type { BlogOptions, PageWithExcerpt } from "./options.js";
+import { PLUGIN_NAME, getPageMap, logger } from "./utils.js";
 
 export const blogPlugin =
-  (options: BlogOptions): PluginFunction =>
+  (options: BlogOptions, legacy = true): PluginFunction =>
   (app) => {
+    // TODO: Remove this in v2 stable
+    if (legacy)
+      convertOptions(options as BlogOptions & Record<string, unknown>);
+
+    checkVersion(app, PLUGIN_NAME, "2.0.0-beta.62");
+
     const {
       getInfo = (): Record<string, never> => ({}),
       filter = (page): boolean =>
@@ -28,6 +34,13 @@ export const blogPlugin =
       excerptLength = 300,
       excerptFilter = filter,
       isCustomElement = (): boolean => false,
+      category = [],
+      type = [],
+      slugify = (name: string): string =>
+        name
+          .replace(/[ _]/g, "-")
+          .replace(/[:?*|\\/<>]/g, "")
+          .toLowerCase(),
     } = options;
 
     let generatePageKeys: string[] = [];
@@ -35,41 +48,46 @@ export const blogPlugin =
     if (app.env.isDebug) logger.info("Options:", options);
 
     return {
-      name: "vuepress-plugin-blog2",
+      name: PLUGIN_NAME,
 
       define: () => ({
         BLOG_META_SCOPE: metaScope,
       }),
 
       extendsPage: (page): void => {
-        if (excerpt && excerptFilter(page)) {
+        // generate page excerpt
+        if (excerpt && excerptFilter(page))
           (<PageWithExcerpt>page).data["excerpt"] = getPageExcerpt(app, page, {
             isCustomElement,
             excerptSeparator,
             excerptLength,
           });
-        }
+      },
 
-        if (filter(page)) {
+      onInitialized: (app): Promise<void> => {
+        const pageMap = getPageMap(app, filter);
+
+        // inject meta information
+        app.pages.filter(filter).forEach((page) => {
           page.routeMeta = {
             ...(metaScope === ""
               ? getInfo(page)
               : { [metaScope]: getInfo(page) }),
             ...page.routeMeta,
           };
-        }
-      },
-
-      onInitialized: (app): Promise<void> => {
-        const pageMap = getPageMap(filter, app);
+        });
 
         return Promise.all([
-          prepareCategory(app, options, pageMap, true).then((pageKeys) => {
-            generatePageKeys.push(...pageKeys);
-          }),
-          prepareType(app, options, pageMap, true).then((pageKeys) => {
-            generatePageKeys.push(...pageKeys);
-          }),
+          prepareCategory(app, { category, slugify }, pageMap, true).then(
+            (pageKeys) => {
+              generatePageKeys.push(...pageKeys);
+            }
+          ),
+          prepareType(app, { type, slugify }, pageMap, true).then(
+            (pageKeys) => {
+              generatePageKeys.push(...pageKeys);
+            }
+          ),
         ]).then(() => {
           if (app.env.isDebug) logger.info("temp file generated");
         });
@@ -88,13 +106,15 @@ export const blogPlugin =
           const updateBlog = (): Promise<void> => {
             const newGeneratedPageKeys: string[] = [];
 
-            const pageMap = getPageMap(filter, app);
+            const pageMap = getPageMap(app, filter);
 
             return Promise.all([
-              prepareCategory(app, options, pageMap).then((pageKeys) => {
-                newGeneratedPageKeys.push(...pageKeys);
-              }),
-              prepareType(app, options, pageMap).then((pageKeys) => {
+              prepareCategory(app, { category, slugify }, pageMap).then(
+                (pageKeys) => {
+                  newGeneratedPageKeys.push(...pageKeys);
+                }
+              ),
+              prepareType(app, { type, slugify }, pageMap).then((pageKeys) => {
                 newGeneratedPageKeys.push(...pageKeys);
               }),
             ]).then(async () => {

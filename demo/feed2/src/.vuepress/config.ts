@@ -2,7 +2,7 @@ import { defineUserConfig } from "@vuepress/cli";
 import { defaultTheme } from "@vuepress/theme-default";
 import { feedPlugin } from "vuepress-plugin-feed2";
 
-const base = <"/" | `/${string}/`>process.env.BASE || "/";
+const base = <"/" | `/${string}/`>process.env["BASE"] || "/";
 
 export default defineUserConfig({
   base,
@@ -40,10 +40,10 @@ export default defineUserConfig({
 
   plugins: [
     feedPlugin({
-      hostname: "https://vuepress-theme-hope.github.io",
+      hostname: "https://plugin-feed2-demo.vuejs.press",
       atom: true,
-      rss: true,
       json: true,
+      rss: true,
     }),
   ],
 });

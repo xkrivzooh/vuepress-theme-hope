@@ -1,6 +1,6 @@
 ---
 title: 组件
-icon: plugin
+icon: puzzle-piece
 category:
   - Markdown
 tag:
@@ -12,13 +12,15 @@ tag:
 
 可用组件:
 
+- ArtPlayer
 - AudioPlayer
 - Badge
 - BiliBili
-- Catalog
 - CodePen
 - FontIcon
 - PDF
+- Replit
+- SiteInfo
 - StackBlitz
 - VideoPlayer
 - YouTube
@@ -47,9 +49,9 @@ export default defineUserConfig({
           "AudioPlayer",
           "Badge",
           "BiliBili",
-          "Catalog",
           "CodePen",
           "PDF",
+          "Replit",
           "StackBlitz",
           "VideoPlayer",
           "YouTube",
@@ -75,9 +77,9 @@ export default {
           "AudioPlayer",
           "Badge",
           "BiliBili",
-          "Catalog",
           "CodePen",
           "PDF",
+          "Replit",
           "StackBlitz",
           "VideoPlayer",
           "YouTube",
@@ -89,6 +91,76 @@ export default {
 ```
 
 :::
+
+## ArtPlayer
+
+一个视频播放器:
+
+<ArtPlayer src="https://mse-demo.u2sb.com/caminandes_03_llamigos_720p.mp4" />
+
+```md
+<ArtPlayer src="https://mse-demo.u2sb.com/caminandes_03_llamigos_720p.mp4" />
+```
+
+一个包含了封面的播放器:
+
+<ArtPlayer
+  src="https://mse-demo.u2sb.com/caminandes_03_llamigos_720p.mp4"
+  poster="/poster.svg"
+/>
+
+```md
+<ArtPlayer
+  src="https://mse-demo.u2sb.com/caminandes_03_llamigos_720p.mp4"
+  poster="/poster.svg"
+/>
+```
+
+一个包含自定义设置的播放器:
+
+<ArtPlayer
+  src="https://mse-demo.u2sb.com/caminandes_03_llamigos_720p.mp4"
+  airplay
+  aspect-ratio
+  auto-size
+  auto-orientation
+  auto-playback
+  fast-forward
+  flip
+  fullscreen-web
+  lock
+  loop
+  is-live
+  muted
+  mini-progress-bar
+  pip
+  screenshot
+  subtitle-offset
+/>
+
+```md
+<ArtPlayer
+  src="https://mse-demo.u2sb.com/caminandes_03_llamigos_720p.mp4"
+  airplay
+  aspect-ratio
+  auto-size
+  auto-orientation
+  auto-playback
+  fast-forward
+  flip
+  fullscreen-web
+  lock
+  loop
+  is-live
+  muted
+  mini-progress-bar
+  pip
+  screenshot
+  subtitle-offset
+/>
+```
+
+有关可用属性，请参阅 <ProjectLink name="components" path="/zh/guide/artplayer.html">ArtPlayer</ProjectLink> 页面。
 
 ## AudioPlayer
 
@@ -116,7 +188,7 @@ export default {
 />
 ```
 
-有关可用属性，请参阅 [AudioPlayer][audioplayer] 页面。
+有关可用属性，请参阅 <ProjectLink name="components" path="/zh/guide/audioplayer.html">AudioPlayer</ProjectLink> 页面。
 
 ## Badge
 
@@ -128,7 +200,7 @@ export default {
 - <Badge text="info" type="info" vertical="middle" />
 - <Badge text="note" type="note" vertical="middle" />
 
-有关可用属性，请参阅 [Badge][badge] 页面。
+有关可用属性，请参阅 <ProjectLink name="components" path="/zh/guide/badge.html">Badge</ProjectLink> 页面。
 
 ## BiliBili
 
@@ -142,43 +214,15 @@ export default {
 <BiliBili bvid="BV1kt411o7C3" />
 ```
 
-一个自定义分 P 和空降地址的 B 站视频:
+一个自定义空降地址且自动播放的 B 站视频:
 
-<BiliBili bvid="BV1kt411o7C3" ratio="16:9" time="60" page="2" />
-
-```md
-<BiliBili bvid="BV1kt411o7C3" ratio="16:9" time="60" page="2" />
-```
-
-一个自定义设置的 B 站视频:
-
-<BiliBili bvid="BV1kt411o7C3" low-quality no-danmaku />
+<BiliBili aid="34304064" cid="109293122" ratio="9:16" time="60" autoplay page="2" />
 
 ```md
-<BiliBili bvid="BV1kt411o7C3" low-quality no-danmaku />
+<BiliBili aid="34304064" cid="109293122" ratio="9:16" time="60" autoplay page="2" />
 ```
 
-有关可用属性，请参阅 [BiliBili][bilibili] 页面。
-
-## Catalog
-
-一个展示目录的组件。
-
-主页目录:
-
-<!-- markdownlint-disable MD033 -->
-
-<div class="catalog-display-container">
-  <Catalog base='/zh/' />
-</div>
-
-<!-- markdownlint-enable MD033 -->
-
-```md
-<Catalog base='/zh/' />
-```
-
-有关可用属性，请参阅 [Catalog][catalog] 页面。
+有关可用属性，请参阅 <ProjectLink name="components" path="/zh/guide/bilibili.html">BiliBili</ProjectLink> 页面。
 
 ## CodePen
 
@@ -186,7 +230,7 @@ export default {
 
 一个使用用户和 Slug Hash 的案例:
 
-<CodePen user="kowlor" slug-hash="ZYYQoy" title="Solar System animation - Pure CSS" :default-tab="['css','result']" :theme="$isDarkMode? 'dark': 'light'" />
+<CodePen user="kowlor" slug-hash="ZYYQoy" title="Solar System animation - Pure CSS" :default-tab="['css','result']" :theme="$isDarkmode? 'dark': 'light'" />
 
 ```md
 <CodePen
@@ -194,37 +238,37 @@ export default {
   slug-hash="ZYYQoy"
   title="Solar System animation - Pure CSS"
   :default-tab="['css','result']"
-  :theme="$isDarkMode? 'dark': 'light'"
+  :theme="$isDarkmode? 'dark': 'light'"
 />
 ```
 
 一个使用链接的案例:
 
-<CodePen link="https://codepen.io/kowlor/pen/ZYYQoy" title="Solar System animation - Pure CSS" :default-tab="['css','result']" :theme="$isDarkMode? 'dark': 'light'" />
+<CodePen link="https://codepen.io/kowlor/pen/ZYYQoy" title="Solar System animation - Pure CSS" :default-tab="['css','result']" :theme="$isDarkmode? 'dark': 'light'" />
 
 ```md
 <CodePen
   link="https://codepen.io/kowlor/pen/ZYYQoy"
   title="Solar System animation - Pure CSS"
   :default-tab="['css','result']"
-  :theme="$isDarkMode? 'dark': 'light'"
+  :theme="$isDarkmode? 'dark': 'light'"
 />
 ```
 
 一个加载运行的案例:
 
-<CodePen link="https://codepen.io/keginaring/pen/XWZazwW" title="Solar System animation - Pure CSS" status="clicktorun" :theme="$isDarkMode? 'dark': 'light'" />
+<CodePen link="https://codepen.io/keginaring/pen/XWZazwW" title="Solar System animation - Pure CSS" status="clicktorun" :theme="$isDarkmode? 'dark': 'light'" />
 
 ```md
 <CodePen
   link="https://codepen.io/kowlor/pen/ZYYQoy"
   title="Envelope w/ Hearts"
   status="clicktorun"
-  :theme="$isDarkMode? 'dark': 'light'"
+  :theme="$isDarkmode? 'dark': 'light'"
 />
 ```
 
-有关可用属性，请参阅 [CodePen][codepen] 页面。
+有关可用属性，请参阅 <ProjectLink name="components" path="/zh/guide/codepen.html">CodePen</ProjectLink> 页面。
 
 ## FontIcon
 
@@ -232,15 +276,15 @@ export default {
 
 - 主页图标: <FontIcon icon="home" />
 
-- 一个大红 Markdown 图标: <FontIcon icon="markdown" color="red" size="32" />
+- 一个大绿分享图标: <FontIcon icon="share" color="#3eaf7c" size="32" />
 
 ```md
 - 主页图标: <FontIcon icon="home" />
 
-- 一个大红 Markdown 图标: <FontIcon icon="markdown" color="red" size="32" />
+- 一个大绿分享图标: <FontIcon icon="share" color="#3eaf7c" size="32" />
 ```
 
-有关可用属性，请参阅 [FontIcon][fonticon] 页面。
+有关可用属性，请参阅 <ProjectLink name="components" path="/zh/guide/fonticon.html">FontIcon</ProjectLink> 页面。
 
 ## PDF
 
@@ -262,7 +306,67 @@ PDF 浏览器组件。
 <PDF url="/assets/sample.pdf" page="2" no-toolbar />
 ```
 
-有关可用属性，请参阅 [PDF][pdf] 页面。
+有关可用属性，请参阅 <ProjectLink name="components" path="/zh/guide/pdf.html">PDF</ProjectLink> 页面。
+
+## Replit
+
+一个嵌入的 repl:
+
+<Replit user="FuckDoctors" repl="Java-Test" />
+
+```md
+<Replit user="FuckDoctors" repl="Java-Test" />
+```
+
+一个嵌入的 repl，并且显示指定的文件:
+
+<Replit user="FuckDoctors" repl="Java-Test" file="Main.java" />
+
+```md
+<Replit user="FuckDoctors" repl="Java-Test" file="Main.java" />
+```
+
+一个 repl 链接:
+
+<Replit user="FuckDoctors" repl="Java-Test" plain />
+
+```md
+<Replit user="FuckDoctors" repl="Java-Test" plain />
+```
+
+## SiteInfo
+
+基础站点信息:
+
+<SiteInfo name="Mr.Hope's Blog" url="https://mrhope.site" preview="https://theme-hope.vuejs.press/assets/image/mrhope.jpg" />
+
+```md
+<SiteInfo name="Mr.Hope's Blog" url="https://mrhope.site" preview="https://theme-hope.vuejs.press/assets/image/mrhope.jpg" />
+```
+
+有更多属性的站点信息:
+
+<SiteInfo
+  name="Mr.Hope's Blog"
+  desc="Where there is light, there is hope"
+  url="https://mrhope.site"
+  logo="https://mrhope.site/logo.svg"
+  repo="https://github.com/Mister-Hope/Mister-Hope.github.io"
+  preview="https://theme-hope.vuejs.press/assets/image/mrhope.jpg"
+/>
+
+```md
+<SiteInfo
+  name="Mr.Hope's Blog"
+  desc="Where there is light, there is hope"
+  url="https://mrhope.site"
+  logo="https://mrhope.site/logo.svg"
+  repo="https://github.com/Mister-Hope/Mister-Hope.github.io"
+  preview="https://theme-hope.vuejs.press/assets/image/mrhope.jpg"
+/>
+```
+
+有关可用属性，请参阅 <ProjectLink name="components" path="/zh/guide/siteinfo.html">SiteInfo</ProjectLink> 页面。
 
 ## StackBlitz
 
@@ -284,7 +388,7 @@ PDF 浏览器组件。
 <StackBlitz id="vuepress-theme-hope" hideExplorer hideNavigation hideDevtools />
 ```
 
-有关可用属性，请参阅 [StackBlitz][stackblitz] 页面。
+有关可用属性，请参阅 <ProjectLink name="components" path="/zh/guide/stackblitz.html">StackBlitz</ProjectLink> 页面。
 
 ## VideoPlayer
 
@@ -342,7 +446,7 @@ PDF 浏览器组件。
 />
 ```
 
-有关可用属性，请参阅 [VideoPlayer][videoplayer] 页面。
+有关可用属性，请参阅 <ProjectLink name="components" path="/zh/guide/videoplayer.html">VideoPlayer</ProjectLink> 页面。
 
 ## YouTube
 
@@ -372,15 +476,4 @@ PDF 浏览器组件。
 <YouTube list-type="playlist" list="PLJNLwTPak6dhCRzVelZIs2-DfBp01NX_1" />
 ```
 
-有关可用属性，请参阅 [YouTube][youtube] 页面。
-
-[audioplayer]: https://vuepress-theme-hope.github.io/v2/components/zh/guide/audioplayer.html
-[badge]: https://vuepress-theme-hope.github.io/v2/components/zh/guide/badge.html
-[bilibili]: https://vuepress-theme-hope.github.io/v2/components/zh/guide/bilibili.html
-[catalog]: https://vuepress-theme-hope.github.io/v2/components/zh/guide/catalog.html
-[codepen]: https://vuepress-theme-hope.github.io/v2/components/zh/guide/codepen.html
-[fonticon]: https://vuepress-theme-hope.github.io/v2/components/zh/guide/fonticon.html
-[pdf]: https://vuepress-theme-hope.github.io/v2/components/zh/guide/pdf.html
-[stackblitz]: https://vuepress-theme-hope.github.io/v2/components/zh/guide/stackblitz.html
-[videoplayer]: https://vuepress-theme-hope.github.io/v2/components/zh/guide/videoplayer.html
-[youtube]: https://vuepress-theme-hope.github.io/v2/components/zh/guide/youtube.html
+有关可用属性，请参阅 <ProjectLink name="components" path="/zh/guide/youtube.html">YouTube</ProjectLink> 页面。

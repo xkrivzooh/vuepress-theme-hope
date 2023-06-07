@@ -1,11 +1,19 @@
 ---
 title: Vue 交互演示
-icon: code
+icon: fab fa-vuejs
 ---
 
 让你的 VuePress 站点中的 Markdown 文件支持 vue 交互演示。
 
 <!-- more -->
+
+::: tip
+
+由于我们提供了一个运行时编译器，我们引入了带有 TypeScript 支持的整个 `@vue/compiler-sfc` 包，因此整个 Vue Playground 块大于 4MB。 因此，只有在严重依赖交互式 Vue Playground 时才应使用它。
+
+你可以使用 [Vue Demo](./demo.md#vue) 和 [交互演示 Vue 预设](./playground.md#vue) 作为替代。
+
+:::
 
 ## 配置
 

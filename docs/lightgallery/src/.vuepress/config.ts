@@ -2,11 +2,9 @@ import { config } from "docs-shared";
 import { lightgalleryPlugin } from "vuepress-plugin-lightgallery";
 import theme from "./theme.js";
 
+// the config wrapper is located in <root>/docs-shared/src/config-wrapper.ts
 export default config(
-  {
-    base: "lightgallery",
-    indexName: "vuepress-theme-hope-lightgallery",
-  },
+  { name: "lightgallery" },
   {
     locales: {
       "/": {
@@ -25,7 +23,9 @@ export default config(
     theme,
 
     plugins: [
-      lightgalleryPlugin({ selector: ".theme-hope-content :not(a) > img" }),
+      lightgalleryPlugin({
+        selector: ".theme-hope-content :not(a) > img:not([no-view])",
+      }),
     ],
   }
 );

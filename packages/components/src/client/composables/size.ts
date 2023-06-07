@@ -1,10 +1,19 @@
-import { useEventListener } from "@vueuse/core";
-import { computed, onMounted, isRef, ref, unref, watch } from "vue";
-import type { MaybeRef } from "@vueuse/core";
-import type { Ref } from "vue";
+import { isString } from "@vuepress/shared";
+import { type MaybeRef, useEventListener } from "@vueuse/core";
+import {
+  type Ref,
+  type ShallowRef,
+  computed,
+  isRef,
+  onMounted,
+  ref,
+  shallowRef,
+  unref,
+  watch,
+} from "vue";
 
 const getValue = (value: string | number): string =>
-  typeof value === "string" ? value : `${value}px`;
+  isString(value) ? value : `${value}px`;
 
 export interface SizeOptions {
   width: string | number | undefined;
@@ -13,7 +22,7 @@ export interface SizeOptions {
 }
 
 export interface SizeInfo<E extends HTMLElement> {
-  el: Ref<E | undefined>;
+  el: ShallowRef<E | undefined>;
   width: Ref<string>;
   height: Ref<string>;
 }
@@ -22,19 +31,19 @@ export const useSize = <E extends HTMLElement>(
   options: SizeOptions,
   extraHeight: MaybeRef<number> = 0
 ): SizeInfo<E> => {
-  const el = ref<E>();
+  const el = shallowRef<E>();
   const width = computed(() => getValue(unref(options.width) || "100%"));
   const height = ref("auto");
 
-  const getRadio = (radio: number | string | undefined): number => {
-    if (typeof radio === "string") {
-      const [width, height] = radio.split(":");
+  const getRadio = (ratio: number | string | undefined): number => {
+    if (isString(ratio)) {
+      const [width, height] = ratio.split(":");
       const parsedRadio = Number(width) / Number(height);
 
       if (!Number.isNaN(parsedRadio)) return parsedRadio;
     }
 
-    return typeof radio === "number" ? radio : 16 / 9;
+    return typeof ratio === "number" ? ratio : 16 / 9;
   };
 
   const getHeight = (width: number): string => {

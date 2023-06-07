@@ -1,6 +1,7 @@
 ---
 title: Markdown 示例
-icon: markdown
+icon: fab fa-markdown
+order: 2
 category:
   - 教程知识
   - Markdown
@@ -169,18 +170,18 @@ tag:
 
 [相对路径访问主页](../../README.md)
 
-[根目录访问示例](/v2/demo)
+[根目录访问贡献指南](/v2/contribution)
 
-[相对路径访问示例](../../demo.md)
+[相对路径访问贡献指南](../../contribution.md)
 
 ```md
 [根目录访问主页](/v2/)
 
 [相对路径访问主页](../../README.md)
 
-[根目录访问示例](/v2/demo)
+[根目录访问贡献指南](/v2/contribution)
 
-[相对路径访问示例](../../demo.md)
+[相对路径访问贡献指南](../../contribution.md)
 ```
 
 ::: tip

@@ -1,13 +1,21 @@
-import { computed, defineComponent, h, toRef } from "vue";
-import { RouterLink, useRoute } from "vue-router";
 import { useSiteData } from "@vuepress/client";
 import { ExternalLinkIcon } from "@vuepress/plugin-external-link-icon/client";
 import { isLinkHttp, isLinkMailto, isLinkTel } from "@vuepress/shared";
+import {
+  type PropType,
+  type SlotsType,
+  type VNode,
+  computed,
+  defineComponent,
+  h,
+  toRef,
+} from "vue";
+import { RouterLink, useRoute } from "vue-router";
+import { keys, startsWith } from "vuepress-shared/client";
 
-import Icon from "@theme-hope/components/Icon";
+import HopeIcon from "@theme-hope/components/HopeIcon";
 
-import type { PropType, VNode } from "vue";
-import type { AutoLinkOptions } from "../../shared/index.js";
+import { type AutoLinkOptions } from "../../shared/index.js";
 
 export default defineComponent({
   name: "AutoLink",
@@ -34,9 +42,13 @@ export default defineComponent({
     noExternalLinkIcon: Boolean,
   },
 
-  emits: {
-    focusout: () => true,
-  },
+  emits: ["focusout"],
+
+  slots: Object as SlotsType<{
+    before?: () => VNode[] | VNode;
+    after?: () => VNode[] | VNode;
+    default?: () => VNode[] | VNode;
+  }>,
 
   setup(props, { attrs, emit, slots }) {
     const route = useRoute();
@@ -59,7 +71,7 @@ export default defineComponent({
         : config.value.target || (hasHttpProtocol.value ? "_blank" : undefined)
     );
 
-    // if the `target` attr is '_blank'
+    // if the `target` attr is "_blank"
     const isBlankTarget = computed(() => linkTarget.value === "_blank");
 
     // render `<RouterLink>` or not
@@ -88,7 +100,7 @@ export default defineComponent({
       // should not be active in `exact` mode
       if (props.exact) return false;
 
-      const localeKeys = Object.keys(siteData.value.locales);
+      const localeKeys = keys(siteData.value.locales);
 
       return localeKeys.length
         ? // check all the locales
@@ -105,11 +117,12 @@ export default defineComponent({
           : // if this link is active in subpath
           !shouldBeActiveInSubpath.value
           ? route.path === config.value.link
-          : route.path.startsWith(config.value.link)
+          : startsWith(route.path, config.value.link)
         : false
     );
 
     return (): VNode => {
+      const { before, after, default: defaultSlot } = slots;
       const { text, icon, link } = config.value;
 
       return renderRouterLink.value
@@ -124,11 +137,9 @@ export default defineComponent({
               onFocusout: () => emit("focusout"),
             },
             () =>
-              slots["default"]?.() || [
-                slots["before"]?.() || h(Icon, { icon }),
-                text,
-                slots["after"]?.(),
-              ]
+              defaultSlot
+                ? defaultSlot()
+                : [before ? before() : h(HopeIcon, { icon }), text, after?.()]
           )
         : h(
             "a",
@@ -142,12 +153,14 @@ export default defineComponent({
               class: ["nav-link", attrs["class"]],
               onFocusout: () => emit("focusout"),
             },
-            slots["default"]?.() || [
-              slots["before"]?.() || h(Icon, { icon }),
-              text,
-              props.noExternalLinkIcon ? null : h(ExternalLinkIcon),
-              slots["after"]?.(),
-            ]
+            defaultSlot
+              ? defaultSlot()
+              : [
+                  before ? before() : h(HopeIcon, { icon }),
+                  text,
+                  props.noExternalLinkIcon ? null : h(ExternalLinkIcon),
+                  after?.(),
+                ]
           );
     };
   },

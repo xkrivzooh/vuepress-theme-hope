@@ -1,10 +1,11 @@
-import { describe, it, expect } from "vitest";
 import MarkdownIt from "markdown-it";
+import { describe, expect, it } from "vitest";
+
 import {
   normalDemo,
-  vueDemo,
   reactDemo,
-} from "../../src/node/markdown-it/index.js";
+  vueDemo,
+} from "../../src/node/markdown-it/codeDemo.js";
 
 describe("demo", () => {
   const markdownIt = MarkdownIt({ linkify: true })

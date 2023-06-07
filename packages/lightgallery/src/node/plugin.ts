@@ -1,17 +1,16 @@
-import { getDirname, path } from "@vuepress/utils";
+import { type PluginFunction } from "@vuepress/core";
 import { useSassPalettePlugin } from "vuepress-plugin-sass-palette";
-import { addViteOptimizeDepsExclude } from "vuepress-shared/node";
+import { addViteOptimizeDepsExclude, checkVersion } from "vuepress-shared/node";
 
-import { logger } from "./utils.js";
-
-import type { PluginFunction } from "@vuepress/core";
-import type { LightGalleryOptions } from "./options.js";
-
-const __dirname = getDirname(import.meta.url);
+import { type LightGalleryOptions } from "./options.js";
+import { prepareLightGalleryPlugins } from "./prepare.js";
+import { CLIENT_FOLDER, PLUGIN_NAME, logger } from "./utils.js";
 
 export const lightgalleryPlugin =
   (options: LightGalleryOptions = {}): PluginFunction =>
   (app) => {
+    checkVersion(app, PLUGIN_NAME, "2.0.0-beta.62");
+
     if (app.env.isDebug) logger.info("Options:", options);
 
     const plugins = options.plugins || ["pager", "share", "zoom"];
@@ -19,13 +18,13 @@ export const lightgalleryPlugin =
     useSassPalettePlugin(app, { id: "hope" });
 
     return {
-      name: "vuepress-plugin-lightgallery",
+      name: PLUGIN_NAME,
 
       define: (): Record<string, unknown> => ({
         IMAGE_SELECTOR:
-          options.selector || ".theme-default-content :not(a) > img",
+          options.selector ||
+          ".theme-default-content :not(a) > img:not([no-view])",
         LIGHT_GALLERY_DELAY: options.delay || 800,
-        LIGHT_GALLERY_OPTIONS: options.options || {},
         LIGHT_GALLERY_AUTOPLAY: plugins.includes("autoplay"),
         LIGHT_GALLERY_FULLSCREEN: plugins.includes("fullscreen"),
         LIGHT_GALLERY_PAGER: plugins.includes("pager"),
@@ -35,16 +34,19 @@ export const lightgalleryPlugin =
         LIGHT_GALLERY_ZOOM: plugins.includes("zoom"),
       }),
 
-      extendsBundlerOptions: (config: unknown, app): void => {
-        addViteOptimizeDepsExclude({ app, config }, [
+      extendsBundlerOptions: (bundlerOptions: unknown, app): void => {
+        addViteOptimizeDepsExclude(bundlerOptions, app, [
           "lightgallery/lightgallery.es5.js",
           ...plugins.map(
             (name) => `lightgallery/plugins/${name}/lg-${name}.es5.js`
           ),
         ]);
-        addViteOptimizeDepsExclude({ app, config }, ["lightgallery"]);
+        addViteOptimizeDepsExclude(bundlerOptions, app, ["lightgallery"]);
       },
 
-      clientConfigFile: path.resolve(__dirname, "../client/config.js"),
+      onPrepared: (app): Promise<void> =>
+        prepareLightGalleryPlugins(app, options.plugins),
+
+      clientConfigFile: `${CLIENT_FOLDER}config.js`,
     };
   };

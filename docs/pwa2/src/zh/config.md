@@ -1,14 +1,7 @@
 ---
 title: 配置
-icon: config
+icon: gears
 ---
-
-## showInstall
-
-- 类型: `boolean`
-- 默认值: `true`
-
-是否在 Service Worker 首次成功注册时显示 PWA 安装按钮
 
 ## manifest
 
@@ -287,7 +280,8 @@ PWA 插件的国际化配置。
 - **简体中文** (zh-CN)
 - **繁体中文** (zh-TW)
 - **英文(美国)** (en-US)
-- **德语** (de-AT)
+- **德语** (de-DE)
+- **德语(澳大利亚)** (de-AT)
 - **俄语** (ru-RU)
 - **乌克兰语** (uk-UA)
 - **越南语** (vi-VN)
@@ -299,5 +293,8 @@ PWA 插件的国际化配置。
 - **日语** (ja-JP)
 - **土耳其语** (tr-TR)
 - **韩语** (ko-KR)
+- **芬兰语** (fi-FI)
+- **印尼语** (id-ID)
+- **荷兰语** (nl-NL)
 
 :::

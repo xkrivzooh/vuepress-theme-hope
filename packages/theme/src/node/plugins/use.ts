@@ -1,18 +1,26 @@
+import { type App } from "@vuepress/core";
 import { useReadingTimePlugin } from "vuepress-plugin-reading-time2";
 import { useSassPalettePlugin } from "vuepress-plugin-sass-palette";
+import { isPlainObject } from "vuepress-shared/node";
 
 import { useGitPlugin } from "./git.js";
 import { useExtendsPagePlugin } from "./pageConverter.js";
+import { usePrismPlugin } from "./prism.js";
+import { type PluginsOptions, type ThemeData } from "../../shared/index.js";
+import { type HopeThemeBehaviorOptions } from "../typings/index.js";
 import { TEMPLATE_FOLDER } from "../utils.js";
 
-import type { App } from "@vuepress/core";
-import type { PluginsOptions } from "../../shared/index.js";
-
+/**
+ * @private
+ *
+ * Use plugins to ensure they apply first
+ */
 export const usePlugin = (
   app: App,
+  themeData: ThemeData,
   plugins: PluginsOptions,
-  legacy: boolean,
-  hotReload: boolean
+  hotReload: boolean,
+  behavior: HopeThemeBehaviorOptions
 ): void => {
   // respect git options
   if ("git" in plugins)
@@ -39,18 +47,20 @@ export const usePlugin = (
   if (plugins.readingTime !== false)
     useReadingTimePlugin(
       app,
-      typeof plugins.readingTime === "object" ? plugins.readingTime : {}
+      isPlainObject(plugins.readingTime) ? plugins.readingTime : {}
     );
+
+  if (plugins.prismjs !== false) usePrismPlugin(app);
 
   useSassPalettePlugin(app, {
     id: "hope",
     config: ".vuepress/styles/config.scss",
-    defaultConfig: `${TEMPLATE_FOLDER}config.scss`,
-    defaultPalette: `${TEMPLATE_FOLDER}palette.scss`,
-    generator: `${TEMPLATE_FOLDER}generator.scss`,
+    defaultConfig: `${TEMPLATE_FOLDER}palette/config.scss`,
     palette: ".vuepress/styles/palette.scss",
+    defaultPalette: `${TEMPLATE_FOLDER}palette/palette.scss`,
+    generator: `${TEMPLATE_FOLDER}palette/generator.scss`,
     style: ".vuepress/styles/index.scss",
   });
 
-  useExtendsPagePlugin(app, legacy);
+  useExtendsPagePlugin(app, themeData, behavior);
 };

@@ -1,64 +1,49 @@
-import { getLocales } from "vuepress-shared/node";
+import { type App } from "@vuepress/core";
+import { entries, fromEntries, getLocales } from "vuepress-shared/node";
+
 import { getEncryptConfig } from "./encrypt.js";
+import { type ThemeStatus } from "./status.js";
+import {
+  type ThemeData,
+  type ThemeLocaleConfig,
+  type ThemeLocaleOptions,
+  type ThemeOptions,
+} from "../../shared/index.js";
 import { themeLocalesData } from "../locales/index.js";
 
-import type { App } from "@vuepress/core";
-import type { ThemeStatus } from "./status.js";
-import {
-  ThemeData,
-  ThemeLocaleConfig,
-  ThemeLocaleOptions,
-  ThemeOptions,
-} from "../../shared/index.js";
+const ROOT_DISALLOW_CONFIG = [
+  "navbar",
+  "sidebar",
+  "rtl",
+  "langName",
+  "selectLangAriaLabel",
 
-const rootAllowConfig = [
-  "blog",
-  "encrypt",
-  "pure",
-  "darkmode",
-  "themeColor",
-  "fullscreen",
-  "mobileBreakPoint",
+  // locales
+  "metaLocales",
+  "navbarLocales",
+  "outlookLocales",
+  "routeLocales",
+  "blogLocales",
+  "encryptLocales",
+  "paginationLocales",
 ];
 
-const defaultRootOptions: Omit<ThemeData, "locales"> = {
-  // features
-  blog: {},
-  encrypt: {},
-
-  // appearance
-  pure: false,
-  darkmode: "switch",
-  themeColor: false,
-  fullscreen: false,
-};
-
-const defaultLocaleOptions: ThemeLocaleOptions = {
-  // features
-  blog: {},
-  // layouts
-  repoDisplay: true,
-  navbarIcon: true,
-  navbarAutoHide: "mobile",
-  hideSiteNameOnMobile: true,
-  sidebar: "structure",
-  sidebarIcon: true,
-  headerDepth: 2,
-};
-
 /**
+ * @private
+ *
  * Get client-side `themeData`
  */
 export const getThemeData = (
   app: App,
   themeOptions: ThemeOptions,
-  { enableBlog }: ThemeStatus
+  { enableBlog, enableEncrypt }: ThemeStatus
 ): ThemeData => {
   const themeData: ThemeData = {
-    ...defaultRootOptions,
-    ...Object.fromEntries(
-      Object.entries(themeOptions).filter(([key]) =>
-        rootAllowConfig.includes(key)
+    encrypt: {},
+    ...fromEntries(
+      // only remain root allowed config
+      entries(themeOptions).filter(
+        ([key]) => !ROOT_DISALLOW_CONFIG.includes(key)
       )
     ),
     locales:
@@ -66,38 +51,38 @@ export const getThemeData = (
       getLocales({
         app,
         name: "vuepress-theme-hope",
-        default: Object.fromEntries(
-          Object.entries(themeLocalesData).map(([locale, config]) => {
+        default: fromEntries(
+          entries(themeLocalesData).map(([locale, config]) => {
+            // remove locales if their features are not enabled
             if (!enableBlog) {
-              // @ts-ignore
+              // @ts-expect-error
               delete config.blogLocales;
 
-              // @ts-ignore
+              // @ts-expect-error
               delete config.paginationLocales;
             }
 
-            return [
-              locale,
-              <ThemeLocaleConfig>{
-                // default config
-                ...defaultLocaleOptions,
-                ...config,
-              },
-            ];
+            if (!enableEncrypt)
+              // @ts-expect-error
+              delete config.encryptLocales;
+
+            return [locale, <ThemeLocaleConfig>config];
           })
         ),
         // extract localeConfig
-        config: Object.fromEntries(
-          [
-            <[string, ThemeLocaleOptions]>["/", {}],
-            ...Object.entries(themeOptions.locales || {}),
-          ].map<[string, ThemeLocaleConfig]>(([localePath, localeConfig]) => [
+        config: fromEntries(
+          entries<ThemeLocaleOptions>({
+            // ensure default locale
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            "/": {},
+            ...(themeOptions.locales || {}),
+          }).map(([localePath, localeConfig]) => [
             localePath,
             <ThemeLocaleConfig>{
               // root config
-              ...Object.fromEntries(
-                Object.entries(themeOptions).filter(
-                  ([key]) => key !== "locales" && !rootAllowConfig.includes(key)
+              ...fromEntries(
+                entries(themeOptions).filter(([key]) =>
+                  ROOT_DISALLOW_CONFIG.includes(key)
                 )
               ),
               // locale options

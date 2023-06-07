@@ -1,6 +1,6 @@
 ---
 title: PWA
-icon: app
+icon: mobile-screen
 category:
   - 高级
 tag:
@@ -8,13 +8,7 @@ tag:
   - PWA
 ---
 
-该主题将通过内置 [`vuepress-plugin-pwa2`][pwa2] 提供渐进式 Web 应用程序支持[^pwa-intro]，该功能默认禁用。
-
-[^pwa-intro]: **PWA 介绍**
-
-    PWA 全称 Progressive Web app，即渐进式网络应用程序，标准由 W3C 规定。
-
-    它允许网站通过支持该特性的浏览器将网站作为 App 安装在对应平台上。
+该主题将通过内置 <ProjectLink name="pwa2" path="/zh/">`vuepress-plugin-pwa2`</ProjectLink> 提供渐进式 Web 应用程序支持[^pwa-intro]，该功能默认禁用。
 
 ::: info
 
@@ -25,6 +19,12 @@ tag:
 :::
 
 <!-- more -->
+
+[^pwa-intro]: **PWA 介绍**
+
+    PWA 全称 Progressive Web app，即渐进式网络应用程序，标准由 W3C 规定。
+
+    它允许网站通过支持该特性的浏览器将网站作为 App 安装在对应平台上。
 
 ## 快速启用 <Badge text="不推荐" type="warning" />
 
@@ -86,7 +86,7 @@ Service Worker [^service-worker] (简称 SW) 主要用于获取并托管网站�
 
 ::: info 图片识别
 
-我们通过文件后缀名识别图片，任何以 `.png`, `.jpg`, `.jpeg` , `.gif`, `.bmp`, `.webp` 结尾的文件都会视为图片。
+我们通过文件后缀名识别图片，任何以 `.png`, `.jpg`, `.jpeg`, `.gif`, `.bmp`, `.webp` 结尾的文件都会视为图片。
 
 :::
 
@@ -96,9 +96,9 @@ Service Worker [^service-worker] (简称 SW) 主要用于获取并托管网站�
 
 ::: tip 为什么默认不缓存非主页和 404 页面
 
-虽然说 VuePress 为所有的页面通过 SSR[^ssr] 生成了 HTML 文件，但是这些文件主要用于 SEO[^seo]，并能够让你在后端不做 SPA[^spa] 配置的情况下能够直接访问任何链接。
+虽然说 VuePress 为所有的页面通过 SSG[^ssg] 生成了 HTML 文件，但是这些文件主要用于 SEO[^seo]，并能够让你在后端不做 SPA[^spa] 配置的情况下能够直接访问任何链接。
 
-[^ssr]: **SSR**: **S**erver **S**ide **R**endering，服务端渲染
+[^ssg]: **SSG**: **S**tatic **S**ite **G**enerating，静态站点生成。
 [^seo]: **SEO**: **S**earch **E**ngine **O**ptimization，搜索引擎增强，
 
     详见 [SEO 介绍](https://mrhope.site/code/website/html/definition/seo.html)
@@ -115,7 +115,7 @@ VuePress 本质上是一个 SPA。这意味着你只需要缓存主页并从主�
 
 ### 大小控制
 
-为了防止在预缓存列表中包含大文件，任何大于 2MB 的文件或大于 1MB 的图片都将被删除。
+为了防止在预缓存列表中包含大文件，任何大于 2 MB 的文件或大于 1 MB 的图片都将被删除。
 
 你可以在主题选项中通过 `plugins.pwa.maxSize` 选项自定义缓存的最大文件大小 (单位 KB)，或通过 `plugins.pwa.maxPicSize` 来更改图片的大小限制 (单位: KB)。
 
@@ -227,9 +227,7 @@ VuePress 本质上是一个 SPA。这意味着你只需要缓存主页并从主�
 
 更多内容，请详见:
 
-- [PWA 插件文档][pwa2]
+- <ProjectLink name="pwa2" path="/zh/">PWA 插件文档</ProjectLink>
 - [Google PWA](https://web.dev/progressive-web-apps/)
 - [MDN PWA](https://developer.mozilla.org/zh-CN/docs/Web/Progressive_web_apps)
 - [W3C Manifest 规范](https://w3c.github.io/manifest/)
-
-[pwa2]: https://vuepress-theme-hope.github.io/v2/pwa/zh/

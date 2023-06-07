@@ -1,6 +1,6 @@
 ---
 title: 指南
-icon: creative
+icon: lightbulb
 ---
 
 使用 `vuepress-plugin-blog2`，你可以轻松地将博客功能引入主题。
@@ -230,6 +230,135 @@ interface BlogFrontmatterOptions {
 
 此外，你可以通过传递所需的 `key` 作为参数，来将获得绑定到该 `key` 的信息。
 
+对于上方的 Node 配置而言，你可以在客户端通过如下方式获取 tag 和 star 的信息:
+
+`TagMap` 布局:
+
+```vue
+<template>
+  <div>
+    <h1>Tag page</h1>
+    <ul>
+      <li v-for="({ items, path }, name) in categoryMap.map">
+        <RouterLink :key="name" :to="path" class="category">
+          {{ name }}
+          <span class="category-num">
+            {{ items.length }}
+          </span>
+        </RouterLink>
+      </li>
+    </ul>
+  </div>
+</template>
+<script setup lang="ts">
+import { useBlogCategory } from "vuepress-plugin-blog2";
+
+const categoryMap = useBlogCategory("tag");
+</script>
+```
+
+`TagList` 布局:
+
+```vue
+<template>
+  <div>
+    <h1>Tag page</h1>
+    <div class="category-wrapper">
+      <RouterLink
+        v-for="({ items, path }, name) in categoryMap.map"
+        :key="name"
+        :to="path"
+        class="category"
+      >
+        {{ name }}
+        <span class="category-num">
+          {{ items.length }}
+        </span>
+      </RouterLink>
+    </div>
+    <div class="article-wrapper" v-if="categoryMap.currentItems">
+      <div v-if="!categoryMap.currentItems.length">Nothing in here.</div>
+      <article
+        v-for="{ info, path } in categoryMap.currentItems"
+        class="article"
+        @click="$router.push(path)"
+      >
+        <header class="title">
+          {{
+            (isTimeline
+              ? `${new Date(info.date).toLocaleDateString()}: `
+              : "") + info.title
+          }}
+        </header>
+        <hr />
+        <div class="article-info">
+          <span v-if="info.author" class="author"
+            >Author: {{ info.author }}</span
+          >
+          <span v-if="info.date && !isTimeline" class="date"
+            >Date: {{ new Date(info.date).toLocaleDateString() }}</span
+          >
+          <span v-if="info.category" class="category"
+            >Category: {{ info.category.join(", ") }}</span
+          >
+          <span v-if="info.tag" class="tag"
+            >Tag: {{ info.tag.join(", ") }}</span
+          >
+        </div>
+        <div v-if="info.excerpt" class="excerpt" v-html="info.excerpt" />
+      </article>
+    </div>
+  </div>
+</template>
+<script setup lang="ts">
+import { useBlogCategory } from "vuepress-plugin-blog2";
+
+const categoryMap = useBlogCategory("tag");
+</script>
+```
+
+`StarList` 布局:
+
+```vue
+<template>
+  <div class="article-wrapper" v-if="stars.items">
+    <div v-if="!stars.items.length">Nothing in here.</div>
+    <article
+      v-for="{ info, path } in stars.items"
+      class="article"
+      @click="$router.push(path)"
+    >
+      <header class="title">
+        {{
+          (isTimeline ? `${new Date(info.date).toLocaleDateString()}: ` : "") +
+          info.title
+        }}
+      </header>
+      <hr />
+      <div class="article-info">
+        <span v-if="info.author" class="author">Author: {{ info.author }}</span>
+        <span v-if="info.date && !isTimeline" class="date"
+          >Date: {{ new Date(info.date).toLocaleDateString() }}</span
+        >
+        <span v-if="info.category" class="category"
+          >Category: {{ info.category.join(", ") }}</span
+        >
+        <span v-if="info.tag" class="tag">Tag: {{ info.tag.join(", ") }}</span>
+      </div>
+      <div v-if="info.excerpt" class="excerpt" v-html="info.excerpt" />
+    </article>
+  </div>
+</template>
+<script setup lang="ts">
+import { useBlogType } from "vuepress-plugin-blog2/client";
+
+import ArticleList from "../components/ArticleList.vue";
+import ParentLayout from "@vuepress/theme-default/layouts/Layout.vue";
+
+const stars = useBlogType("star");
+</script>
+```
+
 有关返回类型，请参阅 [Composition API 返回类型](./config.md#可组合式-API)。
 
 ## 多语言支持
@@ -262,7 +391,7 @@ export default {
 
 摘要是一个 HTML 片段，被用于在博客列表中显示文章的简短描述，所以摘要有如下限制:
 
-- 摘要不支持 Vue 组件以及其他 Vue 语法，所以此类内容会在生成时被移除。如果你有自定义组件 (非 Vue 组件)，请配置 `isCustomElement` 选项。
+- 摘要不支持任何未知标签以及 Vue 语法，所以此类内容会在生成时被移除。如果你有自定义组件 (非 Vue 组件)，请配置 `isCustomElement` 选项。
 - 由于摘要是一个 HTML 片段，所以你将无法通过相对路径或别名引入任何图片，这些图片会被直接移除。如果你想要保留图片，请使用基于 `.vuepress/public` 的绝对路径或完整路径以确保它们可以在其他地址被访问。
 
 :::

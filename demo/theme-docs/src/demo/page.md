@@ -2,7 +2,7 @@
 # This is the title of the article
 title: Page Config
 # This is the icon of the page
-icon: page
+icon: file
 # This control sidebar order
 order: 1
 # Set author
@@ -32,7 +32,7 @@ Content before `more` comment is regarded as page excerpt.
 
 ## Page Information
 
-You can set page information in Markdown’s Frontmatter.
+You can set page information in Markdown's Frontmatter.
 
 - The author is Ms.Hope.
 - The writing date is January 1, 2020
@@ -59,14 +59,14 @@ The theme contains a custom badge:
 
 This page should contain:
 
-- [BreadCrumb](https://vuepress-theme-hope.github.io/v2/guide/layout/breadcrumb.html)
-- [Title and information](https://vuepress-theme-hope.github.io/v2/guide/feature/page-info.html)
-- [TOC (Table of Contents)](https://vuepress-theme-hope.github.io/v2/guide/layout/page.html#header-list)
-- [Meta information including update time and contributors](https://vuepress-theme-hope.github.io/v2/guide/feature/meta.html)
-- [Comments](https://vuepress-theme-hope.github.io/v2/guide/feature/comment.html)
-- [Navbar](https://vuepress-theme-hope.github.io/v2/guide/layout/navbar.html)
-- [Sidebar](https://vuepress-theme-hope.github.io/v2/guide/layout/sidebar.html)
-- [Footer](https://vuepress-theme-hope.github.io/v2/guide/layout/footer.html)
+- [BreadCrumb](https://theme-hope.vuejs.press/guide/layout/breadcrumb.html)
+- [Title and information](https://theme-hope.vuejs.press/guide/feature/page-info.html)
+- [TOC (Table of Contents)](https://theme-hope.vuejs.press/guide/layout/page.html#header-list)
+- [Meta information including update time and contributors](https://theme-hope.vuejs.press/guide/feature/meta.html)
+- [Comments](https://theme-hope.vuejs.press/guide/feature/comment.html)
+- [Navbar](https://theme-hope.vuejs.press/guide/layout/navbar.html)
+- [Sidebar](https://theme-hope.vuejs.press/guide/layout/sidebar.html)
+- [Footer](https://theme-hope.vuejs.press/guide/layout/footer.html)
 - Back to top button
 
 You can customize them in theme options and page frontmatter.

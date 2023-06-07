@@ -1,27 +1,17 @@
-import { removeLeadingSlash } from "@vuepress/shared";
+import { type IncomingMessage, type ServerResponse } from "node:http";
+
+import { type ViteBundlerOptions } from "@vuepress/bundler-vite";
+import {
+  type WebpackBundlerOptions,
+  type WebpackDevServer,
+} from "@vuepress/bundler-webpack";
+import { type App } from "@vuepress/core";
+import { type HandleFunction } from "connect";
+import { type Plugin } from "vite";
+
 import { getBundlerName } from "./getBundler.js";
 import { mergeViteConfig } from "./vite/index.js";
-
-import type { IncomingMessage, ServerResponse } from "node:http";
-import type { App } from "@vuepress/core";
-import type { ViteBundlerOptions } from "@vuepress/bundler-vite";
-import type {
-  WebpackBundlerOptions,
-  WebpackDevServer,
-} from "@vuepress/bundler-webpack";
-import type { HandleFunction } from "connect";
-import type { Plugin } from "vite";
-
-export interface CustomServerCommonOptions {
-  /**
-   * VuePress Node App
-   */
-  app: App;
-  /**
-   * VuePress Bundler config
-   */
-  config: unknown;
-}
+import { removeLeadingSlash } from "../../shared/index.js";
 
 export interface CustomServerOptions {
   /**
@@ -52,7 +42,8 @@ export interface CustomServerOptions {
  * @param errMsg error msg
  */
 export const useCustomDevServer = (
-  { app, config }: CustomServerCommonOptions,
+  bundlerOptions: unknown,
+  app: App,
   {
     errMsg = "The server encountered an error",
     response: responseHandler,
@@ -63,10 +54,10 @@ export const useCustomDevServer = (
   const bundlerName = getBundlerName(app);
 
   // in dev
-  if (app.env.isDev) {
+  if (app.env.isDev)
     if (bundlerName === "vite") {
       // for vite
-      const viteBundlerConfig = <ViteBundlerOptions>config;
+      const viteBundlerOptions = <ViteBundlerOptions>bundlerOptions;
       const handler: HandleFunction = (
         request: IncomingMessage,
         response: ServerResponse
@@ -89,19 +80,19 @@ export const useCustomDevServer = (
         },
       };
 
-      viteBundlerConfig.viteOptions = mergeViteConfig(
-        viteBundlerConfig.viteOptions || {},
+      viteBundlerOptions.viteOptions = mergeViteConfig(
+        viteBundlerOptions.viteOptions || {},
         { plugins: [viteMockRequestPlugin] }
       );
     }
 
     // for webpack
     else if (bundlerName === "webpack") {
-      const webpackBundlerConfig = <WebpackBundlerOptions>config;
+      const webpackBundlerOptions = <WebpackBundlerOptions>bundlerOptions;
 
-      const { devServerSetupMiddlewares } = webpackBundlerConfig;
+      const { devServerSetupMiddlewares } = webpackBundlerOptions;
 
-      webpackBundlerConfig.devServerSetupMiddlewares = (
+      webpackBundlerOptions.devServerSetupMiddlewares = (
         middlewares: WebpackDevServer.Middleware[],
         server: WebpackDevServer
       ): WebpackDevServer.Middleware[] => {
@@ -119,5 +110,4 @@ export const useCustomDevServer = (
           : middlewares;
       };
     }
-  }
 };

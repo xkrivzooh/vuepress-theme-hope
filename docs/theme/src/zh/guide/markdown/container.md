@@ -1,6 +1,6 @@
 ---
 title: 自定义容器
-icon: customize
+icon: box-open
 category:
   - Markdown
 tag:
@@ -27,7 +27,7 @@ export default defineUserConfig({
   theme: hopeTheme({
     plugins: {
       mdEnhance: {
-        // this is the default option, so you can use it directly
+        // 这就是默认选项，所以你可以直接使用它
         container: true,
       },
     },
@@ -45,7 +45,7 @@ export default {
   theme: hopeTheme({
     plugins: {
       mdEnhance: {
-        // this is the default option, so you can use it directly
+        // 这就是默认选项，所以你可以直接使用它
         container: true,
       },
     },

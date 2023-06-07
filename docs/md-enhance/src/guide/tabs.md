@@ -1,6 +1,6 @@
 ---
 title: Tabs
-icon: tab
+icon: table-columns
 ---
 
 Let the Markdown file in your VuePress site support tabs.
@@ -105,6 +105,8 @@ By default, the title will be used as value of tab, but you can override it usin
 :::
 ```
 
+You can use Vue syntax and components in each tab, and you can access `value` and `isActive`, indicating the tab's binding value and whether the tab is active.
+
 :::: info Switching together and persisting choice
 
 If you want to make some tab groups switch together, you can use same tab id to bind them.
@@ -123,16 +125,8 @@ npm should be installed with Node.js.
 
 @tab pnpm
 
-If you are using Node.js v16+, you can use corepack to enable pnpm:
-
 ```bash
-corepack prepare pnpm@7.21.0 --activated
-```
-
-Otherwise, you can install it with npm:
-
-```bash
-npm i -g pnpm
+corepack prepare pnpm@latest --activated
 ```
 
 :::
@@ -144,13 +138,13 @@ Install `vuepress-plugin-md-enhance`:
 @tab Using npm#npm
 
 ```bash
-npm i -D vuepress-plugin-md-enhance@next
+npm i -D vuepress-plugin-md-enhance
 ```
 
 @tab Using pnpm#pnpm
 
 ```bash
-pnpm add -D vuepress-plugin-md-enhance@next
+pnpm add -D vuepress-plugin-md-enhance
 ```
 
 :::

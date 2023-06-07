@@ -1,29 +1,11 @@
-.theme-hope-content a {
-  &[href*="/guide/"],
-  &[href*="/config/"] {
-    &::before {
-      position: relative;
-      bottom: 0.125em;
+.vp-hero-info-wrapper {
+  min-height: 600px;
+}
 
-      vertical-align: middle;
-
-      margin-right: 0.25em;
-
-      color: var(--theme-color);
-
-      font-family: iconfont, sans-serif;
-    }
-  }
-
-  &[href*="/config/"] {
-    &::before {
-      content: "\e656";
-    }
-  }
-
-  &[href*="/guide/"] {
-    ::before {
-      content: "\e718";
-    }
+.vp-project-home {
+  .theme-hope-content {
+    max-width: unset !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 }

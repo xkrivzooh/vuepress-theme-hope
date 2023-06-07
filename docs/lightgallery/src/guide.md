@@ -1,6 +1,6 @@
 ---
 title: Guide
-icon: creative
+icon: lightbulb
 ---
 
 This plugin will use lightgallery make the pictures in the body of the page enter the preview mode when clicked.
@@ -17,9 +17,31 @@ But PLEASE DO AWARE that organizational license can only be used on one product.
 
 YOU ARE WARNED!
 
-If you are worried about this, please consider using [photo-swipe](https://vuepress-theme-hope.github.io/v2/photo-swipe/) instead.
+If you are worried about this, please consider using <ProjectLink name="photo-swipe">vuepress-plugin-photo-swipe</ProjectLink> instead.
 
 :::
+
+## Customize Options
+
+You can pass options to [`lightgallery`](https://www.lightgalleryjs.com/) by importing and calling `defineLightGalleryConfig` in client config file:
+
+```ts
+// .vuepress/client.ts
+import { defineClientConfig } from "@vuepress/client";
+import { defineLightGalleryConfig } from "vuepress-plugin-lightgallery/client";
+
+defineLightGalleryConfig({
+  // lightgallery options here
+});
+
+export default defineClientConfig({
+  // ...
+});
+```
+
+## Operation Delay
+
+If your theme adds animations when switching pages, you may need to delay when lightgallery re-finds page images. You can configure this delay via the `delay` option, the default value is `800` (in milliseconds).
 
 ## Demo
 

@@ -1,4 +1,4 @@
-import type { ThemeLocaleData } from "../../shared/index.js";
+import { type ThemeLocaleData } from "../../shared/index.js";
 
 export const viLocale: ThemeLocaleData = {
   lang: "vi-VN",
@@ -23,6 +23,7 @@ export const viLocale: ThemeLocaleData = {
     lastUpdated: "Cập nhật gần nhất lúc",
     contributors: "Người đóng góp",
     editLink: "Chỉnh sửa trang này",
+    print: "In",
   },
 
   blogLocales: {
@@ -60,6 +61,7 @@ export const viLocale: ThemeLocaleData = {
 
   routeLocales: {
     skipToContent: "Bỏ qua nội dung chính",
+    notFoundTitle: "Trang không tìm thấy",
     notFoundMsg: [
       "Ở đây chẳng có gì cả.",
       "Sao chúng ta lại đến đây?",

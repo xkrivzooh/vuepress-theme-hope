@@ -6,7 +6,7 @@ heroImage: /logo.svg
 heroText: vuepress-shared
 tagline: VuePress2 的强大工具函数
 
-footer: 使用 <a href="https://vuepress-theme-hope.github.io/v2/" target="_blank">VuePress Theme Hope</a> 主题 | MIT 协议, 版权所有 © 2019-present Mr.Hope
+footer: 使用 <a href="https://theme-hope.vuejs.press/zh/" target="_blank">VuePress Theme Hope</a> 主题 | MIT 协议, 版权所有 © 2019-present Mr.Hope
 
 copyright: false
 ---
@@ -18,19 +18,19 @@ copyright: false
 @tab pnpm
 
 ```bash
-pnpm add -D vuepress-shared@next
+pnpm add -D vuepress-shared
 ```
 
 @tab yarn
 
 ```bash
-yarn add -D vuepress-shared@next
+yarn add -D vuepress-shared
 ```
 
 @tab npm
 
 ```bash
-npm i -D vuepress-shared@next
+npm i -D vuepress-shared
 ```
 
 :::
